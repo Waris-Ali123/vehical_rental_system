@@ -1,13 +1,5 @@
 package com.capstone1.vehical_rental_system.entities;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.capstone1.vehical_rental_system.entities.Booking.BookingStatus;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,7 +7,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -55,12 +46,7 @@ public class Vehicle {
     @Column(nullable = false)
     private double price_per_day;
 
-    // @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL)
-    // private List<Booking> bookingsByVehicle=new ArrayList<>();
-
-
-    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.REMOVE, orphanRemoval = true)
-private List<Booking> bookingsByVehicle = new ArrayList<>();
+  
 
 
 
@@ -138,14 +124,7 @@ private List<Booking> bookingsByVehicle = new ArrayList<>();
         this.price_per_day = price_per_day;
     }
 
-    public void addBooking(Booking b){
-        bookingsByVehicle.add(b);
-    }
-
-    public void removeBooking(Booking b){
-        bookingsByVehicle.remove(b);
-    }
-
+  
     @Override
     public String toString() {
         return "Vehicle [vehicle_id=" + vehicle_id + ", name=" + name + ", type=" + type + ", model=" + model

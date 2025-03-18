@@ -45,11 +45,7 @@ public class User {
     @Column(nullable = false)
     Role role = User.Role.USER; //first user is class name and second is value of enum;
 
-    // @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    // private List<Booking> bookings=new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
-private List<Booking> bookings = new ArrayList<>();
 
 
 
@@ -128,15 +124,6 @@ private List<Booking> bookings = new ArrayList<>();
 
     public void setRole(Role role) {
         this.role = role;
-    }
-
-
-    public void addBooking(Booking b){
-        bookings.add(b);
-    }
-
-    public void removeBooking(Booking b){
-        bookings.remove(b);
     }
 
     @Override
