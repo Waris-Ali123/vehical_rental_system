@@ -15,6 +15,8 @@ import com.capstone1.vehical_rental_system.repositories.VehicleRepo;
 public class VehicleServiceImplementation implements VehicleService {
 
 
+
+
     @Autowired
     VehicleRepo vehicleRepo;
     @Autowired 
@@ -68,6 +70,25 @@ public class VehicleServiceImplementation implements VehicleService {
         return ResponseEntity.internalServerError().build();
             
     }
+
+    @Override
+    public ResponseEntity<String> removeVehicleByRegistrationNumber(String registration_no, String email) {
+        try {
+            if(loginService.isAdmin(email)){
+                    Vehicle vehicle = getByRegistrationNumber(registration_no);
+
+                    vehicleRepo.delete(vehicle);
+                    return ResponseEntity.ok("Deleted Successfully");
+            }else{
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+
 
 
 }

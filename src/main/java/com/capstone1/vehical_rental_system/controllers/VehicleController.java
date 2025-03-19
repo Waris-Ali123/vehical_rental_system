@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,19 +17,28 @@ import org.springframework.web.bind.annotation.RestController;
 import com.capstone1.vehical_rental_system.entities.Vehicle;
 import com.capstone1.vehical_rental_system.entities.Vehicle.Availability;
 import com.capstone1.vehical_rental_system.entities.Vehicle.VehicleType;
+import com.capstone1.vehical_rental_system.repositories.BookingRepo;
 import com.capstone1.vehical_rental_system.services.VehicleService;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
-
+import org.springframework.web.bind.annotation.RequestMethod;
 
 
 @RestController
 @RequestMapping("/vehicle")
 public class VehicleController {
 
+    private final BookingRepo bookingRepo;
+
+    private final BookingController bookingController;
+
     @Autowired
     VehicleService vehicleService;
+
+    VehicleController(BookingController bookingController, BookingRepo bookingRepo) {
+        this.bookingController = bookingController;
+        this.bookingRepo = bookingRepo;
+    }
 
     // @Autowired
     
@@ -82,6 +92,17 @@ public class VehicleController {
          
     }
 
+
+    @DeleteMapping("/delete/{registration_no}/{email}")
+    public ResponseEntity<String> deleteByRegistrationNumber(@PathVariable("registration_no") String registration_no,@PathVariable("email") String email){
+        try {
+            return vehicleService.removeVehicleByRegistrationNumber(registration_no,email);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+    
     
     //gettingVehicleByRegistrationNumber
 

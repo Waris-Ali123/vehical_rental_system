@@ -18,7 +18,7 @@ public interface VehicleService {
 
     public ResponseEntity<Vehicle> updateVehicle(String registration_no,String email,Vehicle vehicle);
 
-    
+    public ResponseEntity<String> removeVehicleByRegistrationNumber(String registration_no,String email);
 
 
 }
