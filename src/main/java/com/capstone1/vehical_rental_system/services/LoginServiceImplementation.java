@@ -78,9 +78,21 @@ public class LoginServiceImplementation implements LoginService  {
 
     }
 
-    public List<User> getAll(){
+    public List<User> getAllUsers(){
         List<User>  users= userRepo.findAll();
         return users;
+    }
+
+    public ResponseEntity<String> deletingUser(User userToDelete){
+        try {
+            userRepo.delete(userToDelete);
+            return ResponseEntity.ok().body("User delete Successfully");
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("User did not deleted.Check the arguments passed");
+        }
+        
     }
 
     

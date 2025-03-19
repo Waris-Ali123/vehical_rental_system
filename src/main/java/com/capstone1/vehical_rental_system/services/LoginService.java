@@ -21,5 +21,7 @@ public interface LoginService {
 
     public boolean isAdmin(String alreadyAdminEmail);
 
-    public List<User> getAll();
+    public List<User> getAllUsers();
+
+    public ResponseEntity<String> deletingUser(User userToDelete);
 }

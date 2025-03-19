@@ -61,6 +61,10 @@ public class BookingController {
 
 
     //Updating booking details or managing
+
+    //removing or cancel the bookings.
+
+    //adding the address or location of vehicles.
     
     
     

@@ -8,7 +8,7 @@ import com.capstone1.vehical_rental_system.entities.Vehicle;
 
 public interface VehicleService {
 
-    public void addVehicle(Vehicle vehicle);
+    public ResponseEntity<String> addVehicle(String email,Vehicle vehicle);
 
     public ResponseEntity<List<Vehicle>> getAllVehicles();
 

@@ -16,16 +16,31 @@ public class VehicleServiceImplementation implements VehicleService {
 
 
 
-
     @Autowired
     VehicleRepo vehicleRepo;
     @Autowired 
     LoginService loginService;
 
 
+
     @Override
-    public void addVehicle(Vehicle vehicle){
-        vehicleRepo.save(vehicle);
+    public ResponseEntity<String> addVehicle(String email, Vehicle vehicle){
+        try {
+
+            
+            if(loginService.isAdmin(email)){
+                vehicleRepo.save(vehicle);
+                return ResponseEntity.ok("Vehicle Deleted Successfully");
+                
+            }
+            else{
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Only admins are allowed to add the vehicle");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("May be the vehicle is already registered");
+        }
+
     }
 
     public ResponseEntity<List<Vehicle>> getAllVehicles(){
@@ -61,13 +76,13 @@ public class VehicleServiceImplementation implements VehicleService {
 
                 
             }else{
-                ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
             }
         
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity.internalServerError().build();
+        return ResponseEntity.internalServerError().body(null);
             
     }
 
