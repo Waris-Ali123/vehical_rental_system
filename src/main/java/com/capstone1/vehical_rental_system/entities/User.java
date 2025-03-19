@@ -46,6 +46,8 @@ public class User {
     Role role = User.Role.USER; //first user is class name and second is value of enum;
 
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Booking> bookings = new ArrayList<>();
 
 
 
@@ -124,6 +126,18 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+
+    public void addBooking(Booking b){
+        bookings.add(b);
+        System.out.println("book added in the list also in users");
+        System.out.println(bookings.toString() + "in users");
+    }
+
+    public void removeBooking(Booking b){
+        bookings.remove(b);
+        System.out.println("Book removed in list in users ");
     }
 
     @Override
