@@ -14,5 +14,7 @@ public interface VehicleService {
 
     public List<Vehicle> getByType(String type);
 
+    public Vehicle getByRegistrationNumber(String registration_no);
+
 
 }

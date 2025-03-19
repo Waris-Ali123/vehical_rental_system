@@ -46,7 +46,7 @@ public class Vehicle {
     private String model ;
 
     @Column(nullable = false, unique = true)
-    private String registration_number;
+    private String registrationNumber;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -68,22 +68,22 @@ private List<Booking> bookingsByVehicle = new ArrayList<>();
         // this.vehicle_id = lastVehicleId++;
     }
 
-    public Vehicle(String name, VehicleType type, String model, String registration_number, Availability availability,
+    public Vehicle(String name, VehicleType type, String model, String registrationNumber, Availability availability,
             double price_per_day) {
                 
         this();
         this.name = name;
         this.type = type;
         this.model = model;
-        this.registration_number = registration_number;
+        this.registrationNumber = registrationNumber;
         this.availability = availability;
         this.price_per_day = price_per_day;
         // this.bookings.add(new Booking(LocalDate.now(),LocalDate.now(ZoneId.systemDefault()),133.98,BookingStatus.CONFIRMED));
     }
     
-    public Vehicle(String name, VehicleType type,String registration_number, Availability availability,
+    public Vehicle(String name, VehicleType type,String registrationNumber, Availability availability,
             double price_per_day) {
-        this(name, type, null, registration_number, availability, price_per_day);
+        this(name, type, null, registrationNumber, availability, price_per_day);
     }
 
     public int getVehicle_id() {
@@ -115,11 +115,11 @@ private List<Booking> bookingsByVehicle = new ArrayList<>();
     }
 
     public String getRegistration_number() {
-        return registration_number;
+        return registrationNumber;
     }
 
-    public void setRegistration_number(String registration_number) {
-        this.registration_number = registration_number;
+    public void setRegistration_number(String registrationNumber) {
+        this.registrationNumber = registrationNumber;
     }
 
     public Availability getAvailability() {
@@ -140,6 +140,9 @@ private List<Booking> bookingsByVehicle = new ArrayList<>();
 
     public void addBooking(Booking b){
         bookingsByVehicle.add(b);
+        System.out.println("book added in the list also in vehicles");
+        System.out.println(bookingsByVehicle.toString() + "In vehicles");
+
     }
 
     public void removeBooking(Booking b){
@@ -149,7 +152,7 @@ private List<Booking> bookingsByVehicle = new ArrayList<>();
     @Override
     public String toString() {
         return "Vehicle [vehicle_id=" + vehicle_id + ", name=" + name + ", type=" + type + ", model=" + model
-                + ", registration_number=" + registration_number + ", availability=" + availability + ", price_per_day="
+                + ", registrationNumber=" + registrationNumber + ", availability=" + availability + ", price_per_day="
                 + price_per_day + "]";
     }
     

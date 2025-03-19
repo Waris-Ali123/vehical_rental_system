@@ -9,4 +9,6 @@ import com.capstone1.vehical_rental_system.entities.Vehicle.VehicleType;
 
 public interface VehicleRepo extends JpaRepository<Vehicle,Integer>{
     public List<Vehicle> findAllByType(VehicleType type);    
+
+    public Vehicle findVehicleByRegistrationNumber(String registrantionNumber);
 } 

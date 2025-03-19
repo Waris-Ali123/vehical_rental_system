@@ -49,7 +49,7 @@ public class User {
     // private List<Booking> bookings=new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
-private List<Booking> bookings = new ArrayList<>();
+    private List<Booking> bookings = new ArrayList<>();
 
 
 
@@ -133,10 +133,13 @@ private List<Booking> bookings = new ArrayList<>();
 
     public void addBooking(Booking b){
         bookings.add(b);
+        System.out.println("book added in the list also in users");
+        System.out.println(bookings.toString() + "in users");
     }
 
     public void removeBooking(Booking b){
         bookings.remove(b);
+        System.out.println("Book removed in list in users ");
     }
 
     @Override

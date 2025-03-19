@@ -1,6 +1,6 @@
 package com.capstone1.vehical_rental_system.entities;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 import org.hibernate.annotations.ManyToAny;
 
@@ -25,9 +25,9 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int booking_id;
 
-    private Date startDate;
+    private LocalDate startDate;
 
-    private Date endDate;
+    private LocalDate endDate;
 
     private double totalPrice;
 
@@ -51,7 +51,7 @@ public class Booking {
 
     public Booking(){}
 
-    public Booking(Date startDate, Date endDate, double totalPrice, BookingStatus booking_status) {
+    public Booking(LocalDate startDate, LocalDate endDate, double totalPrice, BookingStatus booking_status) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.totalPrice = totalPrice;
@@ -62,19 +62,19 @@ public class Booking {
         return booking_id;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
