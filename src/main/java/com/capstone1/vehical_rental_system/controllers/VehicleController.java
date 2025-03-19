@@ -17,6 +17,9 @@ import com.capstone1.vehical_rental_system.entities.Vehicle;
 import com.capstone1.vehical_rental_system.entities.Vehicle.Availability;
 import com.capstone1.vehical_rental_system.entities.Vehicle.VehicleType;
 import com.capstone1.vehical_rental_system.services.VehicleService;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 
 
@@ -69,6 +72,18 @@ public class VehicleController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(vehicle);
 
     }
+
+
+    //updatingVehicle
+    @PutMapping("/update/{registration_no}/{email}")
+    public ResponseEntity<Vehicle> putMethodName(@PathVariable("registration_no") String registration_no,@PathVariable("email") String email, @RequestBody Vehicle vehicle) {
+        
+        return vehicleService.updateVehicle(registration_no,email,vehicle);
+         
+    }
+
+    
+    //gettingVehicleByRegistrationNumber
 
 
     // @GetMapping("/get")

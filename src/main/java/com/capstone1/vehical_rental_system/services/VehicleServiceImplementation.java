@@ -6,8 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import com.capstone1.vehical_rental_system.controllers.BookingController;
-import com.capstone1.vehical_rental_system.controllers.LoginController;
+
 import com.capstone1.vehical_rental_system.entities.Vehicle;
 import com.capstone1.vehical_rental_system.entities.Vehicle.VehicleType;
 import com.capstone1.vehical_rental_system.repositories.VehicleRepo;
@@ -16,9 +15,10 @@ import com.capstone1.vehical_rental_system.repositories.VehicleRepo;
 public class VehicleServiceImplementation implements VehicleService {
 
 
-
     @Autowired
     VehicleRepo vehicleRepo;
+    @Autowired 
+    LoginService loginService;
 
 
     @Override
@@ -42,5 +42,32 @@ public class VehicleServiceImplementation implements VehicleService {
     public Vehicle getByRegistrationNumber(String registration_no){
         return vehicleRepo.findVehicleByRegistrationNumber(registration_no);
     }
+    
+    @Override
+    public ResponseEntity<Vehicle> updateVehicle(String registration_no, String email, Vehicle vehicleModified) {
+        
+        try {
+            if (loginService.isAdmin(email)) {
+                Vehicle oldVehicle = getByRegistrationNumber(registration_no);
+                oldVehicle.setModel(vehicleModified.getModel());
+                oldVehicle.setName(vehicleModified.getName());
+                oldVehicle.setPrice_per_day(vehicleModified.getPrice_per_day());
+                oldVehicle.setType(vehicleModified.getType());
+
+                Vehicle updatedVehicle = vehicleRepo.save(oldVehicle);
+                return ResponseEntity.ok().body(updatedVehicle);
+
+                
+            }else{
+                ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+        
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.internalServerError().build();
+            
+    }
+
 
 }

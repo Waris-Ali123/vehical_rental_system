@@ -58,8 +58,14 @@ public class BookingController {
     public ResponseEntity<List<Booking>> getMethodName(@RequestParam String email) {
         return bookingService.getAllBooks(email);
     }
+
+
+    //Updating booking details or managing
     
     
     
+    
+
+    //TotalRevenueGotByPurchasing
     
 }

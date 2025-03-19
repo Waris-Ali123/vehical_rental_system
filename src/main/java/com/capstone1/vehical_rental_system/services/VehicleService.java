@@ -16,5 +16,9 @@ public interface VehicleService {
 
     public Vehicle getByRegistrationNumber(String registration_no);
 
+    public ResponseEntity<Vehicle> updateVehicle(String registration_no,String email,Vehicle vehicle);
+
+    
+
 
 }
