@@ -1,6 +1,7 @@
 package com.capstone1.vehical_rental_system.services;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -84,6 +85,7 @@ public class BookingServiceImplementation implements BookingService {
             Booking booking = new Booking();
             booking.setUser(u1);
             booking.setVehicle(v1);
+            booking.setBookingTime(LocalDateTime.now());
             booking.setStartDate(start);
             booking.setEndDate(end);
             booking.setTotalPrice(totalPrice);

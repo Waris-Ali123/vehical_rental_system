@@ -1,6 +1,7 @@
 package com.capstone1.vehical_rental_system.entities;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -22,6 +23,10 @@ public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int booking_id;
+
+    private LocalDateTime bookingTime;
+
+    
 
     private LocalDate startDate;
 
@@ -49,6 +54,7 @@ public class Booking {
     public Booking(){}
 
     public Booking(LocalDate startDate, LocalDate endDate, double totalPrice, BookingStatus bookingStatus) {
+        this.bookingTime = LocalDateTime.now();
         this.startDate = startDate;
         this.endDate = endDate;
         this.totalPrice = totalPrice;
@@ -57,6 +63,14 @@ public class Booking {
 
     public int getBooking_id() {
         return booking_id;
+    }
+
+    public LocalDateTime getBookingTime() {
+        return bookingTime;
+    }
+
+    public void setBookingTime(LocalDateTime bookingTime) {
+        this.bookingTime = bookingTime;
     }
 
     public LocalDate getStartDate() {
