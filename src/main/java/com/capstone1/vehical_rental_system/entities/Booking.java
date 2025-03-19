@@ -1,12 +1,7 @@
 package com.capstone1.vehical_rental_system.entities;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.hibernate.annotations.ManyToAny;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -15,7 +10,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Version;
 
 @Entity
@@ -37,7 +31,7 @@ public class Booking {
 
 
     @Enumerated(EnumType.STRING)
-    private BookingStatus booking_status;
+    private BookingStatus bookingStatus;
 
     @ManyToOne
     @JoinColumn(name = "user_id",nullable = false)
@@ -54,11 +48,11 @@ public class Booking {
 
     public Booking(){}
 
-    public Booking(LocalDate startDate, LocalDate endDate, double totalPrice, BookingStatus booking_status) {
+    public Booking(LocalDate startDate, LocalDate endDate, double totalPrice, BookingStatus bookingStatus) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.totalPrice = totalPrice;
-        this.booking_status = booking_status;
+        this.bookingStatus = bookingStatus;
     }         //just for checking purpose
 
     public int getBooking_id() {
@@ -90,11 +84,11 @@ public class Booking {
     }
 
     public BookingStatus getBooking_status() {
-        return booking_status;
+        return bookingStatus;
     }
 
-    public void setBooking_status(BookingStatus booking_status) {
-        this.booking_status = booking_status;
+    public void setBooking_status(BookingStatus bookingStatus) {
+        this.bookingStatus = bookingStatus;
     }
 
     
@@ -118,7 +112,7 @@ public class Booking {
     @Override
     public String toString() {
         return "Booking [booking_id=" + booking_id + ", startDate=" + startDate + ", endDate=" + endDate
-                + ", totalPrice=" + totalPrice + ", booking_status=" + booking_status + "]";
+                + ", totalPrice=" + totalPrice + ", bookingStatus=" + bookingStatus + "]";
     }
 
     

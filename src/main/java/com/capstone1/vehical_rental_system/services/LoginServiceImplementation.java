@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import com.capstone1.vehical_rental_system.controllers.BookingController;
 import com.capstone1.vehical_rental_system.entities.User;
 import com.capstone1.vehical_rental_system.repositories.UserRepo;
 

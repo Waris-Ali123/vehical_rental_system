@@ -1,10 +1,8 @@
 package com.capstone1.vehical_rental_system.services;
 
-import java.beans.JavaBean;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 
 import com.capstone1.vehical_rental_system.entities.User;
 

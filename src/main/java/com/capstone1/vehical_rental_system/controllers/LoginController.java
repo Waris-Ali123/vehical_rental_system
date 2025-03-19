@@ -16,36 +16,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.capstone1.vehical_rental_system.entities.User;
 import com.capstone1.vehical_rental_system.entities.User.Role;
-import com.capstone1.vehical_rental_system.repositories.BookingRepo;
 import com.capstone1.vehical_rental_system.repositories.UserRepo;
-import com.capstone1.vehical_rental_system.services.BookingServiceImplementation;
 import com.capstone1.vehical_rental_system.services.LoginService;
-import com.capstone1.vehical_rental_system.services.LoginServiceImplementation;
 
 
 @RestController
 @RequestMapping("/auth") 
 public class LoginController {
 
-    private final BookingServiceImplementation bookingServiceImplementation;
 
-    private final BookingRepo bookingRepo;
-
-    private final BookingController bookingController;
-
-    private final LoginServiceImplementation loginServiceImplementation;
 
     @Autowired
     LoginService loginService;
     @Autowired
     UserRepo repo;
-
-    LoginController(LoginServiceImplementation loginServiceImplementation, BookingController bookingController, BookingRepo bookingRepo, BookingServiceImplementation bookingServiceImplementation) {
-        this.loginServiceImplementation = loginServiceImplementation;
-        this.bookingController = bookingController;
-        this.bookingRepo = bookingRepo;
-        this.bookingServiceImplementation = bookingServiceImplementation;
-    }
 
     @GetMapping("/login")
     public ResponseEntity<User> getUserByEmailAndPassword(@RequestParam String email,@RequestParam String password) {

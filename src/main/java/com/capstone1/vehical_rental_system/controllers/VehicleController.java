@@ -44,17 +44,6 @@ public class VehicleController {
     }
 
 
-    @PostMapping("/add/{email}")
-    public ResponseEntity<String> addingVehicleByAdminOnly(@PathVariable("email") String email ,@RequestBody Vehicle vehicle) {
-        try {
-            return vehicleService.addVehicle(email,vehicle);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Can't store the vehicle.");
-        }
-        // return ResponseEntity.ok("Added succesfully");
-    }
-
-
     @GetMapping("/getByType")
     public ResponseEntity<List<Vehicle>> getVehicleByType(@RequestParam String type) {
         List<Vehicle> vehicle = new ArrayList<>();
@@ -68,6 +57,18 @@ public class VehicleController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(vehicle);
 
+    }
+
+        // Admin Specific Functionalities
+
+    @PostMapping("/add/{email}")
+    public ResponseEntity<String> addingVehicleByAdminOnly(@PathVariable("email") String email ,@RequestBody Vehicle vehicle) {
+        try {
+            return vehicleService.addVehicle(email,vehicle);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Can't store the vehicle.");
+        }
+        // return ResponseEntity.ok("Added succesfully");
     }
 
 

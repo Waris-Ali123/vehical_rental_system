@@ -25,7 +25,6 @@ import com.capstone1.vehical_rental_system.repositories.VehicleRepo;
 public class BookingServiceImplementation implements BookingService {
 
 
-
     @Autowired
     VehicleRepo vehicleRepo;
     @Autowired
@@ -43,8 +42,9 @@ public class BookingServiceImplementation implements BookingService {
         if(starDate.isAfter(endDate))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Start Date must be before end date");
 
-        List<Booking> existingBookings = bookingRepo.findByVehicleAndStartDateLessThanEqualAndEndDateGreaterThanEqual(vehicle,endDate,starDate);
+        List<Booking> existingBookings = bookingRepo.findByVehicleAndStartDateLessThanEqualAndEndDateGreaterThanEqualAndBookingStatus(vehicle,endDate,starDate,BookingStatus.CONFIRMED);
         if (existingBookings.size()>0) {
+            System.out.println(existingBookings.toString());
             String[] bookedArr = new String[existingBookings.size()];
             Arrays.setAll(bookedArr, (i)->existingBookings.get(i).getStartDate().toString()+" and "+existingBookings.get(i).getEndDate().toString());
             
@@ -120,7 +120,7 @@ public class BookingServiceImplementation implements BookingService {
     }
 
 
-    public ResponseEntity<List<Booking>> getAllBooks(String email){
+    public ResponseEntity<List<Booking>> getAllBookings(String email){
         try {
             User user = loginService.getUserByEmail(email);
             if(user.getRole()==Role.ADMIN)
@@ -133,5 +133,34 @@ public class BookingServiceImplementation implements BookingService {
         }
     }
 
-    
+    @Override
+    public ResponseEntity<Booking> updateBooking(String Booking_id,Booking bookingModified){
+        try {
+            //  Booking oldBooking = bookingRepo.findById(Integer.parseInt(Booking_id)).get();
+            //  oldBooking.set;
+             
+        } catch (Exception e) {
+            e.printStackTrace();
+            
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
+
+    public ResponseEntity<String> cancleBooking(int booking_id){
+
+        try {
+            Booking booking = bookingRepo.findById(booking_id).get();
+            booking.setBooking_status(BookingStatus.CANCELED);
+            bookingRepo.save(booking);
+            return ResponseEntity.ok("The booking has been canceled");
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
 }
+

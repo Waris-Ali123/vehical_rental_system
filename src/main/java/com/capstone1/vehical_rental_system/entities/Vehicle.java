@@ -26,8 +26,6 @@ public class Vehicle {
         AVAILABLE,BOOKED,UNDER_MAINTENANCE;
     }
 
-    // private static int lastVehicleId = 1;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int vehicle_id;
@@ -51,7 +49,7 @@ public class Vehicle {
     @Column(nullable = false)
     private double price_per_day;
 
-        @OneToMany(mappedBy = "vehicle", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Booking> bookingsByVehicle = new ArrayList<>();
 
   
@@ -59,7 +57,6 @@ public class Vehicle {
 
 
     public Vehicle(){
-        // this.vehicle_id = lastVehicleId++;
     }
 
     public Vehicle(String name, VehicleType type, String model, String registrationNumber, Availability availability,
@@ -72,7 +69,6 @@ public class Vehicle {
         this.registrationNumber = registrationNumber;
         this.availability = availability;
         this.price_per_day = price_per_day;
-        // this.bookings.add(new Booking(LocalDate.now(),LocalDate.now(ZoneId.systemDefault()),133.98,BookingStatus.CONFIRMED));
     }
     
     public Vehicle(String name, VehicleType type,String registrationNumber, Availability availability,
