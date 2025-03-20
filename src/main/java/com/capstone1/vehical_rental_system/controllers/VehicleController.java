@@ -59,6 +59,19 @@ public class VehicleController {
 
     }
 
+    @GetMapping("/searching/{keyword}")
+    public ResponseEntity<List<Vehicle>> getMethodName(@PathVariable("keyword") String keyword) {
+        try{
+            return vehicleService.searching(keyword);
+
+        }catch(Exception e){
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+
+    }
+    
+
         // Admin Specific Functionalities
 
     @PostMapping("/add/{email}")
