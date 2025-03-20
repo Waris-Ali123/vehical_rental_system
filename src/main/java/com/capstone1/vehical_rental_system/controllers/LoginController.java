@@ -65,7 +65,7 @@ public class LoginController {
             e.printStackTrace();
         }
         
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         
     }
 
@@ -73,17 +73,8 @@ public class LoginController {
     public ResponseEntity<User> updatingExistingUser(@PathVariable int id, @RequestBody User userDetailstoUpdate) {
 
         try {
-            User user = loginService.getById(id);
-
-            user.setName(userDetailstoUpdate.getName());    
-            user.setEmail(userDetailstoUpdate.getEmail());
-            user.setPassword(userDetailstoUpdate.getPassword());
-            user.setContact_number(userDetailstoUpdate.getContact_number());
-
-
-            User updatedUser = loginService.storeUser(user);
-            
-            return  ResponseEntity.ok().body(updatedUser);
+           
+            return loginService.UpdateUser(id, userDetailstoUpdate);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -100,13 +91,7 @@ public class LoginController {
     @GetMapping("/getAllUsers")
     public ResponseEntity<List<User>> getAllUsers(@RequestParam String email){
         try {
-            if(loginService.isAdmin(email)){
-                List<User> users = loginService.getAllUsers();
-                return ResponseEntity.ok().body(users);
-            }
-            else{
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            }
+            return loginService.getAllUsers(email);
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -135,6 +120,9 @@ public class LoginController {
         }
         return ResponseEntity.internalServerError().build();
     }
+
+    
+    
 
     
    

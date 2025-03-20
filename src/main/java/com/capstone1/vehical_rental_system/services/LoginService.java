@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import com.capstone1.vehical_rental_system.entities.User;
 
 public interface LoginService {    
+
     User getUserByEmailAndPass(String email,String password);
 
     User getUserByEmail(String email);
@@ -19,7 +20,9 @@ public interface LoginService {
 
     public boolean isAdmin(String alreadyAdminEmail);
 
-    public List<User> getAllUsers();
+    public ResponseEntity<List<User>> getAllUsers( String email);
 
     public ResponseEntity<String> deletingUser(User userToDelete);
+
+     public ResponseEntity<User> UpdateUser(int id,User userDetailstoUpdate) ;
 }

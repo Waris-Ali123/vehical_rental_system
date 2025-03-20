@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
 import com.capstone1.vehical_rental_system.entities.User;
 import com.capstone1.vehical_rental_system.repositories.UserRepo;
 
@@ -34,6 +35,7 @@ public class LoginServiceImplementation implements LoginService  {
 
     @Override
     public User storeUser(User user){
+        user.setRole(User.Role.USER);
         return userRepo.save(user);
     }
 
@@ -77,9 +79,22 @@ public class LoginServiceImplementation implements LoginService  {
 
     }
 
-    public List<User> getAllUsers(){
-        List<User>  users= userRepo.findAll();
-        return users;
+    public ResponseEntity<List<User>> getAllUsers(String email){
+
+        try {
+            if(isAdmin(email)){
+                List<User> users = userRepo.findAll();
+                return ResponseEntity.ok().body(users);
+            }
+            else{
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return ResponseEntity.internalServerError().build();
     }
 
     public ResponseEntity<String> deletingUser(User userToDelete){
@@ -92,6 +107,31 @@ public class LoginServiceImplementation implements LoginService  {
             return ResponseEntity.internalServerError().body("User did not deleted.Check the arguments passed");
         }
         
+    }
+
+    @Override
+    public ResponseEntity<User> UpdateUser(int id, User userDetailstoUpdate) {
+    
+        try {
+           
+            User user = getById(id);
+
+            user.setName(userDetailstoUpdate.getName());    
+            user.setEmail(userDetailstoUpdate.getEmail());
+            user.setPassword(userDetailstoUpdate.getPassword());
+            user.setContact_number(userDetailstoUpdate.getContact_number());
+
+
+            //not updating the role here so no one can make himself an Admin. Admin can be added by the Admins only
+
+            User updatedUser = storeUser(user);
+            
+            return  ResponseEntity.ok().body(updatedUser);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     
