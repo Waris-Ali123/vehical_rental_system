@@ -103,6 +103,24 @@ public class VehicleServiceImplementation implements VehicleService {
         }
     }
 
+    @Override
+    public ResponseEntity<List<Vehicle>> searching(String keyword) {
+        try {
+            List<Vehicle> vehicles =  vehicleRepo.SearchingByKeyword(keyword);
+
+            //if data not found we give not found status
+            if(vehicles.size()<=0)
+                return ResponseEntity.notFound().build();
+
+            return ResponseEntity.ok().body(vehicles);
+        } catch (Exception e) {
+           e.printStackTrace();
+           return ResponseEntity.internalServerError().build();
+        }
+    }
+
+
+
 
 
 

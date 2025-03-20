@@ -16,6 +16,8 @@ public interface VehicleService {
 
     public Vehicle getByRegistrationNumber(String registration_no);
 
+    public ResponseEntity<List<Vehicle>> searching(String keyword);
+
     public ResponseEntity<Vehicle> updateVehicle(String registration_no,String email,Vehicle vehicle);
 
     public ResponseEntity<String> removeVehicleByRegistrationNumber(String registration_no,String email);
