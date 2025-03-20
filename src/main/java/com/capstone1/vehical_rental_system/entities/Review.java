@@ -2,6 +2,8 @@ package com.capstone1.vehical_rental_system.entities;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,6 +29,7 @@ public class Review {
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
     
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "vehicle_id",nullable = false)
     private Vehicle vehicle;

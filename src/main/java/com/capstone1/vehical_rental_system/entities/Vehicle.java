@@ -49,8 +49,13 @@ public class Vehicle {
     @Column(nullable = false)
     private double price_per_day;
 
+    
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Booking> bookingsByVehicle = new ArrayList<>();
+
+  
+    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Review> reviewsOnVehicle = new ArrayList<>();
 
   
 
@@ -130,13 +135,26 @@ public class Vehicle {
 
     public void addBooking(Booking b){
         bookingsByVehicle.add(b);
-        System.out.println("book added in the list also in vehicles");
-        System.out.println(bookingsByVehicle.toString() + "In vehicles");
-
     }
 
     public void removeBooking(Booking b){
         bookingsByVehicle.remove(b);
+    }
+
+    public void addReview(Review b){
+        reviewsOnVehicle.add(b);
+    }
+
+    public void removeReview(Review b){
+        reviewsOnVehicle.remove(b);
+    }
+
+    public List<Booking> getBookingsByVehicle() {
+        return bookingsByVehicle;
+    }
+
+    public List<Review> getReviewsOnVehicle() {
+        return reviewsOnVehicle;
     }
 
     @Override

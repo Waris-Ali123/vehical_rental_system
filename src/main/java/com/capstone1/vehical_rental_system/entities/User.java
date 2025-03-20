@@ -3,6 +3,8 @@ package com.capstone1.vehical_rental_system.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -46,9 +48,13 @@ public class User {
     Role role = User.Role.USER; //first user is class name and second is value of enum;
 
 
+    @JsonBackReference
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Booking> bookings = new ArrayList<>();
-
+    
+    @JsonBackReference
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>();
 
 
 
@@ -129,17 +135,31 @@ public class User {
     }
 
 
+    public List<Booking> getBookings() {
+        return bookings;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
     public void addBooking(Booking b){
         bookings.add(b);
-        System.out.println("book added in the list also in users");
-        System.out.println(bookings.toString() + "in users");
     }
 
     public void removeBooking(Booking b){
         bookings.remove(b);
-        System.out.println("Book removed in list in users ");
+    }
+    
+    public void addReview(Review b){
+        reviews.add(b);
     }
 
+    public void removeReview(Review b){
+        reviews.remove(b);
+    }
+
+    
     @Override
     public String toString() {
         return "User [name=" + name + ", email=" + email + ", password=" + password + ", contact_number="

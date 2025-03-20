@@ -3,6 +3,8 @@ package com.capstone1.vehical_rental_system.entities;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -39,10 +41,12 @@ public class Booking {
     private BookingStatus bookingStatus;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "vehicle_id",nullable = false)
     private Vehicle vehicle;
 

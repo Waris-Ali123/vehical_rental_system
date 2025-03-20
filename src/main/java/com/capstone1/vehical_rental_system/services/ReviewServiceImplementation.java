@@ -7,19 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import com.capstone1.vehical_rental_system.controllers.BookingController;
+
 import com.capstone1.vehical_rental_system.entities.Review;
 import com.capstone1.vehical_rental_system.entities.User;
 import com.capstone1.vehical_rental_system.entities.Vehicle;
-import com.capstone1.vehical_rental_system.repositories.BookingRepo;
 import com.capstone1.vehical_rental_system.repositories.ReviewRepo;
 
 @Service
 public class ReviewServiceImplementation implements ReviewService{
-
-    private final BookingRepo bookingRepo;
-
-    private final BookingController bookingController;
     
     @Autowired
     LoginService loginService;
@@ -30,10 +25,6 @@ public class ReviewServiceImplementation implements ReviewService{
     @Autowired
     ReviewRepo reviewRepo;
 
-    ReviewServiceImplementation(BookingController bookingController, BookingRepo bookingRepo) {
-        this.bookingController = bookingController;
-        this.bookingRepo = bookingRepo;
-    }
 
     @Override
     public ResponseEntity<Review> addReview(String email, String registrationNumber, String rating, String feedback) {
@@ -53,9 +44,11 @@ public class ReviewServiceImplementation implements ReviewService{
             review.setReviewTime(LocalDateTime.now());
             review.setFeedback(feedback);
 
-            Review saved = reviewRepo.save(review);
+            Review savedReview = reviewRepo.save(review);
+            user.addReview(savedReview);
+            vehicle.addReview(savedReview);
 
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(saved);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(savedReview);
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -84,10 +77,17 @@ public class ReviewServiceImplementation implements ReviewService{
             Vehicle vehicle = vehicleService.getByRegistrationNumber(registrationNumber);
             Review review = reviewRepo.findByVehicleAndUser(vehicle, user);
 
+            user.removeReview(review);
+            vehicle.removeReview(review);
+
             review.setFeedback(feedback);
             review.setRating(Integer.parseInt(rating));
             review.setReviewTime(LocalDateTime.now());
             Review updatedReview = reviewRepo.save(review);
+
+            user.addReview(updatedReview);
+            vehicle.removeReview(updatedReview);
+
             return ResponseEntity.ok().body(updatedReview);
 
         }catch(Exception exception){
