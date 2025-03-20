@@ -1,8 +1,10 @@
 package com.capstone1.vehical_rental_system.controllers;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,11 +67,13 @@ public class BookingController {
         return ResponseEntity.ok().build();
     }
 
-    //removing or cancel the bookings.
+    //removing or cancel the bgitookings.
     @PutMapping("/cancelBooking/{booking_id}")
     public ResponseEntity<String> putMethodName(@PathVariable int booking_id) {
         return bookingService.cancleBooking(booking_id);
     }
+
+    
 
     //adding the address or location of vehicles.
     
