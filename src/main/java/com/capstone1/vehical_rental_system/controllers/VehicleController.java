@@ -1,9 +1,11 @@
 package com.capstone1.vehical_rental_system.controllers;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -70,6 +72,32 @@ public class VehicleController {
         }
 
     }
+
+
+    @GetMapping("/findingAvailable")
+    public ResponseEntity<List<Vehicle>> findingAvailableVehicles( @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+            
+        try {
+            return vehicleService.findingAvailableVehicles(startDate,endDate);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/findingAvailable/{type}")
+    public ResponseEntity<List<Vehicle>> findingAvailableVehiclesByType(@PathVariable("type") String type, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+            
+        try {
+            return vehicleService.findingAvailableVehiclesByType(type,startDate,endDate);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+    
     
 
         // Admin Specific Functionalities

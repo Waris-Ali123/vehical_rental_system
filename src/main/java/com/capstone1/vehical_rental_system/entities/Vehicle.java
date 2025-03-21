@@ -23,7 +23,7 @@ public class Vehicle {
     }
 
     public enum Availability{
-        AVAILABLE,BOOKED,UNDER_MAINTENANCE;
+        AVAILABLE,UNDER_MAINTENANCE;
     }
 
     @Id
