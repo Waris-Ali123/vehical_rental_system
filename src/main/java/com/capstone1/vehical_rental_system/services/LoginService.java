@@ -3,6 +3,8 @@ package com.capstone1.vehical_rental_system.services;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.capstone1.vehical_rental_system.entities.User;
 
@@ -24,5 +26,5 @@ public interface LoginService {
 
     public ResponseEntity<String> deletingUser(User userToDelete);
 
-     public ResponseEntity<User> UpdateUser(int id,User userDetailstoUpdate) ;
+    public ResponseEntity<User> updatingExistingUser(int id,User userDetailstoUpdate);
 }
