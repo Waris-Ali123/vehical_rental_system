@@ -37,11 +37,13 @@ public class LoginController {
             User u1 = loginService.getUserByEmailAndPass(email,password);
             if(u1 != null)
                 return ResponseEntity.ok().body(u1);
+            else
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (Exception e) {
             e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
         }
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @PostMapping("/initialize")
@@ -73,22 +75,12 @@ public class LoginController {
     public ResponseEntity<User> updatingExistingUser(@PathVariable int id, @RequestBody User userDetailstoUpdate) {
 
         try {
-            User user = loginService.getById(id);
-
-            user.setName(userDetailstoUpdate.getName());    
-            user.setEmail(userDetailstoUpdate.getEmail());
-            user.setPassword(userDetailstoUpdate.getPassword());
-            user.setContact_number(userDetailstoUpdate.getContact_number());
-
-
-            User updatedUser = loginService.storeUser(user);
-            
-            return  ResponseEntity.ok().body(updatedUser);
+            return loginService.updatingExistingUser(id, userDetailstoUpdate);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        
         return ResponseEntity.internalServerError().build();
     }
 

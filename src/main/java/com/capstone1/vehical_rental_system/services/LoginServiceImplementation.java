@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.capstone1.vehical_rental_system.entities.User;
 import com.capstone1.vehical_rental_system.repositories.UserRepo;
@@ -12,6 +13,8 @@ import com.capstone1.vehical_rental_system.repositories.UserRepo;
 @Service
 public class LoginServiceImplementation implements LoginService  {
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Autowired
     UserRepo userRepo ;
@@ -19,7 +22,13 @@ public class LoginServiceImplementation implements LoginService  {
     @Override
     public User getUserByEmailAndPass(String email, String password) {
         
-        return userRepo.findUserByEmailAndPassword(email,password).get();
+        User user = userRepo.findUserByEmail(email).orElse(null);
+
+        if(user!=null && passwordEncoder.matches(password, user.getPassword())){
+            return user;
+        }
+        
+        return null;
     }
 
     @Override
@@ -34,6 +43,7 @@ public class LoginServiceImplementation implements LoginService  {
 
     @Override
     public User storeUser(User user){
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepo.save(user);
     }
 
@@ -44,6 +54,7 @@ public class LoginServiceImplementation implements LoginService  {
             
             if(isAdmin(alreadyAdminEmail)){
                 newAdmin.setRole(User.Role.ADMIN);
+                newAdmin.setPassword(passwordEncoder.encode(newAdmin.getPassword()));
                 User user =  userRepo.save(newAdmin);
                 return ResponseEntity.ok().body(user);
             }
@@ -94,6 +105,26 @@ public class LoginServiceImplementation implements LoginService  {
         
     }
 
+
+    public ResponseEntity<User> updatingExistingUser(int id,User userDetailstoUpdate){
+        try {
+            User user = getById(id);
+
+            user.setName(userDetailstoUpdate.getName());    
+            user.setEmail(userDetailstoUpdate.getEmail());
+            user.setPassword(userDetailstoUpdate.getPassword());
+            user.setContact_number(userDetailstoUpdate.getContact_number());
+            user.setPassword(passwordEncoder.encode(userDetailstoUpdate.getPassword()));
+            User updatedUser = userRepo.save(user);
+            
+            return  ResponseEntity.ok().body(updatedUser);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.internalServerError().build();
+    }
     
     
 }

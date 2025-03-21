@@ -1,5 +1,6 @@
 package com.capstone1.vehical_rental_system.services;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,6 +119,37 @@ public class VehicleServiceImplementation implements VehicleService {
            return ResponseEntity.internalServerError().build();
         }
     }
+
+    @Override
+    public ResponseEntity<List<Vehicle>> findingAvailableVehicles(LocalDate startDate, LocalDate endDate) {
+        try {
+            List<Vehicle> availableVehicles = vehicleRepo.SearchingAvailableVehicles(startDate, endDate);
+            return ResponseEntity.ok().body(availableVehicles);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+
+    @Override
+    public ResponseEntity<List<Vehicle>> findingAvailableVehiclesByType(String type,LocalDate startDate, LocalDate endDate) {
+        try{
+            Vehicle.VehicleType vehicleType = VehicleType.valueOf(type.toUpperCase());
+            List<Vehicle> availableVehicles = vehicleRepo.SearchingAvailableVehiclesByType(vehicleType,startDate, endDate);
+            return ResponseEntity.ok().body(availableVehicles);
+             
+
+        }catch(Exception e){
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+
+    }
+
+
+
+    
 
 
 
