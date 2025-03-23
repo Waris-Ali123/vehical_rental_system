@@ -31,9 +31,6 @@ public class BookingController {
 
 
     
-   
-
-
     //Adding the Booking
     @PostMapping("/add")
     public ResponseEntity<String> AddingBooking(@RequestParam String email,@RequestParam String registration_no,

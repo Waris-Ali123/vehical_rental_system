@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.capstone1.vehical_rental_system.entities.User;
+import com.capstone1.vehical_rental_system.entities.Vehicle;
 
 public interface LoginService {    
 
@@ -27,4 +28,6 @@ public interface LoginService {
     public ResponseEntity<String> deletingUser(User userToDelete);
 
     public ResponseEntity<User> updatingExistingUser(int id,User userDetailstoUpdate);
+
+    public ResponseEntity<List<User>> searching(String keyword);
 }

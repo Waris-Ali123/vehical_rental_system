@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.capstone1.vehical_rental_system.entities.Vehicle;
 import com.capstone1.vehical_rental_system.services.VehicleService;
 
-@CrossOrigin(origins ="*")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/vehicle")
 public class VehicleController {
@@ -116,6 +116,7 @@ public class VehicleController {
 
 
     //updatingVehicle
+    @CrossOrigin(origins = "*")
     @PutMapping("/update/{registration_no}/{email}")
     public ResponseEntity<Vehicle> updatingVehicleDetails(@PathVariable("registration_no") String registration_no,@PathVariable("email") String email, @RequestBody Vehicle vehicle) {
         

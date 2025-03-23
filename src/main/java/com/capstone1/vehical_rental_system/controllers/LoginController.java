@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.capstone1.vehical_rental_system.entities.User;
 import com.capstone1.vehical_rental_system.entities.User.Role;
+import com.capstone1.vehical_rental_system.entities.Vehicle;
 import com.capstone1.vehical_rental_system.repositories.UserRepo;
 import com.capstone1.vehical_rental_system.services.LoginService;
 
@@ -101,6 +102,18 @@ public class LoginController {
         }
         
         return ResponseEntity.internalServerError().build();
+
+    }
+
+    @GetMapping("/searching/{keyword}")
+    public ResponseEntity<List<User>> getMethodName(@PathVariable("keyword") String keyword) {
+        try{
+            return loginService.searching(keyword);
+
+        }catch(Exception e){
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
 
     }
 

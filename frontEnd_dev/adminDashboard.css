@@ -146,17 +146,21 @@ body {
     display: flex;
     align-items: center;
     padding: 20px 10px;
+    /* border: none; */
 }
 
 .searchContainer .searchIcon{
-    font-size: 1.9rem;
+    font-size: 1.7rem;
     position: absolute;
-    left:12px;
+    left:18px;
 }
 
 .searchContainer .searchBar{
     padding: 10px 40px;
     border-radius: 15px;
+    outline: none;
+    border: none;
+    border-color:gray;
     width: 100%;
     font-weight: 500;
 }
@@ -254,15 +258,23 @@ body {
     padding: 20px;
     background-color: var(--white);
     border-radius: 15px;
+    overflow-x: scroll;
+    scrollbar-width: thin; /* For Firefox */
+    scrollbar-color: var(--blue-dark) var(--white);
+    scrollbar-width: 30px; 
+    /* display: flex;
+    flex-wrap: wrap; */
+    /* row-gap: 500px; */
+    /* scrollbar-color: var(--black-dark); */
 }
 
 .entityTable{
     margin-top: 35px;
     width: 100%;
     border-collapse: collapse;
+    text-align: left;
+    transition: 1s ease-out;
 
-    /* display: grid; */
-     text-align: left;
     
 }
 

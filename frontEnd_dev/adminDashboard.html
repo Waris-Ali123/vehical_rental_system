@@ -38,7 +38,7 @@
                         <div class="menuText">Dashboard</div>
                     </button>
                 </li>
-                <li class="listItem" onclick="printingBookingsDataInTable()">
+                <li class="listItem" onclick="printingBookingsDataInTable(allBookings)">
                     <button>
 
                         <span class="icon material-symbols-outlined ">
@@ -47,7 +47,7 @@
                         <div class="menuText">Bookings</div>
                     </button>
                 </li>
-                <li class="listItem" onclick="printingReviewsDataInTable()">
+                <li class="listItem" onclick="printingReviewsDataInTable(allReviews)">
                     <button>
 
                         <span class="icon material-symbols-outlined ">
@@ -57,7 +57,7 @@
                     </button>
                 </li>
 
-                <li class="listItem" onclick="printingUsersDataInTable()">
+                <li class="listItem" onclick="printingUsersDataInTable(allUsers)">
                     <button >
 
                         <span class="icon material-symbols-outlined ">
@@ -67,7 +67,7 @@
                     </button>
                     </li>
                 
-                <li class="listItem" onclick="printingVehiclesDataInTable()">
+                <li class="listItem" onclick="printingVehiclesDataInTable(allVehicles)">
                     <button>
 
                         <span class="icon material-symbols-outlined ">
@@ -104,7 +104,7 @@
                 <span class="toggle menuIcon material-symbols-outlined">menu</span>
                 <div class="searchContainer">
                     <span class="searchIcon material-symbols-outlined">search</span>
-                    <input class="searchBar" placeholder="Search here.." ></input>
+                    <input id="searchBarId" class="searchBar" placeholder="Search here.." onchange="searchingByVehicleKeywords()"></input>
                 </div>
                 <div class="profilePhoto">
                     <div class="circularPhoto">W</div>

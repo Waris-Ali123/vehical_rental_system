@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.capstone1.vehical_rental_system.entities.User;
+import com.capstone1.vehical_rental_system.entities.Vehicle;
 import com.capstone1.vehical_rental_system.repositories.UserRepo;
 
 @Service
@@ -141,6 +142,22 @@ public class LoginServiceImplementation implements LoginService  {
         }
 
         return ResponseEntity.internalServerError().build();
+    }
+
+    @Override
+    public ResponseEntity<List<User>> searching(String keyword) {
+        try {
+            List<User> users =  userRepo.SearchingByKeyword(keyword);
+
+            //if data not found we give not found status
+            if(users.size()<=0)
+                return ResponseEntity.notFound().build();
+
+            return ResponseEntity.ok().body(users);
+        } catch (Exception e) {
+           e.printStackTrace();
+           return ResponseEntity.internalServerError().build();
+        }
     }
     
     
