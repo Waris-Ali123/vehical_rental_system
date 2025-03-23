@@ -3,11 +3,21 @@ let allUsers;
 let allVehicles;
 let allReviews;
 let admin = JSON.parse(localStorage.getItem("admin"));
+if(admin!=null)
+    document.querySelector(".circularPhoto").innerText = admin.name.charAt(0).toUpperCase()+admin.name.charAt(1).toUpperCase();
 let totalUsers;
 let totalBookings;
 let totalReviews;
 let totalVehicles;
 let totalEarnings = 0;
+let dbBouncing;
+document.getElementById("searchBarId").addEventListener("input", () => {
+    clearTimeout(dbBouncing);
+
+        dbBouncing = setTimeout(() => {
+            
+        }, 300);
+});
 
 //table container that holds maximum outputs
 let tablesContainer = document.querySelector(".tablesContainer");
@@ -18,6 +28,7 @@ let cardContainer = document.querySelector(".cardContainer");
 let list = document.querySelectorAll(".listOfMenus .listItem");
 
 function activeLink() {
+    console.log(list);
     list.forEach((item) => {
         item.classList.remove("active");
     });
@@ -25,6 +36,18 @@ function activeLink() {
 }
 
 list.forEach((item) => item.addEventListener("click", activeLink));
+
+
+// ==============making the nav item active if there respective method is called===
+function showActiveNavItem(navId){
+    let list = document.querySelectorAll(".listOfMenus .listItem");
+
+    list.forEach((item)=> item.classList.remove("active"));
+
+    document.getElementById(navId).classList.add("active");
+
+}
+
 
 //toggling the navbar
 let toggle = document.querySelector(".toggle");
@@ -43,8 +66,7 @@ window.onload = async function () {
 
     await Promise.all([fetchingBookings(), fetchingUsers(), fetchingVehicles(), fetchingReviews()]);
 
-    printingBookingsDataInTable(allBookings);
-    printingOverviewOnDashBoard();
+    printingDashBoardData();
 
 }
 
@@ -56,32 +78,38 @@ function printingOverviewOnDashBoard() {
         {
             counts: totalUsers,
             icon: "group",
-            label: "Total Users"
+            label: "Total Users",
+            funToCall : () => printingUsersDataInTable(allUsers)
         },
         {
             counts: totalVehicles,
             icon: "directions_car",
-            label: "Total Vehicles"
+            label: "Total Vehicles",
+            funToCall : () => printingVehiclesDataInTable(allVehicles)
         },
         {
             counts: totalBookings,
             icon: "calendar_month",
-            label: "Bookings"
+            label: "Bookings",
+            funToCall : () => printingBookingsDataInTable(allBookings)
         },
         {
             counts: totalReviews,
             icon:"hotel_class",
-            label: "Total Reviews"
+            label: "Total Reviews",
+            funToCall : () => printingReviewsDataInTable(allReviews)
         },
         {
             counts: totalEarnings.toFixed(2),
             icon: "paid",
-            label: "Total Earnings"
+            label: "Total Earnings",
+            funToCall : () => "printingDashBoardData()"
         },
         {
             counts: 1500,               //dummy value
             icon: "visibility",
-            label: "Daily Views"
+            label: "Daily Views",
+            funToCall : () => "printingDashBoardData()"
         }
     ];
 
@@ -112,6 +140,7 @@ function printingOverviewOnDashBoard() {
         lable.innerText = card.label;
 
         cardsDiv.append(topDiv, lable);
+        cardsDiv.addEventListener("click",()=>{card.funToCall()});
         cardContainer.appendChild(cardsDiv);
     });
 
@@ -121,6 +150,7 @@ function printingOverviewOnDashBoard() {
 
 
 function profileClick() {
+    showActiveNavItem("profileNav");
     let user = JSON.parse(localStorage.getItem("admin"));
     printingProfile(user);
 }
@@ -128,13 +158,15 @@ function profileClick() {
 
 
 function printingDashBoardData() {
+    // let firstTenUsers = allUsers.slice(0, Math.min(10, allUsers.length));
+    let firstTenBooking = allBookings.slice(0, Math.min(10, allUsers.length));
+    printingBookingsDataInTable(firstTenBooking,true,"Recent Bookings");
+    // printingUsersDataInTable(firstTenUsers,false);
     printingOverviewOnDashBoard();
-    printingBookingsDataInTable(allBookings);
+    showActiveNavItem("dashboardNav");
 }
 
 // ====================== Start fetching entities========================================
-
-
 
 //Fetching all users from backend
 async function fetchingUsers() {
@@ -235,25 +267,43 @@ async function fetchingReviews() {
     }
 }
 
-
-
-
-
 // ====================== Ending fetching entities========================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // ================================== start printing Tables=====================================
 
 //used to print the complete booking table
-function printingBookingsDataInTable(bookingsParam,eraseBefore = true) {
+function printingBookingsDataInTable(bookingsParam,eraseBefore = true,headingParam="All Bookings") {
 
     
-
     // Clear existing content before adding new data
-    if(eraseBefore)
+    if(eraseBefore){
         tablesContainer.innerHTML = "";
+        cardContainer.innerHTML = "";
+        showActiveNavItem("bookingNav");
+    }
 
     let heading = document.createElement("h2");
-    heading.innerText = "All Bookings";
+    heading.innerText = headingParam;
+
+
+    //table booking is being implemented here
 
     let bookingTable = document.createElement("table");
     bookingTable.classList.add("entityTable");
@@ -268,6 +318,7 @@ function printingBookingsDataInTable(bookingsParam,eraseBefore = true) {
             <th>Starting Date</th>
             <th>Ending Date</th>
             <th>Total Price</th>
+            <th>Status</th>
         </tr>
     `;
 
@@ -281,7 +332,10 @@ function printingBookingsDataInTable(bookingsParam,eraseBefore = true) {
         return;
     }
 
+    //resetting the totalEarning before calculating again
+    totalEarnings = 0;
     bookingsParam.forEach(element => {
+        console.log(element);
 
 
         let bookId = document.createElement("td");
@@ -299,9 +353,20 @@ function printingBookingsDataInTable(bookingsParam,eraseBefore = true) {
 
         totalEarnings += element.totalPrice;
 
+        let statusBox = document.createElement("td");
+        statusBox.classList.add("statusBox");
+        let status = document.createElement("span");
+        status.innerText = element.booking_status;
+        if(element.booking_status=="CONFIRMED")
+            status.classList.add("success");
+        else
+            status.classList.add("danger");
+
+        statusBox.appendChild(status);
+
         let row = document.createElement("tr");
 
-        row.append(bookId, userEmail, vehicleName, startDate, endDate, totalPrice);
+        row.append(bookId, userEmail, vehicleName, startDate, endDate, totalPrice,statusBox);
 
         tbody.appendChild(row);
 
@@ -319,15 +384,48 @@ function printingBookingsDataInTable(bookingsParam,eraseBefore = true) {
 function printingVehiclesDataInTable(vehiclesParam,eraseBefore = true) {
 
 
-
     
-
+    
     // Clear existing content before adding new data
-    if(eraseBefore)
+    if(eraseBefore){
         tablesContainer.innerHTML = "";
+        cardContainer.innerHTML = "";
+        showActiveNavItem("vehicleNav");
+    }
 
     let heading = document.createElement("h2");
     heading.innerText = "All Vehicles";
+
+
+    // ==========================Add button starts=============
+    
+    let addBtn = document.createElement("span");
+    addBtn.classList.add("material-symbols-outlined");
+    addBtn.innerText = "add";
+    addBtn.classList.add("addBtn");
+    addBtn.title = "Add Vehicle";
+    
+    
+    
+    addBtn.addEventListener("click",async ()=>{
+        
+        let fields = [
+            { label: "Name", value: "", id: "name", type: "text" },
+            { label: "Type (CAR / BIKE / TRUCK)", value: "", id: "type", type: "text" },
+            { label: "Model", value: "", id: "model", type: "text" },
+            { label: "Availability Status (AVAILABLE/UNDER_MAINTENANCE)", value: "AVAILABLE", id: "availability", type: "text"},
+            { label: "Price per Day", value: "", id: "price_per_day", type: "number"},
+            { label: "Registration Number", value: "", id: "registration_number", type: "text"}
+        ];
+        
+        printingFormLayout("Enter New Vehicle Details",fields,"VEHICLE", true, true);
+    });
+    
+    
+    // ==========================Add button ends=============
+
+
+    //Vehicle table
 
     let vehicleTable = document.createElement("table");
     vehicleTable.classList.add("entityTable");
@@ -409,6 +507,7 @@ function printingVehiclesDataInTable(vehiclesParam,eraseBefore = true) {
 
     vehicleTable.appendChild(thead);
     vehicleTable.appendChild(tbody);
+    vehicleTable.appendChild(addBtn);
 
 
     tablesContainer.appendChild(heading);
@@ -419,13 +518,43 @@ function printingVehiclesDataInTable(vehiclesParam,eraseBefore = true) {
 function printingUsersDataInTable(usersParam,eraseBefore=true) {
 
     
-
     // Clear existing content before adding new data
-    if(eraseBefore)
+    if(eraseBefore){
         tablesContainer.innerHTML = "";
+        cardContainer.innerHTML = "";
+        showActiveNavItem("userNav");
+    }
 
     let heading = document.createElement("h2");
     heading.innerText = "All Users";
+
+    // =============== Add user btn ==================
+    let addBtn = document.createElement("span");
+    addBtn.classList.add("material-symbols-outlined");
+    addBtn.innerText = "add";
+    addBtn.classList.add("addBtn");
+    addBtn.title = "Create Another Admin"
+
+
+
+    addBtn.addEventListener("click",async ()=>{
+        console.log("add btn clicked");
+
+        let fields = [
+            { label: "Name", value: "", id: "name", type: "text",required : true },
+            { label: "Password", value: "", id: "password", type: "password",required : true },
+            { label: "Email", value: "", id: "email", type: "email",required : true },
+            { label: "Mobile No", value: "", id: "contactNumber", type: "number",required : false },
+            { label: "Role", value: "ADMIN", id: "role", type: "text",required : true }
+        ];
+
+        printingFormLayout("Enter New Admin Details",fields,"USER", true, true);
+    });
+
+    // Add User btn ends===============
+
+
+    //= User table creation starts
 
     let userTable = document.createElement("table");
     userTable.classList.add("entityTable");
@@ -505,6 +634,9 @@ function printingUsersDataInTable(usersParam,eraseBefore=true) {
 
     userTable.appendChild(thead);
     userTable.appendChild(tbody);
+    userTable.appendChild(addBtn);
+
+    // ==============================User table creation ends ===============================
 
 
     tablesContainer.appendChild(heading);
@@ -517,9 +649,12 @@ function printingUsersDataInTable(usersParam,eraseBefore=true) {
 function printingReviewsDataInTable(reviewsParam,eraseBefore=true) {
 
     
-
     // Clear existing content before adding new data
-    tablesContainer.innerHTML = "";
+    if(eraseBefore){
+        tablesContainer.innerHTML = "";
+        cardContainer.innerHTML = "";
+        showActiveNavItem("reviewNav");
+    }
 
     let heading = document.createElement("h2");
     heading.innerText = "All Reviews";
@@ -620,7 +755,7 @@ async function deletingUserFromDB(userToDelete) {
 
             allUsers = allUsers.filter(user => user.user_id !== userToDelete.user_id);
 
-            printingUsersDataInTable();
+            printingUsersDataInTable(allUsers);
 
         }
         else {
@@ -659,7 +794,7 @@ async function deletingVehicleFromDB(vehicleToDelete) {
 
             // console.log("Updated allVehicles :", allVehicles);
 
-            printingVehiclesDataInTable();
+            printingVehiclesDataInTable(allVehicles);
 
         }
         else {
@@ -691,11 +826,7 @@ async function deletingVehicleFromDB(vehicleToDelete) {
 
 //printing a layout for profile, making it generalize so that i dont have to create profile for each vehicle,rating,review etc.
 //trying to do that here
-function printingFormLayout(headingContent, fieldsComing, entityType, fromSection = false) {
-
-
-    
-    
+function printingFormLayout(headingContent, fieldsComing, entityType,isAdding=false , fromSection = false) {
 
     tablesContainer.innerHTML = "";
     cardContainer.innerHTML = "";
@@ -726,13 +857,18 @@ function printingFormLayout(headingContent, fieldsComing, entityType, fromSectio
         label.innerText = specificField.label;
 
         let input = document.createElement("input");
-        input.value = specificField.value;
         if(input.value == null){
             input.value = "Not Specified yet";
         }
         input.id = specificField.id;
         input.name = specificField.label;
-        input.readOnly = true;
+        input.value = specificField.value;
+        if(!isAdding || specificField.id=="role"){
+            input.readOnly = true;
+        }
+        if(isAdding)
+            input.required = specificField.required;
+
         input.type = specificField.type;
 
         inputContainer.append(label, input);
@@ -743,13 +879,49 @@ function printingFormLayout(headingContent, fieldsComing, entityType, fromSectio
     //==================Edit btn starts===========
     let editBtn = document.createElement("button");
     editBtn.classList.add("editBtn");
-    editBtn.innerText = "Update Details";
+    if(isAdding && entityType=="USER"){
+        editBtn.innerText = "Create Admin";
+    }
+    else if(isAdding && entityType=="VEHICLE"){
+        editBtn.innerText = "Create Vehicle";
+    }
+    else{
+        editBtn.innerText = "Update Details";
+    }
 
     // console.log("callled");
 
-
     editBtn.addEventListener("click", async () => {
 
+
+        if(isAdding){
+
+            if (entityType.toUpperCase() == "USER") {
+                let newAdmin = {
+                    name: (document.getElementById("name").value),
+                    email: (document.getElementById("email").value),
+                    contact_number: String(document.getElementById("contactNumber").value),
+                    role: (document.getElementById("role").value).toUpperCase(),
+                    password : (document.getElementById("password").value)
+                };
+
+                await storingNewUserInDB(newAdmin);
+            }
+            if (entityType.toUpperCase() == "VEHICLE") {
+                let newVehicle = {
+                    name: (document.getElementById("name").value),
+                    type: (document.getElementById("type").value),
+                    model: String(document.getElementById("model").value),
+                    availability: (document.getElementById("availability").value).toUpperCase(),
+                    price_per_day : parseFloat(document.getElementById("price_per_day").value),
+                    registration_number : document.getElementById("registration_number").value
+                };
+                await storingNewVehicleInDB(newVehicle);
+            }
+        }
+        else{
+
+       
         if (editBtn.innerText == "Save Changes") {
 
             let id = document.getElementById(fields[0].id).value;
@@ -767,7 +939,7 @@ function printingFormLayout(headingContent, fieldsComing, entityType, fromSectio
                     name: (document.getElementById("name").value),
                     email: (document.getElementById("email").value),
                     contact_number: String(document.getElementById("contactNumber").value),
-                    role: (document.getElementById("role").value).toUpperCase()
+                    role: (document.getElementById("role").value).toUpperCase(),
                 };
 
                 await updatingUserInDB(id, updatedUser, fromSection);
@@ -786,6 +958,7 @@ function printingFormLayout(headingContent, fieldsComing, entityType, fromSectio
                 await updatingVehicleInDB(registration_number,updatedVehicle, fromSection);
             }
         }
+        
 
 
         let inputs = document.querySelectorAll(".inputContainer input");
@@ -801,6 +974,7 @@ function printingFormLayout(headingContent, fieldsComing, entityType, fromSectio
 
         editBtn.innerText = inputs[2].readOnly ? "Update Details" : "Save Changes";
 
+    }
         // console.log(inputs);
     });
 
@@ -819,6 +993,7 @@ function printingFormLayout(headingContent, fieldsComing, entityType, fromSectio
 //Printing a user profile
 function printingProfile(element, fromUsersSection = false) {
 
+    
     let userId = element.user_id;
     let name = element.name;
     let email = element.email;
@@ -834,7 +1009,7 @@ function printingProfile(element, fromUsersSection = false) {
         { label: "Role", value: role, id: "role", type: "text" }
     ];
 
-    printingFormLayout("User Details", fields,"USER", fromUsersSection);
+    printingFormLayout("User Details", fields,"USER",false,fromUsersSection);
 }
 
 
@@ -860,7 +1035,7 @@ function printingVehicleProfile(element,fromVehicleSection=false){
         { label: "Registration Number", value: registration_number, id: "registration_number", type: "text"}
     ];
 
-    printingFormLayout("Vehicle Details", fields,"VEHICLE", fromVehicleSection);
+    printingFormLayout("Vehicle Details", fields,"VEHICLE",false, fromVehicleSection);
 
 }
 
@@ -868,6 +1043,74 @@ function printingVehicleProfile(element,fromVehicleSection=false){
 
 
 
+// ==================================== Storing In Databases =================================
+async function storingNewUserInDB(newUser){
+    try {
+        let adminEmail = admin.email;
+        let response = await fetch(
+            `http://localhost:8080/auth/createAdmin?alreadyAdminEmail=${adminEmail}`, {
+            method: 'POST',
+            headers: {
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify(newUser)
+        }
+        );
+
+        if (response.ok) {
+            let result = await response.json();
+
+            allUsers.push(result);
+
+
+            alert("Admin added succesfully");
+            printingUsersDataInTable(allUsers);
+
+
+        }
+        else {
+            console.error("Error updating user:", response.statusText);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+
+}
+
+
+
+async function storingNewVehicleInDB(newVehicle){
+    try {
+        let adminEmail = admin.email;
+        let response = await fetch(
+            `http://localhost:8080/vehicle/add?email=${adminEmail}`, {
+            method: 'POST',
+            headers: {
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify(newVehicle)
+        }
+        );
+
+        if (response.ok) {
+            let result = await response.json();
+
+            allVehicles.push(result);
+
+            alert("vehicle added successfully");
+
+            printingVehiclesDataInTable(allVehicles);
+
+        }
+        else {
+            alert("Error updating user : ", response.status);
+            console.error("Error updating user:", response.statusText);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+
+}
 
 
 
@@ -907,7 +1150,7 @@ async function updatingUserInDB(user_id, updatedUser, fromUsersSection = false) 
 
 
             if (fromUsersSection) {
-                printingUsersDataInTable();
+                printingUsersDataInTable(allUsers);
             }
             else {
 
@@ -954,7 +1197,7 @@ async function updatingVehicleInDB(registration_number,updatedVehicle,fromVehicl
 
 
             if (fromVehicleSection) {
-                printingVehiclesDataInTable();
+                printingVehiclesDataInTable(allVehicles);
             }
 
         }
@@ -979,6 +1222,8 @@ async function updatingVehicleInDB(registration_number,updatedVehicle,fromVehicl
 // ==============================================Searching Starts======================================
 //searching by keywords
 async function searchingByVehicleKeywords() {
+    
+
     let input = document.getElementById("searchBarId").value;
     console.log(input);
 
@@ -993,11 +1238,21 @@ async function searchingByVehicleKeywords() {
     
     //Fetching all users
     let outputUser = await fetchingUsersOnKeyword(input);
-    // console.log(outputUser);
     if(outputUser!=null)
         printingUsersDataInTable(outputUser,false);
+    
+    //Fetching all Reviews
+    let outputReview = await fetchingReviewsOnKeywords(input);
+    if(outputReview!=null)
+        printingReviewsDataInTable(outputReview,false);
+    
+    //Fetching all Bookings
+    let outputBooking = await fetchingBookingsOnKeywords(input);
+    if(outputBooking!=null)
+        printingBookingsDataInTable(outputBooking,false);
+    
 
-    if(outputUser==null && outputVehicle==null){
+    if(outputUser==null && outputVehicle==null&&outputReview==null&&outputBooking==null){
         tablesContainer.innerHTML = "<h2> No Content found <h2>"
     }
 
@@ -1050,9 +1305,58 @@ async function fetchingUsersOnKeyword(keyword) {
     }
 }
 
+//fetching the booking for the keyword form db
+async function fetchingReviewsOnKeywords(keyword) {
+    try {
+        let response = await fetch(`http://localhost:8080/review/searching/${keyword}`, {
+            method: "GET"
+            // headers: { "Content-Type": "application/json" }
+        });
+        if (response.ok) {
+            let data = await response.json();
+            let searchedReviews = data;
+            console.log(searchedReviews);
+            return searchedReviews;
+            //total result found has to be implemented
+        }
 
 
-//adding a new user and admin
-//adding a new vehicle , updating the vehicle, removing a vehicle
-//same for bookings....
+    } catch (error) {
+        console.log(error);
+        return null;
+
+    }
+    
+}
+//fetching the booking for the keyword form db
+async function fetchingBookingsOnKeywords(keyword) {
+    try {
+        let response = await fetch(`http://localhost:8080/booking/searching/${keyword}`, {
+            method: "GET"
+            // headers: { "Content-Type": "application/json" }
+        });
+        if (response.ok) {
+            let data = await response.json();
+            console.log(data);
+            return data;
+            //total result found has to be implemented
+        }
+
+
+    } catch (error) {
+        console.log(error);
+        return null;
+
+    }
+    
+}
+
+
+
+
 //implementing logout.......
+
+function logout(){
+    localStorage.removeItem("admin");
+    window.location.href = "index.html";
+}

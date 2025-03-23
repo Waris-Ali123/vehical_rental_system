@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -25,21 +26,24 @@ public class VehicleServiceImplementation implements VehicleService {
 
 
     @Override
-    public ResponseEntity<String> addVehicle(String email, Vehicle vehicle){
+    public ResponseEntity<Vehicle> addVehicle(String email, Vehicle vehicle){
         try {
 
             
             if(loginService.isAdmin(email)){
-                vehicleRepo.save(vehicle);
-                return ResponseEntity.ok("Vehicle Deleted Successfully");
+                Vehicle storedVehicle = vehicleRepo.save(vehicle);
+                if(storedVehicle==null){
+                    return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
+                }
+                return ResponseEntity.ok(storedVehicle);
                 
             }
             else{
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Only admins are allowed to add the vehicle");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().body("May be the vehicle is already registered");
+            return ResponseEntity.internalServerError().build();
         }
 
     }

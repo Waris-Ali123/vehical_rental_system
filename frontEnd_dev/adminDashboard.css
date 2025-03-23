@@ -14,7 +14,7 @@
     --white: #ffffff;
     --grey : #4d4d4d;
     --primary : #00246b;
-    --success : #4CAF50;
+    --success : #006b04;
     --warning : #FFEB3B;
     --danger : #F44336;
     --black-dark : #000000;
@@ -262,26 +262,53 @@ body {
     scrollbar-width: thin; /* For Firefox */
     scrollbar-color: var(--blue-dark) var(--white);
     scrollbar-width: 30px; 
+    position: relative;
     /* display: flex;
-    flex-wrap: wrap; */
+    flex-direction: column; */
+    /* flex-wrap: wrap; */
     /* row-gap: 500px; */
     /* scrollbar-color: var(--black-dark); */
+}
+
+.tablesContainer h2{
+    margin-top: 30px;
+}
+
+
+span.addBtn:hover{
+    color: var(--white);
+    background-color: var(--blue-dark);
+    transform: scale(1.1);
 }
 
 .entityTable{
     margin-top: 35px;
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     text-align: left;
     transition: 1s ease-out;
-
+    position: relative;
+    border: 1px solid var(--primary);
+    border-radius: 10px;
+    white-space: nowrap;
     
+}
+
+.entityTable .addBtn{
+    font-size: 2.5rem;
+    cursor: pointer;
+    border-radius: 50%;
+    position: absolute;
+    top: -65px;
+    right: 5px;
+    background-color: var(--blue-light);
+    color: var(--blue-dark);
 }
 
 .entityTable thead th{
     font-weight: 600;
     padding: 20px;
-
     text-align: left;
     pointer-events: none;
 }
@@ -340,6 +367,23 @@ body {
 }
 
 
+.entityTable .statusBox .success{
+    padding: 2px 4px;
+    background: #8de02c;
+    color: var(--black-dark);
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.entityTable .statusBox .danger{
+    padding: 2px 4px;
+    background: #f00;
+    color: var(--white);
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+}
 
 
 
@@ -399,14 +443,19 @@ body {
     width: 100%;
     padding: 5px 15px;
     color:var(--black-dark);
-    cursor: not-allowed;
     font-weight: 500;
-    text-transform: uppercase;
+    /* cursor: pointer; */
+    
+    /* text-transform: uppercase; */
 }
 
-.userForm .inputContainer:nth-child(3) input{
-    text-transform: none;
+.userForm input:read-only{
+    cursor: not-allowed;
 }
+
+/* .userForm .inputContainer:nth-child(3) input{
+    text-transform: none;
+} */
 
 
 .userForm  input.editable {

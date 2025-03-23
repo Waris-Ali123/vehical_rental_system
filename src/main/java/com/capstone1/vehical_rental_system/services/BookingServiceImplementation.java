@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.capstone1.vehical_rental_system.entities.Booking;
 import com.capstone1.vehical_rental_system.entities.Booking.BookingStatus;
+import com.capstone1.vehical_rental_system.entities.Review;
 import com.capstone1.vehical_rental_system.entities.User;
 import com.capstone1.vehical_rental_system.entities.User.Role;
 import com.capstone1.vehical_rental_system.entities.Vehicle;
@@ -161,6 +162,24 @@ public class BookingServiceImplementation implements BookingService {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
+        }
+    }
+
+
+
+    @Override
+    public ResponseEntity<List<Booking>> searching(String keyword) {
+        try {
+            List<Booking> bookings =  bookingRepo.SearchingByKeyword(keyword);
+
+            //if data not found we give not found status
+            if(bookings.size()<=0)
+                return ResponseEntity.notFound().build();
+
+            return ResponseEntity.ok().body(bookings);
+        } catch (Exception e) {
+           e.printStackTrace();
+           return ResponseEntity.internalServerError().build();
         }
     }
 

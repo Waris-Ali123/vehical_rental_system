@@ -104,12 +104,12 @@ public class VehicleController {
 
         // Admin Specific Functionalities
 
-    @PostMapping("/add/{email}")
-    public ResponseEntity<String> addingVehicleByAdminOnly(@PathVariable("email") String email ,@RequestBody Vehicle vehicle) {
+    @PostMapping("/add")
+    public ResponseEntity<Vehicle> addingVehicleByAdminOnly(@RequestParam String email ,@RequestBody Vehicle vehicle) {
         try {
             return vehicleService.addVehicle(email,vehicle);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Can't store the vehicle.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         // return ResponseEntity.ok("Added succesfully");
     }

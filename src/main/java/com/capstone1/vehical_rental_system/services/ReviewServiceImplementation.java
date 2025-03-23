@@ -112,6 +112,23 @@ public class ReviewServiceImplementation implements ReviewService{
     }
 
 
+    @Override
+    public ResponseEntity<List<Review>> searching(String keyword) {
+        try {
+            List<Review> reviews =  reviewRepo.SearchingByKeyword(keyword);
+
+            //if data not found we give not found status
+            if(reviews.size()<=0)
+                return ResponseEntity.notFound().build();
+
+            return ResponseEntity.ok().body(reviews);
+        } catch (Exception e) {
+           e.printStackTrace();
+           return ResponseEntity.internalServerError().build();
+        }
+    }
+
+
 
    
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,6 +47,18 @@ public class ReviewController {
             return ResponseEntity.badRequest().build();
         }
        
+    }
+
+    @GetMapping("/searching/{keyword}")
+    public ResponseEntity<List<Review>> searchingReview(@PathVariable("keyword") String keyword) {
+        try{
+            return reviewService.searching(keyword);
+
+        }catch(Exception e){
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+
     }
 
 

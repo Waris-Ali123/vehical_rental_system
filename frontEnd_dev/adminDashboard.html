@@ -29,7 +29,7 @@
                         <div class="menuText">Brand Name</div>
                     </button>
                 </li>
-                <li class="listItem active" onclick="printingDashBoardData()">
+                <li id="dashboardNav" class="listItem active" onclick="printingDashBoardData()">
                     <button>
 
                         <span class="icon material-symbols-outlined ">
@@ -38,7 +38,7 @@
                         <div class="menuText">Dashboard</div>
                     </button>
                 </li>
-                <li class="listItem" onclick="printingBookingsDataInTable(allBookings)">
+                <li id="bookingNav" class="listItem" onclick="printingBookingsDataInTable(allBookings)">
                     <button>
 
                         <span class="icon material-symbols-outlined ">
@@ -47,7 +47,7 @@
                         <div class="menuText">Bookings</div>
                     </button>
                 </li>
-                <li class="listItem" onclick="printingReviewsDataInTable(allReviews)">
+                <li id="reviewNav" class="listItem" onclick="printingReviewsDataInTable(allReviews)">
                     <button>
 
                         <span class="icon material-symbols-outlined ">
@@ -57,7 +57,7 @@
                     </button>
                 </li>
 
-                <li class="listItem" onclick="printingUsersDataInTable(allUsers)">
+                <li id="userNav" class="listItem" onclick="printingUsersDataInTable(allUsers)">
                     <button >
 
                         <span class="icon material-symbols-outlined ">
@@ -67,7 +67,7 @@
                     </button>
                     </li>
                 
-                <li class="listItem" onclick="printingVehiclesDataInTable(allVehicles)">
+                <li id="vehicleNav" class="listItem" onclick="printingVehiclesDataInTable(allVehicles)">
                     <button>
 
                         <span class="icon material-symbols-outlined ">
@@ -76,7 +76,7 @@
                         <div class="menuText">Vehicles</div>
                     </button>
                 </li>
-                <li class="listItem" onclick="profileClick()">
+                <li id="profileNav" class="listItem" onclick="profileClick()">
                     <button>
 
                         <span class="icon material-symbols-outlined ">
@@ -85,7 +85,7 @@
                         <div class="menuText">Profiles</div>
                     </button>
                 </li>
-                <li class="listItem">
+                <li id="logoutNav" class="listItem" onclick="logout()">
                     <button>
 
                         <span class="icon material-symbols-outlined ">
@@ -104,9 +104,9 @@
                 <span class="toggle menuIcon material-symbols-outlined">menu</span>
                 <div class="searchContainer">
                     <span class="searchIcon material-symbols-outlined">search</span>
-                    <input id="searchBarId" class="searchBar" placeholder="Search here.." onchange="searchingByVehicleKeywords()"></input>
+                    <input id="searchBarId" class="searchBar" placeholder="Search here.." oninput="searchingByVehicleKeywords()"></input>
                 </div>
-                <div class="profilePhoto">
+                <div class="profilePhoto" onclick="profileClick()">
                     <div class="circularPhoto">W</div>
                 </div>
 

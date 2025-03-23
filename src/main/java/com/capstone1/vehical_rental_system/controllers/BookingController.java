@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.capstone1.vehical_rental_system.entities.Booking;
+import com.capstone1.vehical_rental_system.entities.Review;
 import com.capstone1.vehical_rental_system.services.BookingService;
 
 @CrossOrigin(origins = "*")
@@ -70,6 +71,20 @@ public class BookingController {
     public ResponseEntity<String> putMethodName(@PathVariable int booking_id) {
         return bookingService.cancleBooking(booking_id);
     }
+
+
+    @GetMapping("/searching/{keyword}")
+    public ResponseEntity<List<Booking>> searching(@PathVariable("keyword") String keyword) {
+        try{
+            return bookingService.searching(keyword);
+
+        }catch(Exception e){
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+
+    }
+
 
     
 
