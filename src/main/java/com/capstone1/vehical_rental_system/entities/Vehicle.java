@@ -3,6 +3,8 @@ package com.capstone1.vehical_rental_system.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -49,11 +51,11 @@ public class Vehicle {
     @Column(nullable = false)
     private double price_per_day;
 
-    
+    @JsonIgnore
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Booking> bookingsByVehicle = new ArrayList<>();
 
-  
+    @JsonIgnore
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Review> reviewsOnVehicle = new ArrayList<>();
 

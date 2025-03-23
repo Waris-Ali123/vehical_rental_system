@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.capstone1.vehical_rental_system.entities.Vehicle;
 import com.capstone1.vehical_rental_system.services.VehicleService;
 
-
+@CrossOrigin(origins ="*")
 @RestController
 @RequestMapping("/vehicle")
 public class VehicleController {
@@ -78,6 +79,7 @@ public class VehicleController {
     public ResponseEntity<List<Vehicle>> findingAvailableVehicles( @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
             
         try {
+            System.out.println("findingAvailable called");
             return vehicleService.findingAvailableVehicles(startDate,endDate);
             
         } catch (Exception e) {

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="adminDashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/material-design-icons/4.0.0/font/MaterialIcons-Regular.ttf">
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" />
+    <script src="adminDashboard.js" defer></script>
+    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0&icon_names=home" /> -->
+</head>
+<body>
+    <!-- <h1>Welcome to The Admin Dashboard</h1> -->
+
+    <div class="container">
+        <!-- ==========side container starts =============== -->
+         <aside class="navigation">
+
+            <ul class="listOfMenus">
+                <li class="listItem ">
+                    <button>
+
+                        <span class="icon material-symbols-outlined ">
+                            key
+                        </span>
+                        <div class="menuText">Brand Name</div>
+                    </button>
+                </li>
+                <li class="listItem active" onclick="printingDashBoardData()">
+                    <button>
+
+                        <span class="icon material-symbols-outlined ">
+                            home
+                        </span>
+                        <div class="menuText">Dashboard</div>
+                    </button>
+                </li>
+                <li class="listItem" onclick="printingBookingsDataInTable()">
+                    <button>
+
+                        <span class="icon material-symbols-outlined ">
+                            calendar_month
+                        </span>
+                        <div class="menuText">Bookings</div>
+                    </button>
+                </li>
+                <li class="listItem" onclick="printingReviewsDataInTable()">
+                    <button>
+
+                        <span class="icon material-symbols-outlined ">
+                            rate_review
+                        </span>
+                        <div class="menuText">Reviews</div>
+                    </button>
+                </li>
+
+                <li class="listItem" onclick="printingUsersDataInTable()">
+                    <button >
+
+                        <span class="icon material-symbols-outlined ">
+                            group
+                        </span>
+                        <div class="menuText">Users</div>
+                    </button>
+                    </li>
+                
+                <li class="listItem" onclick="printingVehiclesDataInTable()">
+                    <button>
+
+                        <span class="icon material-symbols-outlined ">
+                            directions_car
+                        </span>
+                        <div class="menuText">Vehicles</div>
+                    </button>
+                </li>
+                <li class="listItem" onclick="profileClick()">
+                    <button>
+
+                        <span class="icon material-symbols-outlined ">
+                            account_circle
+                        </span>
+                        <div class="menuText">Profiles</div>
+                    </button>
+                </li>
+                <li class="listItem">
+                    <button>
+
+                        <span class="icon material-symbols-outlined ">
+                            logout
+                        </span>
+                        <div class="menuText">Logout</div>
+                    </button>
+                </li>
+            </ul>
+                
+         </aside>
+        <!-- ==========side container ends =============== -->
+        <!-- ==========main container starts =============== -->
+         <main class="main">
+            <div class="topContainer">
+                <span class="toggle menuIcon material-symbols-outlined">menu</span>
+                <div class="searchContainer">
+                    <span class="searchIcon material-symbols-outlined">search</span>
+                    <input class="searchBar" placeholder="Search here.." ></input>
+                </div>
+                <div class="profilePhoto">
+                    <div class="circularPhoto">W</div>
+                </div>
+
+            </div>
+            <div class="cardContainer">
+            </div>
+
+            <div class="tablesContainer">   
+            </div>
+         </main>
+        <!-- ==========main container ends =============== -->
+
+
+    </div>
+
+    
+</body>
+</html>

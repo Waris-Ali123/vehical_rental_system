@@ -96,5 +96,22 @@ public class ReviewServiceImplementation implements ReviewService{
         }
     }
 
+    @Override
+    public ResponseEntity<List<Review>> getAllReviews(String email) {
+        try {
+            if(loginService.isAdmin(email)){
+                return ResponseEntity.ok().body(reviewRepo.findAll());
+            }
+            else{
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+        } catch (Exception e) {
+           e.printStackTrace();
+           return ResponseEntity.internalServerError().build();
+        }
+    }
+
+
+
    
 }

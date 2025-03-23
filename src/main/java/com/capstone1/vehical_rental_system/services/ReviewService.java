@@ -13,6 +13,8 @@ public interface ReviewService {
     public ResponseEntity<List<Review>> getReview(String registrationNumber);
     
     public ResponseEntity<Review> updateReview(String email,String registrationNumber,String rating,String feedback);
+
+    public ResponseEntity<List<Review>> getAllReviews( String email);
 }
 
     //will later try to update the review.

@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +20,7 @@ import com.capstone1.vehical_rental_system.entities.User.Role;
 import com.capstone1.vehical_rental_system.repositories.UserRepo;
 import com.capstone1.vehical_rental_system.services.LoginService;
 
-
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/auth") 
 public class LoginController {
@@ -43,8 +44,8 @@ public class LoginController {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
-
     }
+
 
     @PostMapping("/initialize")
     public void initializing() {
@@ -75,6 +76,7 @@ public class LoginController {
     public ResponseEntity<User> updatingExistingUser(@PathVariable int id, @RequestBody User userDetailstoUpdate) {
 
         try {
+        System.out.println("woking");
             return loginService.updatingExistingUser(id, userDetailstoUpdate);
 
         } catch (Exception e) {
@@ -117,11 +119,13 @@ public class LoginController {
     @DeleteMapping("/delete/{adminEmail}")
     public ResponseEntity<String> deletingUserByAdmin(@PathVariable("adminEmail") String emailAdmin, @RequestBody User userToDelete){
         if(loginService.isAdmin(emailAdmin)){
+            System.out.println("admin is correct");
             return loginService.deletingUser(userToDelete);
         }
         return ResponseEntity.internalServerError().build();
     }
 
+    
     
     
 

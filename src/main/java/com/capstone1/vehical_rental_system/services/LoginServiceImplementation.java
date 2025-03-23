@@ -127,11 +127,13 @@ public class LoginServiceImplementation implements LoginService  {
 
             user.setName(userDetailstoUpdate.getName());    
             user.setEmail(userDetailstoUpdate.getEmail());
-            user.setPassword(userDetailstoUpdate.getPassword());
             user.setContact_number(userDetailstoUpdate.getContact_number());
-            user.setPassword(passwordEncoder.encode(userDetailstoUpdate.getPassword()));
-            User updatedUser = userRepo.save(user);
+
             
+            // user.setPassword(userDetailstoUpdate.getPassword());
+            // user.setPassword(passwordEncoder.encode(userDetailstoUpdate.getPassword()));
+            
+            User updatedUser = userRepo.save(user);
             return  ResponseEntity.ok().body(updatedUser);
 
         } catch (Exception e) {

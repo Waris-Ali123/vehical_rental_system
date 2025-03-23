@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -48,11 +50,13 @@ public class User {
     Role role = User.Role.USER; //first user is class name and second is value of enum;
 
 
-    @JsonBackReference
+    @JsonIgnore
+    @JsonBackReference(value = "booking-user")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Booking> bookings = new ArrayList<>();
     
-    @JsonBackReference
+    @JsonIgnore
+    @JsonBackReference(value = "review-user")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 

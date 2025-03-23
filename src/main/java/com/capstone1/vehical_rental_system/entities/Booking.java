@@ -41,12 +41,10 @@ public class Booking {
     private BookingStatus bookingStatus;
 
     @ManyToOne
-    @JsonBackReference
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
 
     @ManyToOne
-    @JsonBackReference
     @JoinColumn(name = "vehicle_id",nullable = false)
     private Vehicle vehicle;
 
