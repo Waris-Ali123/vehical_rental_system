@@ -51,6 +51,7 @@ public class Vehicle {
     @Column(nullable = false)
     private double price_per_day;
 
+
     @JsonIgnore
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Booking> bookingsByVehicle = new ArrayList<>();
