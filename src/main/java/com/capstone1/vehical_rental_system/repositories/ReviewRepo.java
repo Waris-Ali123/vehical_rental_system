@@ -13,6 +13,8 @@ import com.capstone1.vehical_rental_system.entities.Vehicle;
 @Repository
 public interface ReviewRepo extends JpaRepository<Review,Integer>{
 
+    List<Review> findByUser(User user);
+
     List<Review> findByVehicle(Vehicle vehicle);
 
     Review findByVehicleAndUser(Vehicle vehicle,User user);

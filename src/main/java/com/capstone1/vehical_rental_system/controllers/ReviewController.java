@@ -26,9 +26,9 @@ public class ReviewController {
     ReviewService reviewService;
 
     @PostMapping("/add")
-    public ResponseEntity<Review> addingReview(@RequestParam String email,@RequestParam String registrationNumber,@RequestParam String rating,@RequestParam String feedback){
+    public ResponseEntity<Review> addingReview(@RequestParam String email,@RequestParam String registration_number,@RequestParam String rating,@RequestParam String feedback){
         try {
-            return reviewService.addReview(email, registrationNumber, rating, feedback);          
+            return reviewService.addReview(email, registration_number, rating, feedback);          
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -36,11 +36,24 @@ public class ReviewController {
         }
     }
 
-    @GetMapping("/getReviews")
-    public ResponseEntity<List<Review>> getReviews(@RequestParam String registrationNumber) {
+    @GetMapping("/getReviewsByVehicle")
+    public ResponseEntity<List<Review>> getReviewsByVehicle(@RequestParam String registrationNumber) {
         try {
 
             return reviewService.getReview(registrationNumber);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+       
+    }
+
+    @GetMapping("/getReviewsByUser")
+    public ResponseEntity<List<Review>> getReviewsByUser(@RequestParam String email) {
+        try {
+
+            return reviewService.getReviewsByEmail(email);
             
         } catch (Exception e) {
             e.printStackTrace();

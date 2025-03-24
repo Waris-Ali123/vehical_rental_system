@@ -71,6 +71,19 @@ public class ReviewServiceImplementation implements ReviewService{
     }
 
     @Override
+    public ResponseEntity<List<Review>> getReviewsByEmail(String email) {
+        try {
+            User user = loginService.getUserByEmail(email);
+            List<Review> reviews = reviewRepo.findByUser(user);
+            return ResponseEntity.ok().body(reviews);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.noContent().build();
+        }
+    
+    }
+
+    @Override
     public ResponseEntity<Review> updateReview(String email,String registrationNumber,String rating,String feedback){
         try{
             User user = loginService.getUserByEmail(email);

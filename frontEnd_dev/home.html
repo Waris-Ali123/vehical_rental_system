@@ -4,8 +4,114 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" />
+    <script src="home.js" defer></script>
 </head>
 <body>
-    <h1>Welcome to the Home page for users</h1>
+    <div class="container">
+        <!-- ==========side container starts =============== -->
+        <aside class="navigation">
+
+            <ul class="listOfMenus">
+                <li class="listItem ">
+                    <button>
+
+                        <span class="icon material-symbols-outlined ">
+                            key
+                        </span>
+                        <div class="menuText">Brand Name</div>
+                    </button>
+                </li>
+                <li id="homeNav" class="listItem active" >
+                    <button>
+
+                        <span class="icon material-symbols-outlined ">
+                            home
+                        </span>
+                        <div class="menuText">Home</div>
+                    </button>
+                </li>
+                   
+                <li id="vehicleNav" class="listItem" >
+                    <button>
+
+                        <span class="icon material-symbols-outlined ">
+                            directions_car
+                        </span>
+                        <div class="menuText">Vehicles</div>
+                    </button>
+                </li>
+                <li id="bookingNav" class="listItem" onclick="printingBookingsDataInTable(allBookings)">
+                    <button>
+
+                        <span class="icon material-symbols-outlined ">
+                            calendar_month
+                        </span>
+                        <div class="menuText">Bookings</div>
+                    </button>
+                </li>
+                <li id="reviewNav" class="listItem" onclick=" printingReviewsDataInTable(allReviews)">
+                    <button>
+
+                        <span class="icon material-symbols-outlined ">
+                            rate_review
+                        </span>
+                        <div class="menuText">Reviews</div>
+                    </button>
+                </li>
+<!-- 
+                <li id="userNav" class="listItem" >
+                    <button >
+
+                        <span class="icon material-symbols-outlined ">
+                            group
+                        </span>
+                        <div class="menuText">Users</div>
+                    </button>
+                    </li> -->
+             
+                <li id="profileNav" class="listItem" >
+                    <button>
+
+                        <span class="icon material-symbols-outlined ">
+                            account_circle
+                        </span>
+                        <div class="menuText">Profile</div>
+                    </button>
+                </li>
+                <li id="logoutNav" class="listItem" onclick="logout()" >
+                    <button>
+
+                        <span class="icon material-symbols-outlined ">
+                            logout
+                        </span>
+                        <div class="menuText">Logout</div>
+                    </button>
+                </li>
+            </ul>
+                
+         </aside>
+        <!-- ==========side container ends =============== -->
+          <!-- ==========main container starts =============== -->
+        <main class="main">
+            <div class="topContainer">
+                <span class="toggle menuIcon material-symbols-outlined">menu</span>
+                <div class="searchContainer">
+                    <span class="searchIcon material-symbols-outlined">search</span>
+                    <input id="searchBarId" class="searchBar" placeholder="Search here.." oninput="searchingByVehicleKeywords()"></input>
+                </div>
+                <div class="profilePhoto" onclick="profileClick()">
+                    <div class="circularPhoto">W</div>
+                </div>
+
+            </div>
+            <div class="cardContainer">
+            </div>
+
+            <div class="tablesContainer">   
+            </div>
+         </main>
+    </div>
 </body>
 </html>

@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 
 import com.capstone1.vehical_rental_system.entities.Review;
-import com.capstone1.vehical_rental_system.entities.Vehicle;
 
 public interface ReviewService {
     
@@ -18,6 +17,8 @@ public interface ReviewService {
     public ResponseEntity<List<Review>> getAllReviews( String email);
 
     public ResponseEntity<List<Review>> searching(String keyword);
+
+    public ResponseEntity<List<Review>> getReviewsByEmail(String email);
 }
 
     //will later try to update the review.

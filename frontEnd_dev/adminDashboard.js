@@ -10,15 +10,10 @@ let totalBookings;
 let totalReviews;
 let totalVehicles;
 let totalEarnings = 0;
-let dbBouncing;
-document.getElementById("searchBarId").addEventListener("input", () => {
-    clearTimeout(dbBouncing);
 
-        dbBouncing = setTimeout(() => {
-            
-        }, 300);
-});
 
+
+// ==================START js used mainly for css manipulations========================
 //table container that holds maximum outputs
 let tablesContainer = document.querySelector(".tablesContainer");
 //cards Container that is having cards
@@ -38,7 +33,7 @@ function activeLink() {
 list.forEach((item) => item.addEventListener("click", activeLink));
 
 
-// ==============making the nav item active if there respective method is called===
+// ==making the nav item active if there respective method is called===
 function showActiveNavItem(navId){
     let list = document.querySelectorAll(".listOfMenus .listItem");
 
@@ -59,6 +54,7 @@ toggle.onclick = function () {
     main.classList.toggle("active");
 };
 
+// ==================START js used mainly for css manipulations========================
 
 
 window.onload = async function () {
@@ -209,6 +205,12 @@ async function fetchingBookings() {
 
             allBookings = await response.json();
             totalBookings = allBookings.length;
+
+            allBookings.forEach((element)=>{
+                if(element.booking_status=="CONFIRMED"){
+                    totalEarnings += element.totalPrice;
+                }
+            });
         }
 
         if (!response.ok) {
@@ -333,7 +335,7 @@ function printingBookingsDataInTable(bookingsParam,eraseBefore = true,headingPar
     }
 
     //resetting the totalEarning before calculating again
-    totalEarnings = 0;
+    // totalEarnings = 0;
     bookingsParam.forEach(element => {
         console.log(element);
 
@@ -351,7 +353,7 @@ function printingBookingsDataInTable(bookingsParam,eraseBefore = true,headingPar
         let totalPrice = document.createElement("td");
         totalPrice.innerText = element.totalPrice.toFixed(2);
 
-        totalEarnings += element.totalPrice;
+       
 
         let statusBox = document.createElement("td");
         statusBox.classList.add("statusBox");

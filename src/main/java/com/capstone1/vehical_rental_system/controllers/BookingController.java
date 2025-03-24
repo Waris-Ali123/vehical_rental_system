@@ -34,10 +34,10 @@ public class BookingController {
     
     //Adding the Booking
     @PostMapping("/add")
-    public ResponseEntity<String> AddingBooking(@RequestParam String email,@RequestParam String registration_no,
+    public ResponseEntity<String> AddingBooking(@RequestParam String email,@RequestParam String registration_number,
         @RequestParam String startDate,  @RequestParam String endDate) {
         try {
-            return bookingService.addBooking(email,registration_no,startDate,endDate);
+            return bookingService.addBooking(email,registration_number,startDate,endDate);
         } catch (Exception e) {
             e.printStackTrace();
         }
