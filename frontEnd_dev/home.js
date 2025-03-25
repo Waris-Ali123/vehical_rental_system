@@ -86,8 +86,8 @@ window.onload = async function () {
 }
 // ======================================nav bar functions start ===============
 function printingOnClickVehicleNav(){
-    printingVehiclesDataInTable(allVehicles,true,true);
-
+    // printingVehiclesDataInTable(allVehicles,true,true);
+    printingCardsForVehicle(allVehicles);
     printingFilters();
 }
 
@@ -428,13 +428,16 @@ function printingVehiclesDataInTable(vehiclesParam,eraseBefore = true,eraseFilte
             <th>ID</th>
             <th>Name</th>
             <th>Type</th>
-            <th>Model</th>
-            <th>Registration Number</th>
+            <th>Fuel Type</th>
+            <th>Capacity</th>
+            <th>Mileage</th>
             <th>Availability</th>
             <th>Price per day</th>
+            
             </tr>
             `;
             
+            // <th>Edit</th>
             // <th>Edit</th>
 
     let tbody = document.createElement("tbody");
@@ -448,15 +451,17 @@ function printingVehiclesDataInTable(vehiclesParam,eraseBefore = true,eraseFilte
         name.innerText = element.name;
         let type = document.createElement("td");
         type.innerText = element.type;
-        let model = document.createElement("td");
-        model.innerText = element.model;
-        let registrationNumber = document.createElement("td");
-        registrationNumber.innerText = element.registration_number;
+        let fuelType = document.createElement("td");
+        fuelType.innerText = element.fuelType;
+        let capacity = document.createElement("td");
+        capacity.innerText = element.seatingCapacity;
+        let mileage = document.createElement("td");
+        mileage.innerText = element.mileage;
+        
         let availability = document.createElement("td");
         availability.innerText = element.availability;
         let pricePerDay = document.createElement("td");
         pricePerDay.innerText = element.price_per_day;
-
 
         //Providing to edit or delete the vehicles
         // let modifyColumn = document.createElement("td")
@@ -489,7 +494,7 @@ function printingVehiclesDataInTable(vehiclesParam,eraseBefore = true,eraseFilte
 
         let newRow = document.createElement("tr");
         // newRow.append(vehicleId, name, type, model, registrationNumber, availability, pricePerDay, modifyColumn);
-        newRow.append(vehicleId, name, type, model, registrationNumber, availability, pricePerDay);
+        newRow.append(vehicleId, name, type, fuelType, capacity,mileage, availability, pricePerDay);
 
         tbody.appendChild(newRow);
 
@@ -508,6 +513,7 @@ function printingVehiclesDataInTable(vehiclesParam,eraseBefore = true,eraseFilte
 
 function printingCardsForVehicle(vehiclesParam){
     tablesContainer.innerHTML = "";
+
     printingFilters();
 
     if(vehiclesParam.length==0){
@@ -516,8 +522,94 @@ function printingCardsForVehicle(vehiclesParam){
     else{
 
         vehiclesParam.forEach((vehicle)=>{
-            // vehicle
+            
+            let mainVehicleCard = document.createElement("div");
+            mainVehicleCard.classList.add("detailsContainer");
+
+            let image = document.createElement("img");
+            image.src = `${vehicle.vehicleImage}`;
+            image.src = "https://akm-img-a-in.tosshub.com/businesstoday/images/story/202312/658e5b5ebba32-xiaomi-su7-ev-to-take-on-tesla-293837105-16x9.jpg?size=948:533";
+            // image.classList.add("vehicleImage");
+
+
+            let detailsContainer = document.createElement("div");
+            detailsContainer.classList.add("detailsContainer");
+
+            // ---------------name block----------------------
+
+            let nameBlock = document.createElement("div");
+            nameBlock.classList.add("nameBlock");
+
+            let name = document.createElement("h3");
+            name.innerText = vehicle.name;
+
+            let model = document.createElement("h5");
+            model.innerText = vehicle.model;
+
+            nameBlock.append(name,model);
+
+            // -------------icons block----------
+            let iconBlock = document.createElement("div");
+            iconBlock.classList.add("iconBlock");
+
+
+            let subVehicles = [ 
+                {attribute:vehicle.fuelType,icon : "local_gas_station"} ,
+                {attribute:vehicle.type,icon : "commute"} ,
+                {attribute:vehicle.seatingCapacity,icon : "event_seat"} ,
+                {attribute:vehicle.mileage,icon : "oil_barrel"} ,
+                {attribute:vehicle.color,icon : "palette"} 
+            ]
+
+            subVehicles.forEach((subVehicle)=>{
+
+                
+                let iconInnerBox = document.createElement("div");
+                iconInnerBox.classList.add("iconInnerBox");
+                
+                let icon = document.createElement("span");
+                icon.classList.add("material-symbols-outlined");
+                icon.innerText = subVehicle.icon;
+                
+                let iconValue = document.createElement("div");
+                iconValue.classList.add("iconValue");
+                iconValue.innerText = subVehicle.attribute;
+
+
+                iconInnerBox.append(icon,iconValue);
+
+                iconBlock.appendChild(iconInnerBox);
+            })
+
+            // ----------------price------------------
+
+            let lowerBox = document.createElement("div");
+            lowerBox.classList.add("lowerBox");
+
+            let pricePerDay = document.createElement("h3");
+            pricePerDay.classList.add("pricePerDay");
+            pricePerDay.innerText = vehicle.price_per_day+"/-Rs";
+
+            let selectBtn = document.createElement("div");
+            selectBtn.innerText = "SELECT";
+            selectBtn.classList.add("selectBtn");
+            selectBtn.addEventListener("click",()=>{
+                console.log("item selected");
+            });
+
+            lowerBox.append(pricePerDay,selectBtn);
+            // -----------------------appending all----------------
+            
+            detailsContainer.append(nameBlock,iconBlock,lowerBox);
+            mainVehicleCard.append(image,detailsContainer);
+
+
+            cardContainer.appendChild(mainVehicleCard);
+
+
         });
+
+
 
 
 

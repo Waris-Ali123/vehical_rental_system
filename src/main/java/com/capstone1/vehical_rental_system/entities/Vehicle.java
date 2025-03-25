@@ -28,6 +28,14 @@ public class Vehicle {
         AVAILABLE,UNDER_MAINTENANCE;
     }
 
+    public enum FuelType {
+        PETROL,
+        DIESEL,
+        ELECTRIC,
+        HYBRID,
+        CNG
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int vehicle_id;
@@ -59,6 +67,25 @@ public class Vehicle {
     @JsonIgnore
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Review> reviewsOnVehicle = new ArrayList<>();
+
+
+    // =====Added later========
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private FuelType fuelType;  // PETROL, DIESEL, ELECTRIC, etc.
+
+    @Column(nullable = false)
+    private int seatingCapacity;
+
+    @Column(nullable = false)
+    private double mileage;  // in km
+
+    @Column(length = 30)
+    private String color;
+
+    @Column(length = 255)
+    private String vehicleImage;  // URL or file path
 
   
 
@@ -159,6 +186,49 @@ public class Vehicle {
     public List<Review> getReviewsOnVehicle() {
         return reviewsOnVehicle;
     }
+
+
+    // ==========newly added getters and setters==============
+    public FuelType getFuelType() {
+        return fuelType;
+    }
+    
+    public void setFuelType(FuelType fuelType) {
+        this.fuelType = fuelType;
+    }
+    
+    public int getSeatingCapacity() {
+        return seatingCapacity;
+    }
+    
+    public void setSeatingCapacity(int seatingCapacity) {
+        this.seatingCapacity = seatingCapacity;
+    }
+    
+    public double getMileage() {
+        return mileage;
+    }
+    
+    public void setMileage(double mileage) {
+        this.mileage = mileage;
+    }
+    
+    public String getColor() {
+        return color;
+    }
+    
+    public void setColor(String color) {
+        this.color = color;
+    }
+    
+    public String getVehicleImage() {
+        return vehicleImage;
+    }
+    
+    public void setVehicleImage(String vehicleImage) {
+        this.vehicleImage = vehicleImage;
+    }
+    
 
     @Override
     public String toString() {

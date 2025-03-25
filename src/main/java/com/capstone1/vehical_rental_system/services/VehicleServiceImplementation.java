@@ -76,6 +76,13 @@ public class VehicleServiceImplementation implements VehicleService {
                 oldVehicle.setPrice_per_day(vehicleModified.getPrice_per_day());
                 oldVehicle.setType(vehicleModified.getType());
 
+                // ==newly added===
+                oldVehicle.setFuelType(vehicleModified.getFuelType());
+                oldVehicle.setSeatingCapacity(vehicleModified.getSeatingCapacity());
+                oldVehicle.setMileage(vehicleModified.getMileage());
+                oldVehicle.setColor(vehicleModified.getColor());
+                oldVehicle.setVehicleImage(vehicleModified.getVehicleImage());
+
                 Vehicle updatedVehicle = vehicleRepo.save(oldVehicle);
                 return ResponseEntity.ok().body(updatedVehicle);
 

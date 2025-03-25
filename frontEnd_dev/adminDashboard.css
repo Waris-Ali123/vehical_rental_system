@@ -402,7 +402,8 @@ span.addBtn:hover{
 
 .heading{
     text-align: center;
-    color: var(--blue-dark);
+    color: var(--blue-dark);,
+    .userForm select
     margin: 15px 0;;
 }
 
@@ -432,7 +433,8 @@ span.addBtn:hover{
     white-space: nowrap; 
 }
 
-.userForm input{
+.userForm input,
+.userForm select{
     border: none;
     outline: none;
     font-size: 1.2rem;

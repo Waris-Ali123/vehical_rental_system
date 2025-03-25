@@ -352,3 +352,93 @@ span.addBtn:hover{
     color: var(--white);
     background-color: var(--blue-dark);
 }
+
+
+
+/* ================cardContainer================= */
+.cardContainer{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    row-gap: 20px;
+    column-gap: 15px;
+    margin-top: 25px;
+}
+
+.mainVehicleCard{
+    /* display: flex; */
+    /* flex-direction: column; */
+    max-width: 300px;
+    /* row-gap: 15px; */
+    padding: 10px;
+    background-color: var(--white);
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.detailsContainer{
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+    row-gap: 25px;
+    padding: 10px;
+    background-color: var(--white);
+    border-radius: 15px;
+    cursor: pointer;
+    /* margin-left: 25px; */
+}
+.detailsContainer img{
+    border-radius: 15px;
+}
+
+.detailsContainer .nameBlock{
+    display: flex;
+    flex-direction: column;
+    /* gap: px; */
+}
+
+.nameBlock h5{
+    color: gray;
+}
+.detailsContainer .iconBlock{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    justify-content: space-between;
+    column-gap: 15px;
+    row-gap: 5px;
+    color: var(--grey);
+    /* background-color: #000000;    */
+}
+
+
+.iconBlock .iconInnerBox{
+    display: flex;
+    column-gap: 4px;
+}
+
+.iconInnerBox span{
+    font-weight: 700;
+}
+
+.iconInnerBox div{
+    font-weight: 500;
+}
+
+.detailsContainer .lowerBox{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.detailsContainer .lowerBox .pricePerDay{
+    color: var(--blue-dark);
+}
+
+.detailsContainer .lowerBox .selectBtn{
+    background-color: var(--success);
+    color: var(--white);
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 5px 20px;
+    font-size: 0.8rem;
+    margin-right: 10px;
+
+}

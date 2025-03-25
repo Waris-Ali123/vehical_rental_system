@@ -411,14 +411,19 @@ function printingVehiclesDataInTable(vehiclesParam,eraseBefore = true) {
     
     addBtn.addEventListener("click",async ()=>{
         
-        let fields = [
-            { label: "Name", value: "", id: "name", type: "text" },
-            { label: "Type (CAR / BIKE / TRUCK)", value: "", id: "type", type: "text" },
-            { label: "Model", value: "", id: "model", type: "text" },
-            { label: "Availability Status (AVAILABLE/UNDER_MAINTENANCE)", value: "AVAILABLE", id: "availability", type: "text"},
-            { label: "Price per Day", value: "", id: "price_per_day", type: "number"},
-            { label: "Registration Number", value: "", id: "registration_number", type: "text"}
-        ];
+        let fields = [  
+    { label: "Name", value: "", id: "name", type: "text", required : true },
+    { label: "Type", value: "", id: "type", type: "select",options:["CAR","BIKE","TRUCK"], required : true },
+    { label: "Model", value: "", id: "model", type: "text", required : true },
+    { label: "Availability Status", value: "", id: "availability", type: "select",options : ["AVAILABLE","UNDER_MAINTENANCE"], required : true },
+    { label: "Price per Day", value: "", id: "price_per_day", type: "number", required : true },
+    { label: "Registration Number", value: "", id: "registration_number", type: "text", required : true },
+    { label: "Color", value: "", id: "color", type: "text", required : true },
+    { label: "Vehicle Image URL", value: "", id: "vehicleImage", type: "text", required : true },
+    { label: "Fuel Type", value: "", id: "fuelType", type: "select", options : ["PETROL", "DIESEL", "ELECTRIC","HYBRID","CNG"], required : true },
+    { label: "Mileage (km/l)", value: "", id: "mileage", type: "number", required : true },
+    { label: "Seating Capacity", value: "", id: "seatingCapacity", type: "number", required : true }
+];
         
         printingFormLayout("Enter New Vehicle Details",fields,"VEHICLE", true, true);
     });
@@ -439,8 +444,9 @@ function printingVehiclesDataInTable(vehiclesParam,eraseBefore = true) {
             <th>ID</th>
             <th>Name</th>
             <th>Type</th>
-            <th>Model</th>
-            <th>Registration Number</th>
+            <th>Fuel Type</th>
+            <th>Capacity</th>
+            <th>Mileage</th>
             <th>Availability</th>
             <th>Price per day</th>
             <th>Edit</th>
@@ -460,10 +466,13 @@ function printingVehiclesDataInTable(vehiclesParam,eraseBefore = true) {
         name.innerText = element.name;
         let type = document.createElement("td");
         type.innerText = element.type;
-        let model = document.createElement("td");
-        model.innerText = element.model;
-        let registrationNumber = document.createElement("td");
-        registrationNumber.innerText = element.registration_number;
+        let fuelType = document.createElement("td");
+        fuelType.innerText = element.fuelType;
+        let capacity = document.createElement("td");
+        capacity.innerText = element.seatingCapacity;
+        let mileage = document.createElement("td");
+        mileage.innerText = element.mileage;
+        
         let availability = document.createElement("td");
         availability.innerText = element.availability;
         let pricePerDay = document.createElement("td");
@@ -500,7 +509,7 @@ function printingVehiclesDataInTable(vehiclesParam,eraseBefore = true) {
         modifyColumn.appendChild(updateBtn);
 
         let newRow = document.createElement("tr");
-        newRow.append(vehicleId, name, type, model, registrationNumber, availability, pricePerDay, modifyColumn);
+        newRow.append(vehicleId, name, type, fuelType, capacity,mileage, availability, pricePerDay, modifyColumn);
 
         tbody.appendChild(newRow);
 
@@ -756,6 +765,7 @@ async function deletingUserFromDB(userToDelete) {
             // let result = await response.json();
 
             allUsers = allUsers.filter(user => user.user_id !== userToDelete.user_id);
+            totalUsers--;
 
             printingUsersDataInTable(allUsers);
 
@@ -793,6 +803,7 @@ async function deletingVehicleFromDB(vehicleToDelete) {
             // let result = await response.json();
 
             allVehicles = allVehicles.filter(vehicle => vehicle.vehicle_id !== vehicleToDelete.vehicle_id);
+            totalVehicles--;
 
             // console.log("Updated allVehicles :", allVehicles);
 
@@ -858,22 +869,49 @@ function printingFormLayout(headingContent, fieldsComing, entityType,isAdding=fa
         label.for = specificField.label;
         label.innerText = specificField.label;
 
-        let input = document.createElement("input");
-        if(input.value == null){
-            input.value = "Not Specified yet";
-        }
-        input.id = specificField.id;
-        input.name = specificField.label;
-        input.value = specificField.value;
-        if(!isAdding || specificField.id=="role"){
-            input.readOnly = true;
-        }
-        if(isAdding)
-            input.required = specificField.required;
+        if (specificField.type == "select") {
 
-        input.type = specificField.type;
+            let inputSelect = document.createElement("select");
+            inputSelect.id = specificField.id;
 
-        inputContainer.append(label, input);
+            specificField.options.forEach((ele) => {
+                console.log(ele);
+                let option = document.createElement("option");
+                option.text = ele;
+                option.value = ele;
+
+                inputSelect.appendChild(option);
+            });
+
+            if(!isAdding || specificField.id=="role"){
+                inputSelect.readOnly = true;
+            }
+            if(isAdding)
+                inputSelect.required = specificField.required;
+
+            inputContainer.append(label,inputSelect);
+
+        }else{
+
+            
+            let input = document.createElement("input");
+            // if(input.value == null){
+                //     input.value = "Not Specified yet";
+                // }
+                    input.id = specificField.id;
+            input.name = specificField.label;
+            input.value = specificField.value;
+            if(!isAdding || specificField.id=="role"){
+                input.readOnly = true;
+            }
+            if(isAdding)
+                input.required = specificField.required;
+            
+            input.type = specificField.type;
+            
+            inputContainer.append(label, input);
+        }   
+        
         userForm.appendChild(inputContainer);
         // console.log(userForm);
     });
@@ -895,7 +933,9 @@ function printingFormLayout(headingContent, fieldsComing, entityType,isAdding=fa
 
     editBtn.addEventListener("click", async () => {
 
-
+        if (!validateForm(fields)) {
+            return; // Stop if form is invalid
+        }
         if(isAdding){
 
             if (entityType.toUpperCase() == "USER") {
@@ -911,13 +951,19 @@ function printingFormLayout(headingContent, fieldsComing, entityType,isAdding=fa
             }
             if (entityType.toUpperCase() == "VEHICLE") {
                 let newVehicle = {
-                    name: (document.getElementById("name").value),
-                    type: (document.getElementById("type").value),
+                    name: document.getElementById("name").value,
+                    type: document.getElementById("type").value.toUpperCase(),
                     model: String(document.getElementById("model").value),
-                    availability: (document.getElementById("availability").value).toUpperCase(),
-                    price_per_day : parseFloat(document.getElementById("price_per_day").value),
-                    registration_number : document.getElementById("registration_number").value
+                    availability: document.getElementById("availability").value.toUpperCase(),
+                    price_per_day: parseFloat(document.getElementById("price_per_day").value),
+                    registration_number: document.getElementById("registration_number").value,
+                    color: document.getElementById("color").value,
+                    vehicleImage: document.getElementById("vehicleImage").value,
+                    fuelType: document.getElementById("fuelType").value.toUpperCase(),
+                    mileage: parseFloat(document.getElementById("mileage").value),
+                    seatingCapacity: parseInt(document.getElementById("seatingCapacity").value)
                 };
+                
                 await storingNewVehicleInDB(newVehicle);
             }
         }
@@ -948,12 +994,17 @@ function printingFormLayout(headingContent, fieldsComing, entityType,isAdding=fa
             }
             if (entityType.toUpperCase() == "VEHICLE") {
                 let updatedVehicle = {
-                    name: (document.getElementById("name").value),
-                    type: (document.getElementById("type").value),
+                    name: document.getElementById("name").value,
+                    type: document.getElementById("type").value.toUpperCase(),
                     model: String(document.getElementById("model").value),
-                    availability: (document.getElementById("availability").value).toUpperCase(),
-                    price_per_day : parseFloat(document.getElementById("price_per_day").value),
-                    registration_number : document.getElementById("registration_number").value
+                    availability: document.getElementById("availability").value.toUpperCase(),
+                    price_per_day: parseFloat(document.getElementById("price_per_day").value),
+                    registration_number: document.getElementById("registration_number").value,
+                    color: document.getElementById("color").value,
+                    vehicleImage: document.getElementById("vehicleImage").value,
+                    fuelType: document.getElementById("fuelType").value.toUpperCase(),
+                    mileage: parseFloat(document.getElementById("mileage").value),
+                    seatingCapacity: parseInt(document.getElementById("seatingCapacity").value)
                 };
 
                 let registration_number = document.getElementById("registration_number").value;
@@ -991,6 +1042,24 @@ function printingFormLayout(headingContent, fieldsComing, entityType,isAdding=fa
 
 }
 
+//////validing
+function validateForm(fields) {
+    let isValid = true;
+    fields.forEach(field => {
+        let inputElement = document.getElementById(field.id);
+        if (inputElement && inputElement.hasAttribute("required")) {
+            if (!inputElement.value || inputElement.value.trim() === "") {
+                alert(`Please fill in the required field: ${field.label}`);
+                isValid = false;
+                inputElement.focus();
+                return false;
+            }
+        }
+    });
+    return isValid;
+}
+
+
 
 //Printing a user profile
 function printingProfile(element, fromUsersSection = false) {
@@ -1018,26 +1087,38 @@ function printingProfile(element, fromUsersSection = false) {
 //printing a vehicle profile
 function printingVehicleProfile(element,fromVehicleSection=false){
 
+    console.log(element);
+
     let vehicleId = element.vehicle_id;
-    let name = element.name;
-    let type = element.type;
-    let model = element.model;
-    let availability = element.availability;
-    let price_per_day = element.price_per_day;
-    let registration_number = element.registration_number;
+let name = element.name;
+let type = element.type;
+let model = element.model;
+let availability = element.availability;
+let price_per_day = element.price_per_day;
+let registration_number = element.registration_number;
+let color = element.color;
+let vehicleImage = element.vehicleImage;
+let fuelType = element.fuelType;
+let mileage = element.mileage;
+let seatingCapacity = element.seatingCapacity;
 
+let fields = [
+    { label: "Vehicle ID", value: vehicleId, id: "vehicle_id", type: "number" },
+    { label: "Name", value: name, id: "name", type: "text" },
+    { label: "Type", value: type, id: "type", type: "text" },
+    { label: "Model", value: model, id: "model", type: "text" },
+    { label: "Availability Status", value: availability, id: "availability", type: "text" },
+    { label: "Price per Day", value: price_per_day, id: "price_per_day", type: "number" },
+    { label: "Registration Number", value: registration_number, id: "registration_number", type: "text" },
+    { label: "Color", value: color, id: "color", type: "text" },
+    { label: "Vehicle Image URL", value: vehicleImage, id: "vehicleImage", type: "text" },
+    { label: "Fuel Type", value: fuelType, id: "fuelType", type: "text" },
+    { label: "Mileage (km/l)", value: mileage, id: "mileage", type: "number" },
+    { label: "Seating Capacity", value: seatingCapacity, id: "seatingCapacity", type: "number" }
+];
 
-    let fields = [
-        { label: "Vehicle ID", value: vehicleId, id: "vehicle_id", type: "number" },
-        { label: "Name", value: name, id: "name", type: "text" },
-        { label: "Type", value: type, id: "type", type: "text" },
-        { label: "Model", value: model, id: "model", type: "text" },
-        { label: "Availability Status", value: availability, id: "availability", type: "text"},
-        { label: "Price per Day", value: price_per_day, id: "price_per_day", type: "number"},
-        { label: "Registration Number", value: registration_number, id: "registration_number", type: "text"}
-    ];
+printingFormLayout("Vehicle Details", fields, "VEHICLE", false, fromVehicleSection);
 
-    printingFormLayout("Vehicle Details", fields,"VEHICLE",false, fromVehicleSection);
 
 }
 
@@ -1063,6 +1144,7 @@ async function storingNewUserInDB(newUser){
             let result = await response.json();
 
             allUsers.push(result);
+            totalUsers++;
 
 
             alert("Admin added succesfully");
@@ -1098,6 +1180,7 @@ async function storingNewVehicleInDB(newVehicle){
             let result = await response.json();
 
             allVehicles.push(result);
+            totalVehicles++;
 
             alert("vehicle added successfully");
 
