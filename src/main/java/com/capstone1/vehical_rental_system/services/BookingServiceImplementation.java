@@ -48,7 +48,7 @@ public class BookingServiceImplementation implements BookingService {
         if (existingBookings.size()>0) {
             System.out.println(existingBookings.toString());
             String[] bookedArr = new String[existingBookings.size()];
-            Arrays.setAll(bookedArr, (i)->existingBookings.get(i).getStartDate().toString()+" and "+existingBookings.get(i).getEndDate().toString());
+            Arrays.setAll(bookedArr, (i)->existingBookings.get(i).getStartDate().toString()+" to "+existingBookings.get(i).getEndDate().toString());
             
             return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 """

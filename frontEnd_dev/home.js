@@ -505,118 +505,87 @@ function printingReviewsDataInTable(reviewsParam,eraseBefore=true) {
 
 
 //printing Vehicles Data in the form of table not cards
-function printingVehiclesDataInTable(vehiclesParam,eraseBefore = true,eraseFilter = true) {
+// function printingVehiclesDataInTable(vehiclesParam,eraseBefore = true,eraseFilter = true) {
 
     
 
-    // Clear existing content before adding new data
-    // if(eraseBefore){
-    //     tablesContainer.innerHTML = "";
-    //     cardContainer.innerHTML = "";
-    //     if(eraseFilter){
-    //         filterContainer.innerHTML="";
-    //     }
-    // }
+//     // Clear existing content before adding new data
+//     // if(eraseBefore){
+//     //     tablesContainer.innerHTML = "";
+//     //     cardContainer.innerHTML = "";
+//     //     if(eraseFilter){
+//     //         filterContainer.innerHTML="";
+//     //     }
+//     // }
 
-    let heading = document.createElement("h2");
-    heading.innerText = "All Vehicles";
+//     let heading = document.createElement("h2");
+//     heading.innerText = "All Vehicles";
 
 
     
 
-    //Vehicle table
+//     //Vehicle table
 
-    let vehicleTable = document.createElement("table");
-    vehicleTable.classList.add("entityTable");
+//     let vehicleTable = document.createElement("table");
+//     vehicleTable.classList.add("entityTable");
 
 
-    let thead = document.createElement("thead");
-    thead.innerHTML = `
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Fuel Type</th>
-            <th>Capacity</th>
-            <th>Mileage</th>
-            <th>Availability</th>
-            <th>Price per day</th>
+//     let thead = document.createElement("thead");
+//     thead.innerHTML = `
+//         <tr>
+//             <th>ID</th>
+//             <th>Name</th>
+//             <th>Type</th>
+//             <th>Fuel Type</th>
+//             <th>Capacity</th>
+//             <th>Mileage</th>
+//             <th>Availability</th>
+//             <th>Price per day</th>
             
-            </tr>
-            `;
+//             </tr>
+//             `;
             
-            // <th>Edit</th>
-            // <th>Edit</th>
+           
 
-    let tbody = document.createElement("tbody");
-
+//     let tbody = document.createElement("tbody");
 
 
-    vehiclesParam.forEach(element => {
-        let vehicleId = document.createElement("td");
-        vehicleId.innerText = element.vehicle_id;
-        let name = document.createElement("td");
-        name.innerText = element.name;
-        let type = document.createElement("td");
-        type.innerText = element.type;
-        let fuelType = document.createElement("td");
-        fuelType.innerText = element.fuelType;
-        let capacity = document.createElement("td");
-        capacity.innerText = element.seatingCapacity;
-        let mileage = document.createElement("td");
-        mileage.innerText = element.mileage;
+
+//     vehiclesParam.forEach(element => {
+//         let vehicleId = document.createElement("td");
+//         vehicleId.innerText = element.vehicle_id;
+//         let name = document.createElement("td");
+//         name.innerText = element.name;
+//         let type = document.createElement("td");
+//         type.innerText = element.type;
+//         let fuelType = document.createElement("td");
+//         fuelType.innerText = element.fuelType;
+//         let capacity = document.createElement("td");
+//         capacity.innerText = element.seatingCapacity;
+//         let mileage = document.createElement("td");
+//         mileage.innerText = element.mileage;
         
-        let availability = document.createElement("td");
-        availability.innerText = element.availability;
-        let pricePerDay = document.createElement("td");
-        pricePerDay.innerText = element.price_per_day;
+//         let availability = document.createElement("td");
+//         availability.innerText = element.availability;
+//         let pricePerDay = document.createElement("td");
+//         pricePerDay.innerText = element.price_per_day;
 
-        //Providing to edit or delete the vehicles
-        // let modifyColumn = document.createElement("td")
-        // let deleteBtn = document.createElement("span");
-        // deleteBtn.classList.add("Del-icon");
-        // deleteBtn.classList.add("material-symbols-outlined");
-        // deleteBtn.innerText = "delete";
+        
+//         let newRow = document.createElement("tr");
+//         newRow.append(vehicleId, name, type, fuelType, capacity,mileage, availability, pricePerDay);
 
-        // deleteBtn.addEventListener("click", async () => {
-        //     if (confirm("Are you sure you want to delete this Vehicle?")) {
-        //         await deletingVehicleFromDB(element);
-        //         console.log("Vehicle deleted successfully");
+//         tbody.appendChild(newRow);
 
-        //     }
-        // });
-
-        // let updateBtn = document.createElement("span");
-        // updateBtn.classList.add("update-btn");
-        // updateBtn.classList.add("material-symbols-outlined");
-        // updateBtn.innerText = "edit_square";
+//     });
 
 
-        // updateBtn.addEventListener("click", () => {
-        //     printingVehicleProfile(element, true);
-        // })
+//     vehicleTable.appendChild(thead);
+//     vehicleTable.appendChild(tbody);
 
 
-        // modifyColumn.appendChild(deleteBtn);
-        // modifyColumn.appendChild(updateBtn);
-
-        let newRow = document.createElement("tr");
-        // newRow.append(vehicleId, name, type, model, registrationNumber, availability, pricePerDay, modifyColumn);
-        newRow.append(vehicleId, name, type, fuelType, capacity,mileage, availability, pricePerDay);
-
-        tbody.appendChild(newRow);
-
-    });
-
-
-    vehicleTable.appendChild(thead);
-    vehicleTable.appendChild(tbody);
-    // vehicleTable.appendChild(addBtn);
-
-
-    tablesContainer.appendChild(heading);
-    tablesContainer.appendChild(vehicleTable);
-}
+//     tablesContainer.appendChild(heading);
+//     tablesContainer.appendChild(vehicleTable);
+// }
 
 
 function printingCardsForVehicle(vehiclesParam){
@@ -1018,6 +987,15 @@ function scheduleBookingForVehicle(vehicle){
                 let final = document.getElementById("b_EndDate");
                 let totalPriceBooking = document.querySelector(".totalPriceBooking");
 
+                if(initial.value > final.value){
+                    alert("Start Date must be smaller or equal to end date");
+                    return;
+                }
+                
+                //Also changing global startDate and endDate
+                startDate = initial.value;
+                endDate = final.value;
+
                 console.log(totalPriceBooking);
 
                 let finalPrice = vehicle.price_per_day * getDateDifference(initial.value,final.value);
@@ -1058,7 +1036,12 @@ function scheduleBookingForVehicle(vehicle){
     bookbtn.innerText = "Book Now";
 
     bookbtn.addEventListener("click",async()=>{
-        
+
+        let userEmail = user.email;
+        let registration_number = vehicle.registration_number;
+        // let startDate = startDate;
+
+        await storingBookingInDB(userEmail,registration_number,startDate,endDate);
     })
 
 
@@ -1072,6 +1055,33 @@ function scheduleBookingForVehicle(vehicle){
 
 
 }   
+
+// ==========================Storing in DB =================
+async function storingBookingInDB(email,registration_number,starting,ending) {
+    try {
+
+        let response = await fetch(`http://localhost:8080/booking/add?email=${email}&registration_number=${registration_number}&startDate=${starting}&endDate=${ending}`,{
+            method : "POST"
+        });
+
+        if(response.ok){
+
+            let data = await response.text();
+            alert("Booked successfully Successfully !!! Refresh to load the changes");
+            console.log(data);
+            
+        }
+        else{
+            let msg = await response.text();
+            alert("Failed to book the vehicle bcz server responding as ' "+ msg + " ' ");
+            console.log("error msg",response.status);
+            console.log("error msg",response.statusText);
+        }
+        
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 
 
