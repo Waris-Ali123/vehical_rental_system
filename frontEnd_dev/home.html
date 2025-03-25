@@ -42,7 +42,7 @@
                         <div class="menuText">Vehicles</div>
                     </button>
                 </li>
-                <li id="bookingNav" class="listItem" onclick="printingBookingsDataInTable(allBookings)">
+                <li id="bookingNav" class="listItem" onclick="printingOnClickBookingNav()">
                     <button>
 
                         <span class="icon material-symbols-outlined ">
@@ -51,7 +51,7 @@
                         <div class="menuText">Bookings</div>
                     </button>
                 </li>
-                <li id="reviewNav" class="listItem" onclick=" printingReviewsDataInTable(allReviews)">
+                <li id="reviewNav" class="listItem" onclick=" printingOnClickReviewNav()">
                     <button>
 
                         <span class="icon material-symbols-outlined ">
@@ -106,13 +106,24 @@
                 </div>
 
             </div>
-            <div class="cardContainer">
+
+            <div id="page1">
+                <div class="filterContainer">
+                </div>
+                <div class="cardContainer">
+                </div>       
             </div>
-            <div class="filterContainer">
+            
+            <div id="page2">
+                <div class="vehicleContainer">
+                </div>
+                <div class="tablesContainer">   
+                </div>
             </div>
 
 
-            <div class="tablesContainer">   
+            <div id="page3">
+                <div class="formContainer"></div>
             </div>
          </main>
     </div>

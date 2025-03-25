@@ -123,6 +123,21 @@ public class BookingServiceImplementation implements BookingService {
     }
 
 
+    
+    @Override
+    public ResponseEntity<List<Booking>> getBookingsByRegistrationNumber(String registration_number) {
+        try {
+            Vehicle vehicle = vehicleService.getByRegistrationNumber(registration_number);
+            List<Booking> bookingsList = bookingRepo.findByVehicle(vehicle);
+            return ResponseEntity.ok().body(bookingsList);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ArrayList<>());
+        }
+    }
+
+
     public ResponseEntity<List<Booking>> getAllBookings(String email){
         try {
             User user = loginService.getUserByEmail(email);
@@ -183,5 +198,8 @@ public class BookingServiceImplementation implements BookingService {
         }
     }
 
+
+
+    
 }
 

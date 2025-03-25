@@ -13,6 +13,8 @@ public interface BookingService {
 
     public ResponseEntity<List<Booking>> getBookings(String email);
     
+    public ResponseEntity<List<Booking>> getBookingsByRegistrationNumber(String registration_number);
+
     public ResponseEntity<List<Booking>> getAllBookings(String email);
 
     public ResponseEntity<Booking> updateBooking(String bookingId,Booking bookingModified);

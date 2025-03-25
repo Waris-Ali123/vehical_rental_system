@@ -37,10 +37,10 @@ public class ReviewController {
     }
 
     @GetMapping("/getReviewsByVehicle")
-    public ResponseEntity<List<Review>> getReviewsByVehicle(@RequestParam String registrationNumber) {
+    public ResponseEntity<List<Review>> getReviewsByVehicle(@RequestParam String registration_number) {
         try {
 
-            return reviewService.getReview(registrationNumber);
+            return reviewService.getReview(registration_number);
             
         } catch (Exception e) {
             e.printStackTrace();

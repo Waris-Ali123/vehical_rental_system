@@ -31,6 +31,8 @@ body {
 }
 
 
+
+
 /* =============================================Navigation aside starts=================================== */
 
 .navigation {
@@ -178,6 +180,19 @@ body {
 }
 
 
+.tablesContainer.invisible{
+    display: none;
+}
+
+/* ==============================paging starts============= */
+#page1.invisible,
+#page2.invisible,
+#page3.invisible
+{
+    display: none;
+}
+
+
 
 /* =================================tablesContainer starts============================= */
 .tablesContainer{
@@ -190,6 +205,7 @@ body {
     scrollbar-color: var(--blue-dark) var(--white);
     scrollbar-width: 30px; 
     position: relative;
+    display: block;
     /* display: flex;
     flex-direction: column; */
     /* flex-wrap: wrap; */
@@ -361,7 +377,11 @@ span.addBtn:hover{
     grid-template-columns: repeat(3,1fr);
     row-gap: 20px;
     column-gap: 15px;
-    margin-top: 25px;
+    margin:25px 0;
+}
+
+.cardContainer.invisible{
+    display: none;
 }
 
 .mainVehicleCard{
@@ -373,7 +393,17 @@ span.addBtn:hover{
     background-color: var(--white);
     border-radius: 15px;
     cursor: pointer;
+    margin: 25px 0;
 }
+
+.mainVehicleCard img{
+    border-radius: 15px;
+    width: 100%;
+    height: 180px;
+    box-shadow: 2px 5px 5px rgba(0, 0, 0, 0.1);
+    /* filter: drop-shadow(2px rgba(0,0,0,1)); */
+}
+
 
 .detailsContainer{
     display: flex;
@@ -385,9 +415,6 @@ span.addBtn:hover{
     border-radius: 15px;
     cursor: pointer;
     /* margin-left: 25px; */
-}
-.detailsContainer img{
-    border-radius: 15px;
 }
 
 .detailsContainer .nameBlock{
@@ -441,4 +468,194 @@ span.addBtn:hover{
     font-size: 0.8rem;
     margin-right: 10px;
 
+}
+
+
+
+
+
+
+/* ========================== Specific Vehicle Details info page ======================4 */
+/* =====================vehicleContainer================== */
+
+#vehicleContainer.invisible{
+    display: none;
+}
+
+.mainDetailsContainer{
+    display: flex;
+    width: 100%;
+    padding: 30px;
+    column-gap: 25px;
+    background-color: var(--white);
+    border-radius: 15px;
+    
+
+    /* flex-basis: 1 1; */
+}
+
+.mainDetailsContainer .vehicleImg{
+    border-radius: 25px;
+    width: 50%;
+}
+
+
+.mainDetailsContainer .sideDetails{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    row-gap: 15px;
+    width: 100%;
+}
+
+.mainDetailsContainer .vehicleName{
+    font-weight: 700;
+    font-size: 1.4rem;
+}
+
+.mainDetailsContainer .vehicleModel{
+    color: var(--grey);
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.mainDetailsContainer .vehicleIconBlock{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    row-gap: 10px;
+    font-size: 0.8rem ;
+    font-weight: 500;
+}
+
+.mainDetailsContainer .iconInnerBox{
+    display: flex;
+    align-items: center;
+    column-gap: 3px;
+}
+
+.mainDetailsContainer .vehiclePrice{
+    font-size: 1.8rem;
+    color: var(--blue-dark);
+    font-weight: 700;
+}
+
+.mainDetailsContainer .vehiclePrice span{
+    color: var(--grey);
+    font-size: 0.9rem;
+}
+
+.mainDetailsContainer .bookingBtn{
+    padding: 5px;
+    /* padding-left: 15px; */
+    background-color: var(--blue-dark);
+    color: var(--white);
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    font-size: 1.2rem;
+    border-radius: 10px;
+    max-width: 200px;
+    cursor: pointer;
+    /* text-align: left; */ 
+}
+
+.mainDetailsContainer .bookingBtn:hover{
+    color: var(--blue-dark);
+    background-color: var(--white);
+}
+
+
+
+
+/* =======================booking form ==================== */
+.formContainer{
+    background-color: var(--blue-dark);
+    color: var(--white);
+    border-radius: 25px;
+    padding: 50px 40px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* align-items: around;; */
+    /* padding-bottom: 100px; */
+}
+
+.formContainer .heading{
+    width: 100%;
+    text-align: center;
+    margin-bottom: 60px;
+    text-transform: capitalize;
+    
+}
+
+.bookingForm{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    row-gap: 25px;
+    font-weight: 600;
+    justify-content: space-between;
+}
+
+.bookingForm .inputBox{
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 25px;
+    width: 100%;
+    max-width: 450px;
+    /* background-color: #00246b; */
+}
+.bookingForm input{
+    outline: none;
+    border: none;
+    /* width: 100%; */
+    background-color: #cadcfc;
+    min-width: 220px;
+    padding: 5px 10px;
+    font-weight: 600;
+    font-size: 1rem;
+     border-radius: 25px;
+}
+
+.formContainer .lowerBlock{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 30px;
+    /* position: absolute; */
+
+}
+
+.formContainer .lowerBlock .totalPriceBlock{
+    display: flex;
+    align-items: center;
+    column-gap: 15px;;;
+    font-weight: 500;
+    font-size: 1.4rem;
+}
+
+.totalPriceBlock .totalPriceBooking{
+    font-weight: 800;
+    /* font-size: 1.3rem; */
+    color: var(--warning);
+}
+
+.finalBookBtn{
+    padding: 10px 35px;
+    color: var(--success);
+    background-color: var(--white);;
+    border: 1px solid black;
+    font-size: 1.5rem;
+    font-weight:700;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform .5s ;
+
+}
+
+.finalBookBtn:hover{
+    transform: scale(1.1);
+    /* border: 1px solid gray; */
+    /* box-shadow: 4px 4px 2px rgba(255, 255, 255, 1); */
 }

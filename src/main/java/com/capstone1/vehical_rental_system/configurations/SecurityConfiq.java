@@ -12,7 +12,6 @@ public class SecurityConfiq {
     public PasswordEncoder encodingPassword(){
 
         return new BCryptPasswordEncoder();
-    }   
-    
+    }
     
 }

@@ -1,10 +1,8 @@
 package com.capstone1.vehical_rental_system.controllers;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.capstone1.vehical_rental_system.entities.Booking;
-import com.capstone1.vehical_rental_system.entities.Review;
 import com.capstone1.vehical_rental_system.services.BookingService;
 
 @CrossOrigin(origins = "*")
@@ -49,6 +46,12 @@ public class BookingController {
     @GetMapping("/getByEmail")
     public ResponseEntity<List<Booking>> getBookingHistoryByMail(@RequestParam String email) {
         return bookingService.getBookings(email);
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/getByRegistrationNumber")
+    public ResponseEntity<List<Booking>> getBookingHistoryByVehicle(@RequestParam String registration_number) {
+        return bookingService.getBookingsByRegistrationNumber(registration_number);
     }
 
 
