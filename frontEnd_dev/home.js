@@ -22,6 +22,16 @@ let tomorrow = new Date();
 tomorrow.setDate(tomorrow.getDate()+1);
 let endDate = tomorrow.toISOString().split('T')[0];
 console.log(endDate);
+
+// =============================================Event Listeners=========================
+let searchBar = document.getElementById("searchBarId");
+searchBar.addEventListener("input",searchBarClick);
+
+
+
+
+
+
 // =======================paging starts==================
 let page1 = document.getElementById("page1");
 let page2 = document.getElementById("page2");
@@ -912,7 +922,7 @@ function printingCompleteVehicleDetails(vehicle){
     // ----------price per day --------------
 
     let price_per_day = document.createElement("div");
-    price_per_day.innerHTML = vehicle.price_per_day + "/-Rs" +"<span> per day</span>";
+    price_per_day.innerHTML = vehicle.price_per_day.toFixed(2) + "/-Rs" +"<span> per day</span>";
     price_per_day.classList.add("vehiclePrice");
     // ------------Book Btn--------------------
     let bookingBtn = document.createElement("button");
@@ -1038,6 +1048,7 @@ function printingFilters(){
         else{
             availableVehicles = await fetchingVehiclesAvailableWithType(initial,ending,typeSelected.value);
         }
+        
         
         if(availableVehicles!=null){
                 printingCardsForVehicle(availableVehicles);
@@ -1349,6 +1360,48 @@ function scheduleBookingForVehicle(vehicle){
 
 
 
+
+// ========================================================Search Bar Implementation starts ==========================================
+function searchBarClick(){
+    console.log("seach bar key up");
+    let keyword = searchBar.value.toLowerCase();
+
+    let targetVehicles =  searchingVehiclesForKeyword(keyword);
+
+    
+
+    console.log(targetVehicles);
+
+    showPage1();
+    printingCardsForVehicle(targetVehicles);
+
+
+}
+
+
+function searchingVehiclesForKeyword(keyword){
+
+    let targetVehicles = [];
+
+    allVehicles.forEach((vehicle)=>{
+        let name = vehicle.name.toLowerCase();
+        let type = vehicle.type.toLowerCase();
+        let fuelType = vehicle.fuelType.toLowerCase();
+        let model = vehicle.model.toLowerCase();
+        let price_per_day = vehicle.price_per_day;
+
+
+        if(name.includes(keyword) || type.includes(keyword)
+                || fuelType.includes(keyword)   || model.includes(keyword)
+                || price_per_day < (keyword) && price_per_day>keyword     //filtering based on price with a range to enhance the user experience
+        ){
+            targetVehicles.push(vehicle);
+        }
+    });                                         
+
+
+    return targetVehicles;
+}
 
 
 
