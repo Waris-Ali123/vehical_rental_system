@@ -160,7 +160,7 @@ function printingOnClickBookingNav(){
     showPage2();
     tablesContainer.innerHTML = "";
     vehicleContainer.innerHTML="";
-    printingBookingsDataInTable(allBookings);
+    printingBookingsDataInTable(allBookings,true);
 }
 
 function printingOnClickReviewNav(){
@@ -403,7 +403,7 @@ async function storingBookingInDB(email,registration_number,starting,ending) {
         }
         else{
             let msg = await response.text();
-            alert("Failed to book the vehicle bcz server responding as ' "+ msg + " ' ");
+            alert("Failed to book bcz ' " + msg + " ' ");
             console.log("error msg",response.status);
             console.log("error msg",response.statusText);
         }
@@ -412,9 +412,6 @@ async function storingBookingInDB(email,registration_number,starting,ending) {
         console.error(error);
     }
 }
-
-
-
 
 
 
@@ -456,6 +453,25 @@ async function updatingUserInDB(user_id, updatedUser) {
 }
 
 
+// ---------fun to cancel the booking-------------
+async function updatingBookingStatusInDB(booking_id) {
+    try {
+        let response = await fetch( `http://localhost:8080/booking/cancelBooking/${booking_id}`,{
+            method : "PUT",
+
+        });
+
+        if(response.ok){
+            alert("The booking has been cancled successfully");
+        }
+        else{
+            alert("Failed to cancel the booking");
+            console.log(response.status);
+        }
+    } catch (error) {
+        console.error("Error Msg : ", error);
+    }
+}
 
 
 
@@ -467,13 +483,12 @@ async function updatingUserInDB(user_id, updatedUser) {
 
 // ===============================Printing starts===========================================
 
-function printingBookingsDataInTable(bookingsParam,eraseBefore = true,headingParam="Bookings History") {
+function printingBookingsDataInTable(bookingsParam,isCancelBtnRequired=false,eraseBefore = true,headingParam="Bookings History") {
 
     
     // // Clear existing content before adding new data
     if(eraseBefore){
         tablesContainer.innerHTML = "";
-        cardContainer.innerHTML = "";
     }
 
     let heading = document.createElement("h2");
@@ -488,7 +503,7 @@ function printingBookingsDataInTable(bookingsParam,eraseBefore = true,headingPar
 
     let thead = document.createElement("thead");
     thead.innerHTML = `
-        <tr>
+        <tr id='bookingtableColumns'>
             <th>ID</th>
             <th>User Email</th>
             <th>Vehicle Name</th>
@@ -499,6 +514,9 @@ function printingBookingsDataInTable(bookingsParam,eraseBefore = true,headingPar
         </tr>
     `;
 
+
+    // used to check whether the Cancle name column heading is created later or not . And if not created but required will create it once else no more repetative cancle heading generated if required more than one time .
+    let IsCancelHeadingCreated = false;
 
     let tbody = document.createElement("tbody");
 
@@ -542,14 +560,72 @@ function printingBookingsDataInTable(bookingsParam,eraseBefore = true,headingPar
 
         statusBox.appendChild(status);
 
+
+        
         let row = document.createElement("tr");
+        
+        
+        
+        // -----------providing cancel btn if needed as per function param isCancelRequired-------------
+
+        if(isCancelBtnRequired){
+            
+            //checking if the user is same one who booked it...
+        //Always creating a td for occupying the space for better looking
+        let cancelCell = document.createElement("td");
+        if(element.user.email == user.email && element.booking_status == "CONFIRMED"){
+            let cancelBtn = document.createElement("button");
+            cancelBtn.classList.add("material-symbols-outlined");
+            cancelBtn.classList.add("cancelBtn");
+            cancelBtn.innerText = "cancel";
+            
+            cancelBtn.addEventListener("click",async ()=>{
+                console.log("Booking cancelling called");
+                if(confirm("Are you sure you want to cancel the booking ? "))
+                    await updatingBookingStatusInDB(element.booking_id);
+            })
+
+            cancelCell.appendChild(cancelBtn);
+
+            if(!IsCancelHeadingCreated){
+                thead.innerHTML = `
+                    <tr id='bookingtableColumns'>
+                        <th>ID</th>
+                        <th>User Email</th>
+                        <th>Vehicle Name</th>
+                        <th>Starting Date</th>
+                        <th>Ending Date</th>
+                        <th>Total Price</th>
+                        <th>Status</th>
+                        <th>Cancel</th>
+                        </tr>
+                        `;
+                IsCancelHeadingCreated = true;
+            }
+
+        }
+
 
         row.append(bookId, userEmail, vehicleName, startDate, endDate, totalPrice,statusBox);
-
+        row.appendChild(cancelCell); //appending cancle cell btn
         tbody.appendChild(row);
+        
+        
+        }
+        else{
+            //Making the booking row with cancel status not to appear in the booking table in specific product page. thus if the isCanclebtn is false it means we are showing the booking table in the specific vehicle page thus we will check first whether the status is confirm or not , if it is not confirm we will not show that
+    
+            if(element.booking_status == "CONFIRMED"){
+                row.append(bookId, userEmail, vehicleName, startDate, endDate, totalPrice,statusBox);
+                tbody.appendChild(row);
+            }
+        }
+
+
+
 
     });
-
+    
     bookingTable.appendChild(thead);
     bookingTable.appendChild(tbody);
 
@@ -856,7 +932,7 @@ function printingCompleteVehicleDetails(vehicle){
 
     printingReviewsBasedOnVehicle(vehicle);
 
-    printingBookinsBasedOnVehicle(vehicle);
+    printingBookingsBasedOnVehicle(vehicle);
 
 
     // -----------showing associated bookings----------
@@ -875,12 +951,12 @@ async function printingReviewsBasedOnVehicle(vehicle){
 }
 
 //used in printingCompleteVehicleDetails for printing the bookings for that specific vehicle
-async function printingBookinsBasedOnVehicle(vehicle) {
+async function printingBookingsBasedOnVehicle(vehicle) {
 
     let bookings = await fetchingBookingsByVehicle(vehicle.registration_number);
 
     if(bookings!=null){
-        printingBookingsDataInTable(bookings,false,"Already Booked for");
+        printingBookingsDataInTable(bookings,false,false,"Already Booked for");
     }
     
 }
@@ -998,6 +1074,7 @@ function printingProfile(element) {
 // ------------layout that actually prints the profile--------------
 function printingFormLayout(headingContent, fieldsComing, entityType) {
     showPage4();
+    profileContainer.innerHTML = "";
 
     //creating main heading of table
     let heading = document.createElement("h2");

@@ -296,8 +296,25 @@ span.addBtn:hover{
     text-align: left;
     cursor: pointer;
     margin-right: 5px;
+}
+.cancelBtn{
+    font-size: .8rem;
+    color: var(--danger);
+    background: none;
+    /* text-align: r; */
+    cursor: pointer;
+    /* margin-right: 5px; */
+    padding: 5px 7px;
+    border-radius: 10px;
+    text-align: right;
+    border: none;
+    /* justify-self: flex-end; */
+}
 
-
+.cancelBtn:hover{
+    /* background-color: #FFEB3B; */
+    font-weight: 800;
+    transform: scale(1.1);
 }
 
 .update-btn{
@@ -323,11 +340,13 @@ span.addBtn:hover{
 
 .entityTable .statusBox .danger{
     padding: 2px 4px;
-    background: #f00;
-    color: var(--white);
+    /* background: #f00; */
+    color: var(--danger);
     border-radius: 4px;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    background-color: var(--warning);
 }
 
 .filterContainer{
