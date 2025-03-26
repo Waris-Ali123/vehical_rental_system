@@ -454,9 +454,12 @@ span.addBtn:hover{
     cursor: not-allowed;
 }
 
-/* .userForm .inputContainer:nth-child(3) input{
-    text-transform: none;
-} */
+.read-only-select {
+    pointer-events: none; /* Prevents user interactions */
+    opacity: 0.6;         /* Gives a "disabled" look */
+    background-color: #f9f9f9; /* Optional: subtle background color change */
+  }
+  
 
 
 .userForm  input.editable {

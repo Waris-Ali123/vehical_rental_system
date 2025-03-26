@@ -462,7 +462,13 @@ async function updatingBookingStatusInDB(booking_id) {
         });
 
         if(response.ok){
+            let index = allBookings.findIndex(booking => booking.booking_id == booking_id);
+            if(index!=-1){
+                allBookings[index].booking_status = "CANCELED";
+                printingBookingsDataInTable(allBookings,true);
+            }
             alert("The booking has been cancled successfully");
+
         }
         else{
             alert("Failed to cancel the booking");

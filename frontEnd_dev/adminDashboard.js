@@ -155,8 +155,8 @@ function profileClick() {
 
 function printingDashBoardData() {
     // let firstTenUsers = allUsers.slice(0, Math.min(10, allUsers.length));
-    let firstTenBooking = allBookings.slice(0, Math.min(10, allUsers.length));
-    printingBookingsDataInTable(firstTenBooking,true,"Recent Bookings");
+    let mostRecentTenBookings = allBookings.slice(-Math.min(10, allBookings.length));
+    printingBookingsDataInTable(mostRecentTenBookings.reverse(),true,"Recent Bookings");
     // printingUsersDataInTable(firstTenUsers,false);
     printingOverviewOnDashBoard();
     showActiveNavItem("dashboardNav");
@@ -876,18 +876,20 @@ function printingFormLayout(headingContent, fieldsComing, entityType,isAdding=fa
 
             let inputSelect = document.createElement("select");
             inputSelect.id = specificField.id;
-
+            
             specificField.options.forEach((ele) => {
                 console.log(ele);
                 let option = document.createElement("option");
                 option.text = ele;
                 option.value = ele;
+                
 
                 inputSelect.appendChild(option);
             });
-
+            inputSelect.value = specificField.value;
+            
             if(!isAdding || specificField.id=="role"){
-                inputSelect.readOnly = true;
+                inputSelect.classList.add("read-only-select");
             }
             if(isAdding)
                 inputSelect.required = specificField.required;
@@ -1010,8 +1012,11 @@ function printingFormLayout(headingContent, fieldsComing, entityType,isAdding=fa
                     seatingCapacity: parseInt(document.getElementById("seatingCapacity").value)
                 };
 
+                console.log("updated vehicle : ", updatedVehicle);
+
                 let registration_number = document.getElementById("registration_number").value;
                 await updatingVehicleInDB(registration_number,updatedVehicle, fromSection);
+                console.log("updatingVehicleInDB called");
             }
         }
         
@@ -1028,7 +1033,21 @@ function printingFormLayout(headingContent, fieldsComing, entityType,isAdding=fa
             }
         });
 
-        editBtn.innerText = inputs[2].readOnly ? "Update Details" : "Save Changes";
+
+        let selects = document.querySelectorAll(".inputContainer select");
+
+
+        selects.forEach((ele) => {
+            //userId and role cannot be updated
+            if ( ele.id != "role") {
+                    ele.classList.remove("read-only-select");
+            }
+        });
+
+        // console.log(inputs);
+
+        if(inputs!=null && inputs.length!=0)
+            editBtn.innerText = inputs[2].readOnly ? "Update Details" : "Save Changes";
 
     }
         // console.log(inputs);
@@ -1108,14 +1127,14 @@ let seatingCapacity = element.seatingCapacity;
 let fields = [
     { label: "Vehicle ID", value: vehicleId, id: "vehicle_id", type: "number" },
     { label: "Name", value: name, id: "name", type: "text" },
-    { label: "Type", value: type, id: "type", type: "text" },
+    { label: "Type", value: type, id: "type", type: "select",options:["CAR","BIKE","TRUCK"] },
     { label: "Model", value: model, id: "model", type: "text" },
-    { label: "Availability Status", value: availability, id: "availability", type: "text" },
+    { label: "Availability Status", value: availability, id: "availability",  type: "select",options : ["AVAILABLE","UNDER_MAINTENANCE"]},
     { label: "Price per Day", value: price_per_day, id: "price_per_day", type: "number" },
     { label: "Registration Number", value: registration_number, id: "registration_number", type: "text" },
     { label: "Color", value: color, id: "color", type: "text" },
     { label: "Vehicle Image URL", value: vehicleImage, id: "vehicleImage", type: "text" },
-    { label: "Fuel Type", value: fuelType, id: "fuelType", type: "text" },
+    { label: "Fuel Type", value: fuelType, id: "fuelType", type: "select", options : ["PETROL", "DIESEL", "ELECTRIC","HYBRID","CNG"] },
     { label: "Mileage (km/l)", value: mileage, id: "mileage", type: "number" },
     { label: "Seating Capacity", value: seatingCapacity, id: "seatingCapacity", type: "number" }
 ];
@@ -1315,6 +1334,8 @@ async function updatingVehicleInDB(registration_number,updatedVehicle,fromVehicl
             if (index !== -1) {
                 allVehicles[index] = result;  // Update user in the array
             }
+
+            alert("vehicle updated successfully as" + result);
 
 
             if (fromVehicleSection) {
