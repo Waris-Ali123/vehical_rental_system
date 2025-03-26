@@ -544,7 +544,7 @@ function printingUsersDataInTable(usersParam,eraseBefore=true) {
     addBtn.classList.add("material-symbols-outlined");
     addBtn.innerText = "add";
     addBtn.classList.add("addBtn");
-    addBtn.title = "Create Another Admin"
+    addBtn.title = "Add User"
 
 
 
@@ -556,10 +556,10 @@ function printingUsersDataInTable(usersParam,eraseBefore=true) {
             { label: "Password", value: "", id: "password", type: "password",required : true },
             { label: "Email", value: "", id: "email", type: "email",required : true },
             { label: "Mobile No", value: "", id: "contactNumber", type: "number",required : false },
-            { label: "Role", value: "ADMIN", id: "role", type: "text",required : true }
+            { label: "Role", value: "USER", id: "role", type: "text",required : true }
         ];
 
-        printingFormLayout("Enter New Admin Details",fields,"USER", true, true);
+        printingFormLayout("Enter New User Details",fields,"USER", true, true);
     });
 
     // Add User btn ends===============
@@ -610,10 +610,13 @@ function printingUsersDataInTable(usersParam,eraseBefore=true) {
         deleteBtn.innerText = "delete";
 
         deleteBtn.addEventListener("click", async () => {
+            if(element.role == "ADMIN"){
+                alert("You cannot delete ADMIN");
+                return;
+            }
             if (confirm("Are you sure you want to delete this user?")) {
                 await deletingUserFromDB(element);
                 console.log("user deleted successfully");
-
             }
         });
 
@@ -920,7 +923,7 @@ function printingFormLayout(headingContent, fieldsComing, entityType,isAdding=fa
     let editBtn = document.createElement("button");
     editBtn.classList.add("editBtn");
     if(isAdding && entityType=="USER"){
-        editBtn.innerText = "Create Admin";
+        editBtn.innerText = "Create User";
     }
     else if(isAdding && entityType=="VEHICLE"){
         editBtn.innerText = "Create Vehicle";
@@ -939,7 +942,7 @@ function printingFormLayout(headingContent, fieldsComing, entityType,isAdding=fa
         if(isAdding){
 
             if (entityType.toUpperCase() == "USER") {
-                let newAdmin = {
+                let newUser = {
                     name: (document.getElementById("name").value),
                     email: (document.getElementById("email").value),
                     contact_number: String(document.getElementById("contactNumber").value),
@@ -947,7 +950,7 @@ function printingFormLayout(headingContent, fieldsComing, entityType,isAdding=fa
                     password : (document.getElementById("password").value)
                 };
 
-                await storingNewUserInDB(newAdmin);
+                await storingNewUserInDB(newUser);
             }
             if (entityType.toUpperCase() == "VEHICLE") {
                 let newVehicle = {
@@ -1127,11 +1130,44 @@ printingFormLayout("Vehicle Details", fields, "VEHICLE", false, fromVehicleSecti
 
 
 // ==================================== Storing In Databases =================================
+// async function storingNewUserInDB(newUser){
+//     try {
+//         let adminEmail = admin.email;
+//         let response = await fetch(
+//             `http://localhost:8080/auth/createAdmin?alreadyAdminEmail=${adminEmail}`, {
+//             method: 'POST',
+//             headers: {
+//                 "Content-type": "application/json"
+//             },
+//             body: JSON.stringify(newUser)
+//         }
+//         );
+
+//         if (response.ok) {
+//             let result = await response.json();
+
+//             allUsers.push(result);
+//             totalUsers++;
+
+
+//             alert("Admin added succesfully");
+//             printingUsersDataInTable(allUsers);
+
+
+//         }
+//         else {
+//             console.error("Error updating user:", response.statusText);
+//         }
+//     } catch (error) {
+//         console.error(error);
+//     }
+
+// }
+
 async function storingNewUserInDB(newUser){
     try {
-        let adminEmail = admin.email;
         let response = await fetch(
-            `http://localhost:8080/auth/createAdmin?alreadyAdminEmail=${adminEmail}`, {
+            `http://localhost:8080/auth/signUp`, {
             method: 'POST',
             headers: {
                 "Content-type": "application/json"
@@ -1147,7 +1183,7 @@ async function storingNewUserInDB(newUser){
             totalUsers++;
 
 
-            alert("Admin added succesfully");
+            alert("User added succesfully");
             printingUsersDataInTable(allUsers);
 
 

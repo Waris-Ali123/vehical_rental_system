@@ -21,11 +21,12 @@ let startDate = today;
 let tomorrow = new Date();
 tomorrow.setDate(tomorrow.getDate()+1);
 let endDate = tomorrow.toISOString().split('T')[0];
-
+console.log(endDate);
 // =======================paging starts==================
 let page1 = document.getElementById("page1");
 let page2 = document.getElementById("page2");
 let page3 = document.getElementById("page3");
+let page4 = document.getElementById("page4");
 
 
 function showPage2(){
@@ -33,6 +34,9 @@ function showPage2(){
 
     page1.classList.add("invisible");
     page3.classList.add("invisible");
+    page4.classList.add("invisible");
+
+
 }
 
 function showPage1(){
@@ -40,6 +44,8 @@ function showPage1(){
 
     page2.classList.add("invisible");
     page3.classList.add("invisible");
+    page4.classList.add("invisible");
+    
 }
 
 function showPage3(){
@@ -47,6 +53,16 @@ function showPage3(){
 
     page1.classList.add("invisible");
     page2.classList.add("invisible");
+    page4.classList.add("invisible");
+
+}
+
+function showPage4(){
+    page4.classList.remove("invisible");
+
+    page1.classList.add("invisible");
+    page2.classList.add("invisible");
+    page3.classList.add("invisible");
 
 }
 
@@ -63,6 +79,8 @@ let filterContainer = document.querySelector(".filterContainer");
 let vehicleContainer = document.querySelector(".vehicleContainer");
 //Form container that is used to have all kind of forms
 let formContainer = document.querySelector(".formContainer");
+//Profile container that is used to display the profile
+let profileContainer = document.querySelector(".profileContainer");
 
 
 
@@ -109,11 +127,25 @@ window.onload = async function () {
    
     await Promise.all([fetchingBookings(), fetchingReviews(),fetchingVehicles()]);
 
+    showPage1();
     printingBookingsDataInTable(allBookings);
-   
 
 }
-// ======================================nav bar functions start ===============
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ======================================NAVBAR functions start ===============
 function printingOnClickVehicleNav(){
     showPage1();
     if(!haveFilter){
@@ -138,7 +170,17 @@ function printingOnClickReviewNav(){
     printingReviewsDataInTable(allReviews);
 }
 
-// ======================================nav bar functions end ===============
+function printingOnClickProfileNav(){
+    showPage4();
+    printingProfile(user);
+}
+
+// ======================================NAVBAR functions end ===============
+
+
+
+
+
 
 
 
@@ -212,7 +254,7 @@ async function fetchingReviews() {
 async function fetchingVehiclesAvailableWithType(start=startDate,end=endDate,type = "BIKE") {
     try {
         startDate = start;
-        endDate = endDate;
+        endDate = end;
         let response = await fetch(`http://localhost:8080/vehicle/findingAvailable/${type}?startDate=${start}&endDate=${end}`, {
             method: "GET"
             // headers: { "Content-Type": "application/json" }
@@ -238,7 +280,7 @@ async function fetchingVehiclesAvailableWithType(start=startDate,end=endDate,typ
 async function fetchingVehiclesAvailable(start=startDate,end=endDate) {
     try {
         startDate = start;
-        endDate = endDate;
+        endDate = end;
         
         let response = await fetch(`http://localhost:8080/vehicle/findingAvailable?startDate=${start}&endDate=${end}`, {
             method: "GET"
@@ -333,13 +375,100 @@ async function fetchingReviewsByVehicle(registration_number) {
 
 // ====================== Ending fetching entities========================================
 
+
+
+
+
+
+
+
+
+
+
+
+// ==========================Storing in DB starts  =================================
+async function storingBookingInDB(email,registration_number,starting,ending) {
+    try {
+
+        let response = await fetch(`http://localhost:8080/booking/add?email=${email}&registration_number=${registration_number}&startDate=${starting}&endDate=${ending}`,{
+            method : "POST"
+        });
+
+        if(response.ok){
+
+            let data = await response.text();
+            alert("Booked successfully Successfully !!! Refresh to load the changes");
+            console.log(data);
+            
+        }
+        else{
+            let msg = await response.text();
+            alert("Failed to book the vehicle bcz server responding as ' "+ msg + " ' ");
+            console.log("error msg",response.status);
+            console.log("error msg",response.statusText);
+        }
+        
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
+
+
+
+
+// ================================Updating the DB=================
+async function updatingUserInDB(user_id, updatedUser) {
+
+    try {
+        let response = await fetch(
+            `http://localhost:8080/auth/update/${user_id}`, {
+            method: 'PUT',
+            headers: {
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify(updatedUser)
+        }
+        );
+
+        if (response.ok) {
+            let result = await response.json();
+
+            //Checking if the admin updating his own details
+            if (user_id == user.user_id) {
+                localStorage.setItem("user", JSON.stringify(result));
+                user = result;
+            }
+
+
+            alert("User Update Succesfully");
+
+        }
+        else {
+            console.error("Error updating user:", response.statusText);
+            alert("Failed to update the user.");
+        }
+    } catch (error) {
+        console.error(error);
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+// ===============================Printing starts===========================================
+
 function printingBookingsDataInTable(bookingsParam,eraseBefore = true,headingParam="Bookings History") {
 
-    // tablesContainer.classList.remove("invisible");
-
-    // if(bookingsParam==null || bookingsParam.length==0){
-    //     tablesContainer.innerHTML = "<h2> No Content Available</h2>";
-    // }
     
     // // Clear existing content before adding new data
     if(eraseBefore){
@@ -504,90 +633,6 @@ function printingReviewsDataInTable(reviewsParam,eraseBefore=true) {
 }
 
 
-//printing Vehicles Data in the form of table not cards
-// function printingVehiclesDataInTable(vehiclesParam,eraseBefore = true,eraseFilter = true) {
-
-    
-
-//     // Clear existing content before adding new data
-//     // if(eraseBefore){
-//     //     tablesContainer.innerHTML = "";
-//     //     cardContainer.innerHTML = "";
-//     //     if(eraseFilter){
-//     //         filterContainer.innerHTML="";
-//     //     }
-//     // }
-
-//     let heading = document.createElement("h2");
-//     heading.innerText = "All Vehicles";
-
-
-    
-
-//     //Vehicle table
-
-//     let vehicleTable = document.createElement("table");
-//     vehicleTable.classList.add("entityTable");
-
-
-//     let thead = document.createElement("thead");
-//     thead.innerHTML = `
-//         <tr>
-//             <th>ID</th>
-//             <th>Name</th>
-//             <th>Type</th>
-//             <th>Fuel Type</th>
-//             <th>Capacity</th>
-//             <th>Mileage</th>
-//             <th>Availability</th>
-//             <th>Price per day</th>
-            
-//             </tr>
-//             `;
-            
-           
-
-//     let tbody = document.createElement("tbody");
-
-
-
-//     vehiclesParam.forEach(element => {
-//         let vehicleId = document.createElement("td");
-//         vehicleId.innerText = element.vehicle_id;
-//         let name = document.createElement("td");
-//         name.innerText = element.name;
-//         let type = document.createElement("td");
-//         type.innerText = element.type;
-//         let fuelType = document.createElement("td");
-//         fuelType.innerText = element.fuelType;
-//         let capacity = document.createElement("td");
-//         capacity.innerText = element.seatingCapacity;
-//         let mileage = document.createElement("td");
-//         mileage.innerText = element.mileage;
-        
-//         let availability = document.createElement("td");
-//         availability.innerText = element.availability;
-//         let pricePerDay = document.createElement("td");
-//         pricePerDay.innerText = element.price_per_day;
-
-        
-//         let newRow = document.createElement("tr");
-//         newRow.append(vehicleId, name, type, fuelType, capacity,mileage, availability, pricePerDay);
-
-//         tbody.appendChild(newRow);
-
-//     });
-
-
-//     vehicleTable.appendChild(thead);
-//     vehicleTable.appendChild(tbody);
-
-
-//     tablesContainer.appendChild(heading);
-//     tablesContainer.appendChild(vehicleTable);
-// }
-
-
 function printingCardsForVehicle(vehiclesParam){
    
     console.log("i am inside the printing cards for vehicle");
@@ -669,10 +714,10 @@ function printingCardsForVehicle(vehiclesParam){
             pricePerDay.innerText = vehicle.price_per_day+"/-Rs";
 
             let selectBtn = document.createElement("div");
-            selectBtn.innerText = "SELECT";
+            selectBtn.innerText = "BOOK NOW";
             selectBtn.classList.add("selectBtn");
             selectBtn.addEventListener("click",()=>{
-                console.log("item selected");
+                console.log("clicked");
             });
 
             lowerBox.append(pricePerDay,selectBtn);
@@ -842,7 +887,7 @@ async function printingBookinsBasedOnVehicle(vehicle) {
 
 
 
-//=============Putting filters in filter container=====
+//=----------------------Putting filters in filter container--------
 
 function printingFilters(){
 
@@ -925,16 +970,172 @@ function printingFilters(){
     filterContainer.appendChild(filterBtn);
 }
 
-//implementing logout.......
 
-function logout(){
-    localStorage.removeItem("user");
-    window.location.href = "index.html";
+
+// -------------------Printing Profile-----------------------
+function printingProfile(element) {
+
+    
+    let userId = element.user_id;
+    let name = element.name;
+    let email = element.email;
+    let contactNumber = element.contact_number;
+    let role = element.role;
+
+
+    let fields = [
+        { label: "User ID", value: userId, id: "userId", type: "number" },
+        { label: "Name", value: name, id: "name", type: "text" },
+        { label: "Email", value: email, id: "email", type: "email" },
+        { label: "Mobile No", value: contactNumber, id: "contactNumber", type: "number" },
+        { label: "Role", value: role, id: "role", type: "text" }
+    ];
+
+    printingFormLayout("User Details", fields,"USER");
+}
+
+
+// ------------layout that actually prints the profile--------------
+function printingFormLayout(headingContent, fieldsComing, entityType) {
+    showPage4();
+
+    //creating main heading of table
+    let heading = document.createElement("h2");
+    heading.innerText = headingContent;
+    heading.classList.add("heading");
+
+    //this will contain the user form
+    let userFormContainer = document.createElement("div");
+    userFormContainer.classList.add("userFormContainer");
+
+    //This is a user form
+    let userForm = document.createElement("form");
+    userForm.classList.add("userForm");
+
+    let fields = fieldsComing;
+
+    fields.forEach(specificField => {
+
+        let inputContainer = document.createElement("div");
+        inputContainer.classList.add("inputContainer");
+
+
+        let label = document.createElement("label");
+        label.for = specificField.label;
+        label.innerText = specificField.label;
+        
+        let input = document.createElement("input");
+
+        input.id = specificField.id;
+        input.name = specificField.label;
+        input.value = specificField.value;
+        // if(specificField.id=="userId" || specificField.id=="role"){
+            input.readOnly = true;
+        // }
+        
+        input.type = specificField.type;
+        
+        inputContainer.append(label, input);
+        
+        
+        userForm.appendChild(inputContainer);
+        // console.log(userForm);
+    });
+
+    //==================Edit btn starts===========
+    let editBtn = document.createElement("button");
+    editBtn.classList.add("editBtn");
+    
+    editBtn.innerText = "Update Details";
+
+    // console.log("callled");
+
+    editBtn.addEventListener("click", async () => {
+
+        if (!validateForm(fields)) {
+            return; // Stop if form is invalid
+        }
+        else{
+       
+        if (editBtn.innerText == "Save Changes") {
+
+            let id = document.getElementById(fields[0].id).value;
+            console.log(" id : ", id);
+
+            if (isNaN(id)) {
+                console.log("Invalid id or not a number");
+                console.log(id);
+                return;
+            }
+
+
+            if (entityType.toUpperCase() == "USER") {
+                let updatedUser = {
+                    name: (document.getElementById("name").value),
+                    email: (document.getElementById("email").value),
+                    contact_number: String(document.getElementById("contactNumber").value),
+                    role: "USER",
+                };
+
+                await updatingUserInDB(id, updatedUser);
+            }
+        }
+        
+
+
+        let inputs = document.querySelectorAll(".userForm .inputContainer input");
+
+
+        inputs.forEach((ele) => {
+            //userId and role cannot be updated
+            if (ele.id != "userId" && ele.id != "role" ) {
+                ele.readOnly = !ele.readOnly;
+                ele.classList.toggle("editable");
+            }
+        });
+
+
+        console.log(inputs[2].readOnly);
+        editBtn.innerText = inputs[1].readOnly ? "Update Details" : "Save Changes";
+
+    }
+        // console.log(inputs);
+    });
+
+
+
+    userFormContainer.appendChild(userForm);
+    userFormContainer.appendChild(editBtn);
+    profileContainer.appendChild(heading);
+    profileContainer.appendChild(userFormContainer);
+
+
+
 }
 
 
 
-// =============================schedule Booking and book the vehicle section ===================
+
+// ===============================Printing ENDS===========================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ---------------schedule Booking and book the vehicle section ------------------
 function scheduleBookingForVehicle(vehicle){
 
     formContainer.innerHTML = "";
@@ -980,7 +1181,12 @@ function scheduleBookingForVehicle(vehicle){
         input.id = field.id;
 
         if(input.type == "date"){
-            input.min = today;
+            if(field.id == "b_StartDate"){
+                input.min = startDate;
+            }
+            else if(field.id == "b_EndDate"){
+                input.min = endDate;
+            }
 
             input.onchange = ()=>{
                 let initial = document.getElementById("b_StartDate");
@@ -1056,32 +1262,35 @@ function scheduleBookingForVehicle(vehicle){
 
 }   
 
-// ==========================Storing in DB =================
-async function storingBookingInDB(email,registration_number,starting,ending) {
-    try {
 
-        let response = await fetch(`http://localhost:8080/booking/add?email=${email}&registration_number=${registration_number}&startDate=${starting}&endDate=${ending}`,{
-            method : "POST"
-        });
 
-        if(response.ok){
 
-            let data = await response.text();
-            alert("Booked successfully Successfully !!! Refresh to load the changes");
-            console.log(data);
-            
-        }
-        else{
-            let msg = await response.text();
-            alert("Failed to book the vehicle bcz server responding as ' "+ msg + " ' ");
-            console.log("error msg",response.status);
-            console.log("error msg",response.statusText);
-        }
-        
-    } catch (error) {
-        console.error(error);
-    }
+
+
+
+
+
+
+
+//====================implementing logout=================
+
+function logout(){
+    localStorage.removeItem("user");
+    window.location.href = "index.html";
 }
+
+
+
+
+
+
+
+
+
+
+
+
+// ===========================helpers==================================
 
 
 
@@ -1102,3 +1311,22 @@ function getDateDifference(startDateStr, endDateStr) {
     return diffDays;
 }
 
+
+
+
+// ----validating entries-------
+function validateForm(fields) {
+    let isValid = true;
+    fields.forEach(field => {
+        let inputElement = document.getElementById(field.id);
+        if (inputElement && inputElement.hasAttribute("required")) {
+            if (!inputElement.value || inputElement.value.trim() === "") {
+                alert(`Please fill in the required field: ${field.label}`);
+                isValid = false;
+                inputElement.focus();
+                return false;
+            }
+        }
+    });
+    return isValid;
+}

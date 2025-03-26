@@ -187,7 +187,9 @@ body {
 /* ==============================paging starts============= */
 #page1.invisible,
 #page2.invisible,
-#page3.invisible
+#page3.invisible,
+#page4.invisible
+
 {
     display: none;
 }
@@ -467,9 +469,17 @@ span.addBtn:hover{
     padding: 5px 20px;
     font-size: 0.8rem;
     margin-right: 10px;
+    cursor: pointer;
+    border: 1px solid var(--success);
+    z-index: 10;
 
 }
 
+.detailsContainer .lowerBox .selectBtn:hover{
+    color: var(--success);
+    background-color: var(--white);
+    border: 1px solid var(--success);
+}
 
 
 
@@ -606,6 +616,7 @@ span.addBtn:hover{
     max-width: 450px;
     /* background-color: #00246b; */
 }
+
 .bookingForm input{
     outline: none;
     border: none;
@@ -616,6 +627,11 @@ span.addBtn:hover{
     font-weight: 600;
     font-size: 1rem;
      border-radius: 25px;
+     cursor: pointer;
+}
+
+.bookingForm input:read-only{
+    cursor: not-allowed;
 }
 
 .formContainer .lowerBlock{
@@ -659,3 +675,128 @@ span.addBtn:hover{
     /* border: 1px solid gray; */
     /* box-shadow: 4px 4px 2px rgba(255, 255, 255, 1); */
 }
+
+
+
+
+
+
+
+
+
+/* ========================Profile Container styles======================== */
+.profileContainer .userFormContainer{
+    margin: 0 auto; 
+    background-color: var(--blue-dark);
+    border-radius: 25px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+}
+
+.profileContainer .heading{
+    text-align: center;
+    color: var(--blue-dark);
+    margin: 15px 0;;
+}
+
+.profileContainer .userForm{
+    width: 100%;
+    display: grid;
+    gap: 20px 30px;
+    grid-template-columns: 1fr 1fr;
+    flex-direction: column;
+    align-items: flex-start;
+    color: var(--white);
+    
+}
+
+.profileContainer .inputContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.profileContainer .userForm label{
+    font-size: 1.2rem;
+    color: var(--white);
+    font-weight: 600;
+    padding:10px;
+    width: max-content;
+    white-space: nowrap; 
+}
+
+.profileContainer .userForm input,
+.profileContainer .userForm select{
+    border: none;
+    outline: none;
+    font-size: 1.2rem;
+    border-bottom: 1px dashed var(--white);
+    width: 100%;
+    background: whitesmoke;
+    border-radius: 15px;
+    width: 100%;
+    padding: 5px 15px;
+    color:var(--black-dark);
+    font-weight: 500;
+    /* cursor: pointer; */
+    
+    /* text-transform: uppercase; */
+}
+
+.profileContainer .userForm input:read-only{
+    cursor: not-allowed;
+}
+
+/* .userForm .inputContainer:nth-child(3) input{
+    text-transform: none;
+} */
+
+
+.profileContainer .userForm  input.editable {
+    background-color: #fff;
+    border: 1px solid var(--blue-light);
+    cursor: text;
+}
+
+
+.profileContainer .editBtn{
+    cursor: pointer;
+    min-width: 40%;
+    max-width: 80%;
+    padding: 10px 30px;
+    margin: 0 auto;
+    background: none;
+    background-color: var(--white);
+    color: var(--blue-dark);
+    border-radius: 15px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    transition: transform 1s;
+}
+
+.profileContainer .editBtn.saveChanges{
+    background-color: var(--success);
+    color: #cadcfc;
+}
+
+.profileContainer .editBtn:hover{
+    background-color: var(--blue-dark);
+    color: var(--white);
+    /* transform: translateY(-2px); */
+    border: 2px solid var(--white);
+    box-shadow: 3px 3px 10px rgba(255, 255, 255, 1);
+}
+
+
+
+
+
+
+
+
+
+
+
