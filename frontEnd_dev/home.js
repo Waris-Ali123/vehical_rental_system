@@ -803,7 +803,7 @@ function printingCardsForVehicle(vehiclesParam){
 
             let pricePerDay = document.createElement("h3");
             pricePerDay.classList.add("pricePerDay");
-            pricePerDay.innerText = vehicle.price_per_day+"/-Rs";
+            pricePerDay.innerText = vehicle.price_per_day.toFixed(2)+"/-Rs";
 
             let selectBtn = document.createElement("div");
             selectBtn.innerText = "BOOK NOW";
@@ -1041,12 +1041,34 @@ function printingFilters(){
         let initial =  document.getElementById("startDate").value;
         let ending =  document.getElementById("endDate").value;
         let typeSelected = document.getElementById("type");
+        
+        console.log(initial,ending);
+    
         let availableVehicles = null;
-        if(typeSelected.value == "ALL"){
-            availableVehicles = await fetchingVehiclesAvailable(initial,ending);
+
+        if(initial&&ending){
+            
+            if(typeSelected.value == "ALL"){
+                console.log("called the initial without type")
+                availableVehicles = await fetchingVehiclesAvailable(initial,ending);
+            }
+            else{
+                console.log("called the initial and type")
+                availableVehicles = await fetchingVehiclesAvailableWithType(initial,ending,typeSelected.value);
+            }
         }
         else{
-            availableVehicles = await fetchingVehiclesAvailableWithType(initial,ending,typeSelected.value);
+            if(typeSelected.value != "ALL"){
+                console.log("called the type without initial")
+                console.log("typeselected : ", typeSelected.value);
+                let targetVehicles = searchingVehiclesForKeyword(typeSelected.value); //Using our search bar for reusability;
+                console.log("targetVehicles for type : ",targetVehicles);
+                showPage1();
+                printingCardsForVehicle(targetVehicles);
+            }
+            else{
+                printingCardsForVehicle(allVehicles);
+            }
         }
         
         
@@ -1377,9 +1399,26 @@ function searchBarClick(){
 
 
 }
+// function searchBarClick(keyword){
+//     console.log("seach bar key up");
+//     // let keyword = searchBar.value.toLowerCase();
+
+//     let targetVehicles =  searchingVehiclesForKeyword(keyword);
+
+    
+
+//     console.log(targetVehicles);
+
+//     showPage1();
+//     printingCardsForVehicle(targetVehicles);
+
+
+// }
 
 
 function searchingVehiclesForKeyword(keyword){
+
+    keyword = keyword.toLowerCase();
 
     let targetVehicles = [];
 
@@ -1393,10 +1432,11 @@ function searchingVehiclesForKeyword(keyword){
 
         if(name.includes(keyword) || type.includes(keyword)
                 || fuelType.includes(keyword)   || model.includes(keyword)
-                || price_per_day < (keyword) && price_per_day>keyword     //filtering based on price with a range to enhance the user experience
+                || price_per_day < (keyword) && price_per_day>keyword - 500   //filtering based on price with a range to enhance the user experience
         ){
             targetVehicles.push(vehicle);
         }
+        
     });                                         
 
 
