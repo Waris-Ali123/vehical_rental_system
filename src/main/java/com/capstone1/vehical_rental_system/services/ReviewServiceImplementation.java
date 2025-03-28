@@ -2,6 +2,7 @@ package com.capstone1.vehical_rental_system.services;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,8 @@ public class ReviewServiceImplementation implements ReviewService{
 
     @Autowired
     VehicleService vehicleService;
+
+
 
     @Autowired
     ReviewRepo reviewRepo;
@@ -138,6 +141,22 @@ public class ReviewServiceImplementation implements ReviewService{
         } catch (Exception e) {
            e.printStackTrace();
            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+
+
+    
+    @Override
+    public ResponseEntity<List<Review>> getTopReviews() {
+        try {
+            List<Review> topReviews = reviewRepo.findByRatingGreaterThanEqual(5);
+
+            return ResponseEntity.ok().body(topReviews);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
         }
     }
 

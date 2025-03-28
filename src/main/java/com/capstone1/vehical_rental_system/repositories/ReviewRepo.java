@@ -26,4 +26,6 @@ public interface ReviewRepo extends JpaRepository<Review,Integer>{
                     " Lower(feedback) like Lower(Concat('%',:keyword,'%'))" 
         )
     public List<Review> SearchingByKeyword(String keyword);
+
+    public List<Review> findByRatingGreaterThanEqual(int rating);
 }

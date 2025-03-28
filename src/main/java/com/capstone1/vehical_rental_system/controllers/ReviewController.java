@@ -92,6 +92,16 @@ public class ReviewController {
         }
 
     }
+
+    @GetMapping("/getTopReviews")
+    public ResponseEntity<List<Review>> getTopReviews(){
+        try {
+            return reviewService.getTopReviews();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
     
 
     

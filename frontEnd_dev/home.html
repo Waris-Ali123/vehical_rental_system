@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="home.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" />
+    <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" />
+    <!-- //having rounded for stars -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
+        
     <script src="home.js" defer></script>
 </head>
+
 <body>
     <div class="container">
         <!-- ==========side container starts =============== -->
@@ -23,7 +29,7 @@
                         <div class="menuText">Brand Name</div>
                     </button>
                 </li>
-                <li id="homeNav" class="listItem active" >
+                <li id="homeNav" class="listItem active" onclick="printingOnClickHomeNav()">
                     <button>
 
                         <span class="icon material-symbols-outlined ">
@@ -32,7 +38,7 @@
                         <div class="menuText">Home</div>
                     </button>
                 </li>
-                   
+
                 <li id="vehicleNav" class="listItem" onclick="printingOnClickVehicleNav()">
                     <button>
 
@@ -60,7 +66,7 @@
                         <div class="menuText">Reviews</div>
                     </button>
                 </li>
-<!-- 
+                <!-- 
                 <li id="userNav" class="listItem" >
                     <button >
 
@@ -70,7 +76,7 @@
                         <div class="menuText">Users</div>
                     </button>
                     </li> -->
-             
+
                 <li id="profileNav" class="listItem" onclick="printingOnClickProfileNav()">
                     <button>
 
@@ -80,7 +86,7 @@
                         <div class="menuText">Profile</div>
                     </button>
                 </li>
-                <li id="logoutNav" class="listItem" onclick="logout()" >
+                <li id="logoutNav" class="listItem" onclick="logout()">
                     <button>
 
                         <span class="icon material-symbols-outlined ">
@@ -90,16 +96,16 @@
                     </button>
                 </li>
             </ul>
-                
-         </aside>
+
+        </aside>
         <!-- ==========side container ends =============== -->
-          <!-- ==========main container starts =============== -->
+        <!-- ==========main container starts =============== -->
         <main class="main">
             <div class="topContainer">
                 <span class="toggle menuIcon material-symbols-outlined">menu</span>
                 <div class="searchContainer">
                     <span class="searchIcon material-symbols-outlined">search</span>
-                    <input id="searchBarId" class="searchBar" placeholder="Search here.." ></input>
+                    <input id="searchBarId" class="searchBar" placeholder="Search here.."></input>
                 </div>
                 <div class="profilePhoto" onclick="profileClick()">
                     <div class="circularPhoto">W</div>
@@ -108,22 +114,22 @@
             </div>
 
             <!-- it will only keep whatever we are showing during main vehicle page -->
-            <div id="page1">  
+            <div id="page1">
                 <!-- it will contain the filter of the main vehicle page -->
                 <div class="filterContainer">
                 </div>
                 <!-- it will show the vehicle in cards format -->
                 <div class="cardContainer">
-                </div>       
+                </div>
             </div>
-            
+
             <!-- it is dedicated to the specific vehicle page as well as the booking and review page. -->
             <div id="page2">
                 <!-- it will contain the details and img of specific product -->
                 <div class="vehicleContainer">
                 </div>
                 <!-- it will contain the tables as booking table and review table. -->
-                <div class="tablesContainer">   
+                <div class="tablesContainer">
                 </div>
             </div>
 
@@ -133,10 +139,69 @@
             </div>
 
             <!-- it will contain the profile related info of user -->
-            <div id = "page4">
+            <div id="page4">
                 <div class="profileContainer"></div>
             </div>
-         </main>
+
+
+
+            <!-- It Contains home page -->
+            <div id="page0">
+                <section id="frontView">
+                    <div class="insiderText">
+
+                        <h1>Upto <span>25%</span>  off on first bookings <span>Car</span>  through your app!</h1>
+                        <!-- <div> -->
+                        <div class="sublines">
+                            <span class="material-symbols-outlined">
+                                attach_money
+                            </span>
+                            <div class="subText">
+                                Best Price Guaranteed
+                            </div>
+                        </div>
+                        <div class="sublines">
+                            <span class="material-symbols-outlined">
+                                directions_car
+                            </span>
+                            <div class="subText">
+                                Home PickUps
+                            </div>
+                        </div>
+                        <div class="sublines">
+                            <span class="material-symbols-outlined">
+                                laptop_mac
+                            </span>
+                            <div class="subText">
+                                Easy Bookings
+                            </div>
+                        </div>
+                        <div class="sublines">
+                            <span class="material-symbols-outlined">
+                                support_agent
+                            </span>
+                            <div class="subText">
+                                24x7 Customer Support
+                            </div>
+                        </div>
+                        <!-- </div> -->
+
+                        <button class="exploreVehicles">Explore Vehicles</button>
+                    </div>
+
+                </section>
+                <section class="reviewSection">
+                    <h1>Top Reivews</h1>
+                    <div class="reviewRow">
+
+                    </div>
+
+                </section>
+            </div>
+
+
+        </main>
     </div>
 </body>
+
 </html>
