@@ -95,7 +95,10 @@ let profileContainer = document.querySelector(".profileContainer");
 let reviewSection = document.querySelector(".reviewSection");
 //Review Row that will have all the dynamic reviews;
 let reviewRow = document.querySelector(".reviewRow");
-
+//Newly added car section in home page that contains the cars that are newly added or modified;
+let newlyAddedCarRow  = document.querySelector(".newlyAddedCarRow");
+//Newly added car section in home page that contains the cars that are newly added or modified;
+let newlyAddedBikeRow  = document.querySelector(".newlyAddedBikeRow");
 // add hovered class to selected list item
 let list = document.querySelectorAll(".listOfMenus .listItem");
 
@@ -141,7 +144,38 @@ window.onload = async function () {
 
   let topReviews = await fetchingTopReviews();
   printingReviewsOnCard(topReviews.slice(-5));
+
+
+
+
+
+  //wanted to print the cars on the home page the logic is as: 
+
+  // sorting the vehicles in the descending order to get the newest first
+  let newlyAddedCarVehicles =  getNewlyAddedVehicles("CAR");
+  //printing only the first four
+  printingCardsForVehicle(newlyAddedCarVehicles.slice(0,Math.min(allVehicles.length,4)),newlyAddedCarRow);
+  
+  // sorting the vehicles in the descending order to get the newest first
+  let newlyAddedBikeVehicles =  getNewlyAddedVehicles("BIKE");
+  //printing only the first four
+  printingCardsForVehicle(newlyAddedBikeVehicles.slice(0,Math.min(allVehicles.length,4)),newlyAddedBikeRow);
+
 };
+
+
+
+
+
+
+// ----------------getting newly added vehicles--------------
+function getNewlyAddedVehicles(type){
+  let newlyAddedVehicles = allVehicles.sort((a,b)=>b.vehicle_id - a.vehicle_id).filter((vehicle)=>{
+    return vehicle.type == type;
+  });
+
+  return newlyAddedVehicles;
+}
 
 // ======================================NAVBAR functions start ===============
 function printingOnClickVehicleNav() {
@@ -527,7 +561,7 @@ function printingBookingsDataInTable(
     let vehicleName = document.createElement("td");
     vehicleName.innerText = element.vehicle.name;
     let totalPrice = document.createElement("td");
-    totalPrice.innerText = element.totalPrice.toFixed(2);
+    totalPrice.innerText = element.totalPrice.toFixed(0);
 
     let statusBox = document.createElement("td");
     statusBox.classList.add("statusBox");
@@ -679,9 +713,9 @@ function printingReviewsDataInTable(reviewsParam, eraseBefore = true) {
 }
 
 //printing the cards for all vehicles
-function printingCardsForVehicle(vehiclesParam) {
+function printingCardsForVehicle(vehiclesParam,containerToPrint = cardContainer) {
   console.log("i am inside the printing cards for vehicle");
-  cardContainer.innerHTML = "";
+  containerToPrint.innerHTML = "";
 
   if (vehiclesParam.length == 0) {
     console.log("No Data Found");
@@ -746,7 +780,7 @@ function printingCardsForVehicle(vehiclesParam) {
 
       let pricePerDay = document.createElement("h3");
       pricePerDay.classList.add("pricePerDay");
-      pricePerDay.innerText = vehicle.price_per_day.toFixed(2) + "/-Rs";
+      pricePerDay.innerText = vehicle.price_per_day.toFixed(0) + "/-Rs";
 
       let selectBtn = document.createElement("div");
       selectBtn.innerText = "BOOK NOW";
@@ -767,7 +801,7 @@ function printingCardsForVehicle(vehiclesParam) {
         printingCompleteVehicleDetails(vehicle);
       });
 
-      cardContainer.appendChild(mainVehicleCard);
+      containerToPrint.appendChild(mainVehicleCard);
     });
   }
 }
@@ -834,7 +868,7 @@ function printingCompleteVehicleDetails(vehicle) {
 
   let price_per_day = document.createElement("div");
   price_per_day.innerHTML =
-    vehicle.price_per_day.toFixed(2) + "/-Rs" + "<span> per day</span>";
+    vehicle.price_per_day.toFixed(0) + "/-Rs" + "<span> per day</span>";
   price_per_day.classList.add("vehiclePrice");
   // ------------Book Btn--------------------
   let bookingBtn = document.createElement("button");
@@ -1006,11 +1040,13 @@ function printingFilters() {
         showPage1();
         printingCardsForVehicle(targetVehicles);
       } else {
+        showPage1();
         printingCardsForVehicle(allVehicles);
       }
     }
 
     if (availableVehicles != null) {
+      showPage1();
       printingCardsForVehicle(availableVehicles);
       if (availableVehicles.length === 0) {
         tablesContainer.innerHTML = "<h2>No Content found</h2>";
@@ -1290,7 +1326,7 @@ function scheduleBookingForVehicle(vehicle) {
 
         let finalPrice =
           vehicle.price_per_day * getDateDifference(initial.value, final.value);
-        totalPriceBooking.innerText = finalPrice.toFixed(2);
+        totalPriceBooking.innerText = finalPrice.toFixed(0);
       };
     }
 

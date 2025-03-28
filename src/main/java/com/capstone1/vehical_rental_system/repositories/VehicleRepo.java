@@ -28,7 +28,7 @@ public interface VehicleRepo extends JpaRepository<Vehicle,Integer>{
                     " V.availability = 'AVAILABLE' " + 
                     " And V.vehicle_id Not In " + 
                     " ( Select B.vehicle.vehicle_id from Booking B where "+
-                    " B.startDate <=:endDate and B.endDate >=:startDate)"
+                    " B.startDate <=:endDate and B.endDate >=:startDate and B.bookingStatus = 'CONFIRMED')"
     )
     public List<Vehicle> SearchingAvailableVehicles(LocalDate startDate,LocalDate endDate);
 
@@ -37,7 +37,7 @@ public interface VehicleRepo extends JpaRepository<Vehicle,Integer>{
                     " V.availability = 'AVAILABLE' And " + 
                     " V.vehicle_id Not In " + 
                     " ( Select B.vehicle.vehicle_id from Booking B where "+
-                    " B.startDate <=:endDate and B.endDate >=:startDate)"
+                    " B.startDate <=:endDate and B.endDate >=:startDate and B.bookingStatus = 'CONFIRMED')"
     )
     public List<Vehicle> SearchingAvailableVehiclesByType(Vehicle.VehicleType type, LocalDate startDate,LocalDate endDate);
 } 

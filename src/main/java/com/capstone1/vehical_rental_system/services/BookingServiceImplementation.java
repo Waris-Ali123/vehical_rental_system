@@ -123,12 +123,12 @@ public class BookingServiceImplementation implements BookingService {
     }
 
 
-    
+    //only for users not having the cancel bookings
     @Override
     public ResponseEntity<List<Booking>> getBookingsByRegistrationNumber(String registration_number) {
         try {
             Vehicle vehicle = vehicleService.getByRegistrationNumber(registration_number);
-            List<Booking> bookingsList = bookingRepo.findByVehicle(vehicle);
+            List<Booking> bookingsList = bookingRepo.findByVehicleAndBookingStatus(vehicle,BookingStatus.CONFIRMED);
             return ResponseEntity.ok().body(bookingsList);
 
         } catch (Exception e) {

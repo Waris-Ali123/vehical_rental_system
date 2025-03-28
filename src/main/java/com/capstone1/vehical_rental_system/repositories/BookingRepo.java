@@ -19,7 +19,7 @@ public interface BookingRepo extends JpaRepository<Booking,Integer> {
 
     List<Booking> findByUser(User user);
 
-    List<Booking> findByVehicle(Vehicle vehicle);
+    List<Booking> findByVehicleAndBookingStatus(Vehicle vehicle,BookingStatus bookingStatus);
 
     @Query(value = "Select B from Booking B where "+
                     " Lower(user.name) like Lower(Concat('%',:keyword,'%')) Or  " + 
