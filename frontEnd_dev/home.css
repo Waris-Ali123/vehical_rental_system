@@ -914,7 +914,7 @@ span.addBtn:hover{
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.132); 
+    background-color: rgba(0, 0, 0, 0.432); 
     z-index: 1;
     border-top-left-radius: 50px;
     border-top-right-radius: 50px;
@@ -933,7 +933,7 @@ span.addBtn:hover{
 }
 
 .insiderText h1 span{
-    color: var(--success);
+    color: var(--warning);
 }
 .sublines{
     display: flex;
@@ -1003,12 +1003,12 @@ span.addBtn:hover{
 }
 
 .reviewRow{
-    display: flex;
-    justify-content: space-between;
-    width: 90%;
-    flex-wrap: wrap;
-    /* align-items: center;; */
-    ;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 30px;
+    max-width: 100%;
+    padding: 0 20px;
+
 }
 
 .cardReview{
@@ -1063,11 +1063,13 @@ span.addBtn:hover{
 
 
 .newlyAddedRow{
-    display: flex; 
-    width: 100%;
-    /* column-gap: 10px; */
-    justify-content: space-around;
-    flex-wrap: wrap;  
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        row-gap: 20px;
+        column-gap: 15px;
+        margin: 25px 0;
+        max-width: 100%;
+        flex-wrap: nowrap;
 }
 .newlyAddedRow .mainVehicleCard{
     /* display: flex; */
@@ -1194,7 +1196,7 @@ span.addBtn:hover{
 
 
 
-/* Responsive design implementation starts ------- media query 900px -----------1
+/* Responsive design implementation starts ------- media query   -----------1
  */
 
  @media (max-width: 1024px) {
@@ -1206,6 +1208,10 @@ span.addBtn:hover{
     .bookingForm .inputBox {
         max-width: none;
         padding: 0 50px;
+    }
+
+    #frontView .insiderText {
+        margin-left: 30px;
     }
 }
 
@@ -1254,11 +1260,11 @@ span.addBtn:hover{
     }
 
     .bookingForm input,
-.bookingForm select{
-    min-width: 220px;
-    font-size: 1rem;
-    width: 100%;
-}
+    .bookingForm select{
+        min-width: 220px;
+        font-size: 1rem;
+        width: 100%;
+    }
 
     
 
@@ -1266,7 +1272,7 @@ span.addBtn:hover{
 }
 
 
-@media (max-width : 420px){
+@media (max-width : 430px){
     .profileContainer .userFormContainer{
         margin-bottom: 25px;
     }
@@ -1287,6 +1293,32 @@ span.addBtn:hover{
         font-size: 1.1rem;
         padding: 5px 15px;
         font-weight: 500;
+    }
+
+
+
+    /* ----home page------ */
+    #frontView .insiderText {
+        row-gap: 10px;
+        max-width: 400px;
+        margin-left: 20px;
+        z-index: 2;
+    }
+
+    #frontView::before {
+        background-color: rgba(0, 0, 0, .55);
+    }
+
+    .insiderText h1 span {
+        color: var(--warning);
+    }
+
+    .reviewRow{
+        row-gap: 15px;
+    }
+
+    .newlyAddedRow .mainVehicleCard {
+        margin: 10px 0;
     }
 }
   
