@@ -706,6 +706,7 @@ function printingReviewsDataInTable(reviewsParam,eraseBefore=true) {
         let rating = document.createElement("td");
         rating.innerText = element.rating;
         let feedback = document.createElement("td");
+        feedback.classList.add("feedbackInsideTable");
         feedback.innerText = element.feedback;
 
 

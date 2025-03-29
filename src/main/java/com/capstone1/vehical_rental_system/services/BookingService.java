@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 
 import com.capstone1.vehical_rental_system.entities.Booking;
-import com.capstone1.vehical_rental_system.entities.Review;
 
 public interface BookingService {
 

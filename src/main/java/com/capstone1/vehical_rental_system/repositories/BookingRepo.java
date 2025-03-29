@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import com.capstone1.vehical_rental_system.entities.Booking;
 import com.capstone1.vehical_rental_system.entities.Booking.BookingStatus;
-import com.capstone1.vehical_rental_system.entities.Review;
 import com.capstone1.vehical_rental_system.entities.User;
 import com.capstone1.vehical_rental_system.entities.Vehicle;
 @Repository

@@ -350,6 +350,24 @@ span.addBtn:hover{
     background-color: var(--warning);
 }
 
+.entityTable .feedbackInsideTable {
+    max-width: 30ch; /* Limit width to 50 characters */
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
+
+.entityTable .feedbackInsideTable:hover {
+    white-space: normal;
+    max-width: 300px;
+    text-align: left
+    ;;
+}
+
+
+/* =====================================filters of vehicle page starts========================== */
+
 .filterContainer{
     display: flex;
     align-items: center;
@@ -576,10 +594,17 @@ span.addBtn:hover{
     font-size: 0.9rem;
 }
 
+.mainDetailsContainer .btnContainer{
+    display: flex;
+    /* justify-content: space-between; */
+    align-items: center;
+    gap: 25px;
+}
+
 .mainDetailsContainer .bookingBtn{
     padding: 5px;
     /* padding-left: 15px; */
-    background-color: var(--blue-dark);
+    background-color: var(--success);
     color: var(--white);
     font-weight: 600;
     letter-spacing: 1.5px;
@@ -591,11 +616,27 @@ span.addBtn:hover{
 }
 
 .mainDetailsContainer .bookingBtn:hover{
-    color: var(--blue-dark);
+    color: var(--success);
     background-color: var(--white);
 }
 
+.mainDetailsContainer .reviewBtn{
+    padding: 5px 10px;
+    background-color: var(--blue-dark);
+    color: var(--white);
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    font-size: 1.2rem;
+    border-radius: 10px;
+    max-width: 200px;
+    cursor: pointer;
+    /* float: right; */
+}
 
+.mainDetailsContainer .reviewBtn:hover{
+    color: var(--blue-dark);
+    background-color: var(--white);
+}
 
 
 /* =======================booking form ==================== */
@@ -639,7 +680,8 @@ span.addBtn:hover{
     /* background-color: #00246b; */
 }
 
-.bookingForm input{
+.bookingForm input,
+.bookingForm select{
     outline: none;
     border: none;
     /* width: 100%; */
@@ -689,7 +731,6 @@ span.addBtn:hover{
     border-radius: 12px;
     cursor: pointer;
     transition: transform .5s ;
-
 }
 
 .finalBookBtn:hover{
@@ -698,6 +739,27 @@ span.addBtn:hover{
     /* box-shadow: 4px 4px 2px rgba(255, 255, 255, 1); */
 }
 
+
+.finalReviewBtn{
+    padding: 5px 15px;
+    color: var(--success);
+    background-color: var(--white);
+    border: 1px solid black;
+    font-size: 1.5rem;
+    font-weight:700;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform .5s ;
+    max-width: 200px;
+    margin-top: 25px;
+    /* float: right; */
+    /* margin:25px auto; */
+}
+
+.finalReviewBtn:hover{
+    color: var(--white);
+    background-color: var(--success);
+}
 
 
 

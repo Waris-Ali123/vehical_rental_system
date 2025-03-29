@@ -412,6 +412,9 @@ async function fetchingTopReviews() {
 
 // ====================== Ending fetching entities========================================
 
+
+
+
 // ==========================Storing in DB starts  =================================
 async function storingBookingInDB(
   email,
@@ -441,6 +444,37 @@ async function storingBookingInDB(
     console.error(error);
   }
 }
+
+async function storingReviewInDB(
+  email,
+  registration_number,
+  rating,
+  feedback
+) {
+  try {
+    let response = await fetch(
+      `http://localhost:8080/review/add?email=${email}&registration_number=${registration_number}&rating=${rating}&feedback=${feedback}`,
+      {
+        method: "POST",
+      }
+    );
+
+    if (response.ok) {
+      let data = await response.json();
+      alert("Review Added successfully !!! Refresh to load the changes");
+      console.log(data);
+      allReviews.push(data);
+    } else {
+      alert("Failed to book bcz");
+      console.log("error msg", response.status);
+      console.log("error msg", response.statusText);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
 
 // ================================Updating the DB=================
 async function updatingUserInDB(user_id, updatedUser) {
@@ -588,6 +622,7 @@ function printingBookingsDataInTable(
         cancelBtn.classList.add("material-symbols-outlined");
         cancelBtn.classList.add("cancelBtn");
         cancelBtn.innerText = "cancel";
+        cancelBtn.title = "Cancel Booking";
 
         cancelBtn.addEventListener("click", async () => {
           console.log("Booking cancelling called");
@@ -697,6 +732,7 @@ function printingReviewsDataInTable(reviewsParam, eraseBefore = true) {
     let rating = document.createElement("td");
     rating.innerText = element.rating;
     let feedback = document.createElement("td");
+    feedback.classList.add("feedbackInsideTable");
     feedback.innerText = element.feedback;
 
     let newRow = document.createElement("tr");
@@ -870,6 +906,12 @@ function printingCompleteVehicleDetails(vehicle) {
   price_per_day.innerHTML =
     vehicle.price_per_day.toFixed(0) + "/-Rs" + "<span> per day</span>";
   price_per_day.classList.add("vehiclePrice");
+
+
+  // --------------------Adding booking and review btn --------------
+  let btnContainer = document.createElement("div");
+  btnContainer.classList.add("btnContainer");
+
   // ------------Book Btn--------------------
   let bookingBtn = document.createElement("button");
   bookingBtn.classList.add("bookingBtn");
@@ -880,8 +922,18 @@ function printingCompleteVehicleDetails(vehicle) {
   });
   bookingBtn.innerText = "Book Now";
 
+  let addReviewBtn = document.createElement("button");
+  addReviewBtn.innerHTML = "Add Review";
+  addReviewBtn.classList.add("reviewBtn");
+  addReviewBtn.addEventListener("click",()=>{
+    console.log("btn add Reveiw clicked");
+    showPage3();
+    addingReviewForVehicle(vehicle);
+  })
+
+  btnContainer.append(bookingBtn,addReviewBtn);
   // ----------------appending All --------------------
-  sideDetails.append(nameBlock, iconBlock, price_per_day, bookingBtn);
+  sideDetails.append(nameBlock, iconBlock, price_per_day, btnContainer);
   mainDetailsContainer.append(sideImg, sideDetails);
 
   vehicleContainer.appendChild(mainDetailsContainer);
@@ -954,6 +1006,13 @@ function printingReviewsOnCard(reviewsParam) {
 
 
 }
+
+
+
+
+
+
+
 
 //=----------------------Putting filters in filter container--------
 
@@ -1186,7 +1245,7 @@ function printingFormLayout(headingContent, fieldsComing, entityType) {
   profileContainer.appendChild(userFormContainer);
 }
 
-// ===============================Printing ENDS===========================================
+// ===============================Printing filters container ENDS===========================================
 
 // ---------------schedule Booking and book the vehicle section ------------------
 function scheduleBookingForVehicle(vehicle) {
@@ -1379,6 +1438,143 @@ function scheduleBookingForVehicle(vehicle) {
   formContainer.appendChild(lowerBlock);
 }
 
+
+// ----------------------------adding the rating of user -----------------------------
+function addingReviewForVehicle(vehicle) {
+  console.log("inside adding review fun");
+
+  formContainer.innerHTML = "";
+
+  let fields = [
+    {
+      label: "User Name",
+      value: user.name,
+      readOnly: true,
+      type: "text",
+      id: "b_UserName",
+    },
+    {
+      label: "Email",
+      value: user.email,
+      readOnly: true,
+      type: "email",
+      id: "b_UserEmail",
+    },
+    {
+      label: "Vehicle Name",
+      value: vehicle.name,
+      readOnly: true,
+      type: "text",
+      id: "b_VehicleName",
+    },
+    {
+      label: "Type",
+      value: vehicle.type,
+      readOnly: true,
+      type: "text",
+      id: "b_VehicleType",
+    },
+    {
+      label: "Registration Number",
+      value: vehicle.registration_number,
+      readOnly: true,
+      type: "text",
+      id: "b_VehicleRegistrationNumber",
+    },
+    {
+      label: "Rating",
+      value: "",
+      readOnly: false,
+      type: "select",
+      id: "b_Rating",
+      options : [1,2,3,4,5]
+    },
+    {
+      label: "Feedback",
+      value: "",
+      readOnly: false,
+      type: "text",
+      id: "b_Feedback",
+    },
+  ];
+
+  let bookingForm = document.createElement("form");
+  bookingForm.classList.add("bookingForm");
+
+  let heading = document.createElement("h1");
+  heading.classList.add("heading");
+  heading.innerText = "Add your review";
+
+  formContainer.appendChild(heading);
+
+  fields.forEach((field) => {
+    let inputBox = document.createElement("div");
+    inputBox.classList.add("inputBox");
+
+    let label = document.createElement("label");
+    label.innerText = field.label;
+
+    
+
+    if (field.type == "select") {
+      let selectInput = document.createElement("select");
+      selectInput.id = field.id;
+      field.options.forEach((op)=>{
+        let option = document.createElement("option");
+        option.value = op;
+        option.innerText = op;
+        selectInput.appendChild(option);
+      })
+      inputBox.append(label, selectInput);
+    }
+    else{
+      let input = document.createElement("input");
+      input.value = field.value;
+      input.readOnly = field.readOnly;
+      input.type = field.type;
+      input.id = field.id;
+      inputBox.append(label, input);
+    }
+
+    bookingForm.appendChild(inputBox);
+  });
+
+  // ------------------creating a add btn---------------
+  
+
+  // ------Book it Btn to store directly into the database ---------------
+  let addReveiwBtn = document.createElement("button");
+  addReveiwBtn.classList.add("finalReviewBtn");
+  addReveiwBtn.innerText = "Submit";
+
+  addReveiwBtn.addEventListener("click", async () => {
+    let userEmail = user.email;
+    let registration_number = vehicle.registration_number;
+    let ratingGiven = document.getElementById("b_Rating").value;
+    let feedbackGiven = document.getElementById("b_Feedback").value;
+    // let startDate = startDate;
+
+    await storingReviewInDB(
+      userEmail,
+      registration_number,
+      ratingGiven,
+      feedbackGiven
+    );
+
+    showPage2();
+    printingReviewsDataInTable(allReviews);
+  });
+
+
+  formContainer.append(bookingForm,addReveiwBtn);
+}
+
+
+
+
+
+
+
 // ========================================================Search Bar Implementation starts ==========================================
 function searchBarClick() {
   console.log("seach bar key up");
@@ -1391,18 +1587,7 @@ function searchBarClick() {
   showPage1();
   printingCardsForVehicle(targetVehicles);
 }
-// function searchBarClick(keyword){
-//     console.log("seach bar key up");
-//     // let keyword = searchBar.value.toLowerCase();
 
-//     let targetVehicles =  searchingVehiclesForKeyword(keyword);
-
-//     console.log(targetVehicles);
-
-//     showPage1();
-//     printingCardsForVehicle(targetVehicles);
-
-// }
 
 function searchingVehiclesForKeyword(keyword) {
   keyword = keyword.toLowerCase();
@@ -1430,14 +1615,14 @@ function searchingVehiclesForKeyword(keyword) {
   return targetVehicles;
 }
 
-//====================implementing logout=================
+//=============================================================implementing logout=====================================================
 
 function logout() {
   localStorage.removeItem("user");
   window.location.href = "index.html";
 }
 
-// ===========================helpers==================================
+// ==============================================================helpers=====================================================================
 
 // ==================calculating dates differences =====================
 function getDateDifference(startDateStr, endDateStr) {
