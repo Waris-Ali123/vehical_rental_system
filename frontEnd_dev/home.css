@@ -28,6 +28,7 @@ body {
 .container {
     display: grid;
     grid-template-columns: 300px auto;
+    /* flex-wrap: wrap; */
 }
 
 
@@ -48,8 +49,7 @@ body {
 
 .navigation.active {
     width: 80px;
-  }
-  
+}
 
 .listOfMenus {
     color: var(--white);
@@ -118,6 +118,8 @@ body {
     width: calc(100% - 300px);
     left: 300px;
     padding: 0 25px;
+    min-height: 100vh; /* Ensure content doesn't overflow */
+    overflow-y: auto;  /* Optional: Allows scrolling if content exceeds */
 }
 
 .main.active{
@@ -371,7 +373,11 @@ span.addBtn:hover{
 .filterContainer{
     display: flex;
     align-items: center;
-    justify-content: space-around; 
+    justify-content: space-between; 
+    flex-wrap: wrap;
+    gap: 10px;
+    row-gap: 20px;
+    padding: 10px;
 }
 
 .filterContainer .inputContainer{
@@ -379,6 +385,7 @@ span.addBtn:hover{
     align-items: center;
     gap: 5px;
     font-weight: 500;
+    /* flex-wrap: wrap; */
 
 }
 
@@ -389,6 +396,8 @@ span.addBtn:hover{
     background-color: var(--white);
     padding: 4px ;
     border-radius: 8px;
+    border: 1px solid var(--grey);
+    width: 150px;
 }
 
 .filterBtn{
@@ -401,7 +410,7 @@ span.addBtn:hover{
     text-align: center;
     font-weight: 600;
     cursor: pointer;
-    
+    border: 1px solid var(--blue-dark);
 }
 
 .filterBtn:hover{
@@ -414,10 +423,13 @@ span.addBtn:hover{
 /* ================cardContainer================= */
 .cardContainer{
     display: grid;
-    grid-template-columns: repeat(4,1fr);
+    grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));;
     row-gap: 20px;
     column-gap: 15px;
     margin:25px 0;
+    overflow: hidden; /* Optional: Prevent horizontal overflow */
+    max-width: 100%;  /* Ensures it stays within bounds */
+    flex-wrap: nowrap;
 }
 
 .cardContainer.invisible{
@@ -425,15 +437,13 @@ span.addBtn:hover{
 }
 
 .mainVehicleCard{
-    /* display: flex; */
-    /* flex-direction: column; */
-    max-width: 300px;
-    /* row-gap: 15px; */
     padding: 10px;
     background-color: var(--white);
     border-radius: 15px;
     cursor: pointer;
-    margin: 25px 0;
+    width: 100%;
+    ;
+    max-width: 350px;
 }
 
 .mainVehicleCard img{
@@ -468,7 +478,7 @@ span.addBtn:hover{
 }
 .detailsContainer .iconBlock{
     display: grid;
-    grid-template-columns: repeat(3,1fr);
+    grid-template-columns: repeat(2,1fr);
     justify-content: space-between;
     column-gap: 15px;
     row-gap: 5px;
@@ -649,6 +659,7 @@ span.addBtn:hover{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    margin: 20px;
     /* align-items: around;; */
     /* padding-bottom: 100px; */
 }
@@ -677,6 +688,7 @@ span.addBtn:hover{
     column-gap: 25px;
     width: 100%;
     max-width: 450px;
+    padding: 0 10px;
     /* background-color: #00246b; */
 }
 
@@ -902,7 +914,7 @@ span.addBtn:hover{
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(195, 254, 0, 0.1); 
+    background-color: rgba(0, 0, 0, 0.132); 
     z-index: 1;
     border-top-left-radius: 50px;
     border-top-right-radius: 50px;
@@ -1179,4 +1191,106 @@ span.addBtn:hover{
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
     border: 4px dashed var(--primary);  
 }
-/* -----was adding container to print--------- */
+
+
+
+/* Responsive design implementation starts ------- media query 900px -----------1
+ */
+
+ @media (max-width: 1024px) {
+
+    .bookingForm {
+        grid-template-columns: 1fr;
+    }
+
+    .bookingForm .inputBox {
+        max-width: none;
+        padding: 0 50px;
+    }
+}
+
+
+
+/* -----------------------------------------768---------------------------------- */
+
+@media (max-width: 768px) {
+    .navigation{
+        width: 80px;
+        ;
+    }
+
+    .main{
+        left: 80px;
+        width: 100%;
+    }
+
+    .bookingForm .inputBox {
+        max-width: none;
+        padding: 0;
+    }
+
+    .formContainer .lowerBlock {
+        align-items: flex-start;
+        flex-direction: column;
+        row-gap: 25px;
+    }
+
+    .finalBookBtn {
+        padding: 8px 15px;
+        font-size: 1.3rem;
+    }
+    
+    .formContainer .lowerBlock .totalPriceBlock {
+        font-size: 1.2rem;
+    }
+
+
+    .bookingForm .inputBox{
+        flex-direction: column;
+        align-items: flex-start;
+        row-gap: 10px;
+        max-width: none;
+        /* background-color: #00246b; */
+    }
+
+    .bookingForm input,
+.bookingForm select{
+    min-width: 220px;
+    font-size: 1rem;
+    width: 100%;
+}
+
+    
+
+  
+}
+
+
+@media (max-width : 420px){
+    .profileContainer .userFormContainer{
+        margin-bottom: 25px;
+    }
+    .profileContainer .userForm{
+        gap: 5px;
+        grid-template-columns: 1fr;
+    }
+    .profileContainer .editBtn {
+        
+        max-width: none;
+        padding: 5px 10px;
+        font-size: 1rem;
+    }
+    .profileContainer .userForm label {
+        font-size: 1rem;
+    }
+    .profileContainer .userForm input, .profileContainer .userForm select {
+        font-size: 1.1rem;
+        padding: 5px 15px;
+        font-weight: 500;
+    }
+}
+  
+
+
+
+
