@@ -931,7 +931,7 @@ function printingCompleteVehicleDetails(vehicle) {
     addingReviewForVehicle(vehicle);
   })
 
-  btnContainer.append(bookingBtn,addReviewBtn);
+  btnContainer.append(addReviewBtn,bookingBtn);
   // ----------------appending All --------------------
   sideDetails.append(nameBlock, iconBlock, price_per_day, btnContainer);
   mainDetailsContainer.append(sideImg, sideDetails);
@@ -1403,7 +1403,7 @@ function scheduleBookingForVehicle(vehicle) {
   totalPriceBlock.classList.add("totalPriceBlock");
 
   let textTotal = document.createElement("h3");
-  textTotal.innerText = "Total Price be : ";
+  textTotal.innerText = "Total Price : ";
 
   let totalPrice = document.createElement("div");
   totalPrice.classList.add("totalPriceBooking");

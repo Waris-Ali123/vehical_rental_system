@@ -50,7 +50,7 @@ public class BookingController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/getByRegistrationNumber")
-    public ResponseEntity<List<Booking>> getBookingHistoryByVehicle(@RequestParam String registration_number) {
+    public ResponseEntity<List<Booking>> getBookingHistoryByVeqhicle(@RequestParam String registration_number) {
         return bookingService.getBookingsByRegistrationNumber(registration_number);
     }
 

@@ -1213,6 +1213,21 @@ span.addBtn:hover{
     #frontView .insiderText {
         margin-left: 30px;
     }
+
+    .mainDetailsContainer .reviewBtn {
+        font-size: 1rem;
+        white-space: nowrap;
+    }
+
+    .mainDetailsContainer .bookingBtn {
+        padding: 5px 12px;
+        font-size: 1rem;
+        white-space: nowrap;
+    }
+
+    .mainDetailsContainer .vehiclePrice {
+        font-size: 1.5rem;
+    }
 }
 
 
@@ -1236,8 +1251,8 @@ span.addBtn:hover{
     }
 
     .formContainer .lowerBlock {
-        align-items: flex-start;
-        flex-direction: column;
+        align-items: center;
+        /* flex-direction: column; */
         row-gap: 25px;
     }
 
@@ -1266,13 +1281,26 @@ span.addBtn:hover{
         width: 100%;
     }
 
-    
+    /* ---------specific vehicle ----------------- */
+    .mainDetailsContainer {
+        display: flex;
+        flex-direction: column;
+        row-gap: 25px;
+    }
+
+    .mainDetailsContainer .vehicleImg {
+        border-radius: 25px;
+        width: 100%;
+    }
 
   
 }
 
 
 @media (max-width : 430px){
+    .main{
+        padding: 10px;
+    }
     .profileContainer .userFormContainer{
         margin-bottom: 25px;
     }
@@ -1319,6 +1347,62 @@ span.addBtn:hover{
 
     .newlyAddedRow .mainVehicleCard {
         margin: 10px 0;
+    }
+
+    /* ---------specific vehicle page ---------- */
+    .mainDetailsContainer {
+        padding: 20px;
+    }
+
+    .mainDetailsContainer .btnContainer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 25px;
+    }
+
+    .formContainer {
+        padding: 15px;
+        /* padding-bottom: 100px; */
+    }
+
+    .formContainer .lowerBlock {
+        /* align-items: center; */
+        flex-direction: column;
+        /* row-gap: 25px; */
+    }
+
+}
+
+/* ---------320px -------------- */
+
+@media (max-width : 320px){
+
+    .main{
+        padding: 0;
+    }
+    .mainDetailsContainer .btnContainer {
+        display: flex;
+        flex-direction: column-reverse;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .mainDetailsContainer .bookingBtn {
+        width: 100%;
+    }
+
+    .mainDetailsContainer .reviewBtn {
+        width: 90%;
+    }
+
+    .formContainer {
+        padding: 10px;
+        /* padding-bottom: 100px; */
+    }
+
+    .profileContainer .userFormContainer {
+        margin: 25px 15px;
     }
 }
   
