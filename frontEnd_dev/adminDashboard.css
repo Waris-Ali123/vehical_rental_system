@@ -41,7 +41,6 @@ body {
     transition: 0.5s;
     overflow: hidden;
     background-color: var(--blue-dark);
-    /* padding: 10px 0; */
 }
 
 .navigation.active {
@@ -53,7 +52,6 @@ body {
     color: var(--white);
     display: flex;
     flex-direction: column;
-    /* row-gap: 20px; */
 }
 
 .listOfMenus .listItem {
@@ -63,9 +61,7 @@ body {
     list-style: none;
     cursor: pointer;
     white-space: nowrap;
-    /* border-top-right-radius: 15px; */
-    /* border-bottom: 1px solid none; */
-    /* transition: all .6s ; */
+ 
 }
 
 .listOfMenus .listItem button {
@@ -76,8 +72,6 @@ body {
     align-items: center;
     text-decoration: none;
     color: var(--white);
-    /* transition: .6s ease-in; */
-    /* justify-content: center; */
     border: #00246b 2px;
     background: none;
     cursor: pointer;
@@ -146,7 +140,6 @@ body {
     display: flex;
     align-items: center;
     padding: 20px 10px;
-    /* border: none; */
 }
 
 .searchContainer .searchIcon{
@@ -254,11 +247,6 @@ body {
     scrollbar-color: var(--blue-dark) var(--white);
     scrollbar-width: 30px; 
     position: relative;
-    /* display: flex;
-    flex-direction: column; */
-    /* flex-wrap: wrap; */
-    /* row-gap: 500px; */
-    /* scrollbar-color: var(--black-dark); */
 }
 
 .tablesContainer h2{
@@ -313,9 +301,7 @@ span.addBtn:hover{
 }
 
 .entityTable td:last-child,
-/* .entityTable td:nth-last-child(2), */
 .entityTable th:last-child
-/* .entityTable th:nth-last-child(2) */
 {
 
     text-align: right;
@@ -330,11 +316,6 @@ span.addBtn:hover{
     color: var(--white);
 }
 
-/* .entityTable tbody,
-.entityTable thead{
-    text-align: left;
-
-} */
 
 .Del-icon{
     font-size: 1.5rem;
@@ -377,7 +358,7 @@ span.addBtn:hover{
 }
 
 .entityTable .feedbackInsideTable {
-    max-width: 30ch; /* Limit width to 50 characters */
+    max-width: 30ch; 
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -450,9 +431,6 @@ span.addBtn:hover{
     padding: 5px 15px;
     color:var(--black-dark);
     font-weight: 500;
-    /* cursor: pointer; */
-    
-    /* text-transform: uppercase; */
 }
 
 .userForm input:read-only{
@@ -460,9 +438,9 @@ span.addBtn:hover{
 }
 
 .read-only-select {
-    pointer-events: none; /* Prevents user interactions */
-    opacity: 0.6;         /* Gives a "disabled" look */
-    background-color: #f9f9f9; /* Optional: subtle background color change */
+    pointer-events: none; 
+    opacity: 0.6;        
+    background-color: #f9f9f9;
   }
   
 
@@ -497,7 +475,6 @@ span.addBtn:hover{
 .editBtn:hover{
     background-color: var(--blue-dark);
     color: var(--white);
-    /* transform: translateY(-2px); */
     border: 2px solid var(--white);
     box-shadow: 3px 3px 10px rgba(255, 255, 255, 1);
 }
@@ -506,6 +483,7 @@ span.addBtn:hover{
 /* ============================
 Responsive design implementation starts ------- media query   -----------1
 ============================ */
+/* --------------1024px---------- */
 
 @media (max-width: 1024px) {
 
@@ -535,8 +513,8 @@ Responsive design implementation starts ------- media query   -----------1
 
 
 
-
-
+/* -------------------768 px -------------
+ */
 
 
 
@@ -586,6 +564,8 @@ Responsive design implementation starts ------- media query   -----------1
 
 }
 
+
+/* -----------------430px ------------ */
 
 @media (max-width:430px){
     .cards {

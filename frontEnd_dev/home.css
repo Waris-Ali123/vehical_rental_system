@@ -28,7 +28,6 @@ body {
 .container {
     display: grid;
     grid-template-columns: 300px auto;
-    /* flex-wrap: wrap; */
 }
 
 
@@ -44,7 +43,6 @@ body {
     transition: 0.5s;
     overflow: hidden;
     background-color: var(--blue-dark);
-    /* padding: 10px 0; */
 }
 
 .navigation.active {
@@ -55,7 +53,6 @@ body {
     color: var(--white);
     display: flex;
     flex-direction: column;
-    /* row-gap: 20px; */
 }
 
 .listOfMenus .listItem {
@@ -65,9 +62,7 @@ body {
     list-style: none;
     cursor: pointer;
     white-space: nowrap;
-    /* border-top-right-radius: 15px; */
-    /* border-bottom: 1px solid none; */
-    /* transition: all .6s ; */
+    
 }
 
 .listOfMenus .listItem button {
@@ -78,8 +73,6 @@ body {
     align-items: center;
     text-decoration: none;
     color: var(--white);
-    /* transition: .6s ease-in; */
-    /* justify-content: center; */
     border: #00246b 2px;
     background: none;
     cursor: pointer;
@@ -118,8 +111,8 @@ body {
     width: calc(100% - 300px);
     left: 300px;
     padding: 0 25px;
-    min-height: 100vh; /* Ensure content doesn't overflow */
-    overflow-y: auto;  /* Optional: Allows scrolling if content exceeds */
+    min-height: 100vh;  
+    overflow-y: auto; 
 }
 
 .main.active{
@@ -149,7 +142,6 @@ body {
     display: flex;
     align-items: center;
     padding: 20px 10px;
-    /* border: none; */
 }
 
 .searchContainer .searchIcon{
@@ -206,16 +198,11 @@ body {
     background-color: var(--white);
     border-radius: 15px;
     overflow-x: scroll;
-    scrollbar-width: thin; /* For Firefox */
+    scrollbar-width: thin;
     scrollbar-color: var(--blue-dark) var(--white);
     scrollbar-width: 30px; 
     position: relative;
     display: block;
-    /* display: flex;
-    flex-direction: column; */
-    /* flex-wrap: wrap; */
-    /* row-gap: 500px; */
-    /* scrollbar-color: var(--black-dark); */
 }
 
 .tablesContainer h2{
@@ -270,9 +257,7 @@ span.addBtn:hover{
 }
 
 .entityTable td:last-child,
-/* .entityTable td:nth-last-child(2), */
 .entityTable th:last-child
-/* .entityTable th:nth-last-child(2) */
 {
 
     text-align: right;
@@ -287,12 +272,6 @@ span.addBtn:hover{
     color: var(--white);
 }
 
-/* .entityTable tbody,
-.entityTable thead{
-    text-align: left;
-
-} */
-
 .Del-icon{
     font-size: 1.5rem;
     color: var(--danger);
@@ -304,18 +283,14 @@ span.addBtn:hover{
     font-size: .8rem;
     color: var(--danger);
     background: none;
-    /* text-align: r; */
     cursor: pointer;
-    /* margin-right: 5px; */
     padding: 5px 7px;
     border-radius: 10px;
     text-align: right;
     border: none;
-    /* justify-self: flex-end; */
 }
 
 .cancelBtn:hover{
-    /* background-color: #FFEB3B; */
     font-weight: 800;
     transform: scale(1.1);
 }
@@ -343,7 +318,6 @@ span.addBtn:hover{
 
 .entityTable .statusBox .danger{
     padding: 2px 4px;
-    /* background: #f00; */
     color: var(--danger);
     border-radius: 4px;
     font-size: 14px;
@@ -353,7 +327,7 @@ span.addBtn:hover{
 }
 
 .entityTable .feedbackInsideTable {
-    max-width: 30ch; /* Limit width to 50 characters */
+    max-width: 30ch;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -385,7 +359,6 @@ span.addBtn:hover{
     align-items: center;
     gap: 5px;
     font-weight: 500;
-    /* flex-wrap: wrap; */
 
 }
 
@@ -427,8 +400,8 @@ span.addBtn:hover{
     row-gap: 20px;
     column-gap: 15px;
     margin:25px 0;
-    overflow: hidden; /* Optional: Prevent horizontal overflow */
-    max-width: 100%;  /* Ensures it stays within bounds */
+    overflow: hidden;
+    max-width: 100%; 
     flex-wrap: nowrap;
 }
 
@@ -451,7 +424,6 @@ span.addBtn:hover{
     width: 100%;
     height: 180px;
     box-shadow: 2px 5px 5px rgba(0, 0, 0, 0.1);
-    /* filter: drop-shadow(2px rgba(0,0,0,1)); */
 }
 
 
@@ -464,13 +436,12 @@ span.addBtn:hover{
     background-color: var(--white);
     border-radius: 15px;
     cursor: pointer;
-    /* margin-left: 25px; */
 }
 
 .detailsContainer .nameBlock{
     display: flex;
     flex-direction: column;
-    /* gap: px; */
+
 }
 
 .nameBlock h5{
@@ -484,7 +455,6 @@ span.addBtn:hover{
     row-gap: 5px;
     color: var(--grey);
     flex-wrap: wrap;
-    /* background-color: #000000;    */
 }
 
 
@@ -549,9 +519,7 @@ span.addBtn:hover{
     column-gap: 25px;
     background-color: var(--white);
     border-radius: 15px;
-    
 
-    /* flex-basis: 1 1; */
 }
 
 .mainDetailsContainer .vehicleImg{
@@ -606,14 +574,12 @@ span.addBtn:hover{
 
 .mainDetailsContainer .btnContainer{
     display: flex;
-    /* justify-content: space-between; */
     align-items: center;
     gap: 25px;
 }
 
 .mainDetailsContainer .bookingBtn{
     padding: 5px;
-    /* padding-left: 15px; */
     background-color: var(--success);
     color: var(--white);
     font-weight: 600;
@@ -622,7 +588,6 @@ span.addBtn:hover{
     border-radius: 10px;
     max-width: 200px;
     cursor: pointer;
-    /* text-align: left; */ 
 }
 
 .mainDetailsContainer .bookingBtn:hover{
@@ -640,7 +605,6 @@ span.addBtn:hover{
     border-radius: 10px;
     max-width: 200px;
     cursor: pointer;
-    /* float: right; */
 }
 
 .mainDetailsContainer .reviewBtn:hover{
@@ -660,8 +624,6 @@ span.addBtn:hover{
     flex-direction: column;
     justify-content: space-between;
     margin: 20px;
-    /* align-items: around;; */
-    /* padding-bottom: 100px; */
 }
 
 .formContainer .heading{
@@ -689,14 +651,12 @@ span.addBtn:hover{
     width: 100%;
     max-width: 450px;
     padding: 0 10px;
-    /* background-color: #00246b; */
 }
 
 .bookingForm input,
 .bookingForm select{
     outline: none;
     border: none;
-    /* width: 100%; */
     background-color: #cadcfc;
     min-width: 220px;
     padding: 5px 10px;
@@ -715,7 +675,6 @@ span.addBtn:hover{
     justify-content: space-around;
     align-items: center;
     margin-top: 30px;
-    /* position: absolute; */
 
 }
 
@@ -729,7 +688,6 @@ span.addBtn:hover{
 
 .totalPriceBlock .totalPriceBooking{
     font-weight: 800;
-    /* font-size: 1.3rem; */
     color: var(--warning);
 }
 
@@ -747,8 +705,6 @@ span.addBtn:hover{
 
 .finalBookBtn:hover{
     transform: scale(1.1);
-    /* border: 1px solid gray; */
-    /* box-shadow: 4px 4px 2px rgba(255, 255, 255, 1); */
 }
 
 
@@ -764,8 +720,7 @@ span.addBtn:hover{
     transition: transform .5s ;
     max-width: 200px;
     margin-top: 25px;
-    /* float: right; */
-    /* margin:25px auto; */
+   
 }
 
 .finalReviewBtn:hover{
@@ -837,18 +792,11 @@ span.addBtn:hover{
     padding: 5px 15px;
     color:var(--black-dark);
     font-weight: 500;
-    /* cursor: pointer; */
-    
-    /* text-transform: uppercase; */
 }
 
 .profileContainer .userForm input:read-only{
     cursor: not-allowed;
 }
-
-/* .userForm .inputContainer:nth-child(3) input{
-    text-transform: none;
-} */
 
 
 .profileContainer .userForm  input.editable {
@@ -881,7 +829,6 @@ span.addBtn:hover{
 .profileContainer .editBtn:hover{
     background-color: var(--blue-dark);
     color: var(--white);
-    /* transform: translateY(-2px); */
     border: 2px solid var(--white);
     box-shadow: 3px 3px 10px rgba(255, 255, 255, 1);
 }
@@ -895,15 +842,12 @@ span.addBtn:hover{
     background-repeat: no-repeat;
     background-size:cover;
     background-position: 100% 60%;
-    /* background-color: #000000; */
     width: 100%;
     height: 70vh;
-    /* border-radius: 50px; */
     display: flex;
     align-items: center;
     border-top-left-radius: 50px;
     border-top-right-radius: 50px;
-    /* justify-content: ; */
 
 }
 
@@ -1022,14 +966,11 @@ span.addBtn:hover{
     row-gap: 10px;
     width: 150px;
     position: relative;
-    /* flex-wrap: wrap; */
-    /* padding-bottom: 50px; */
 }
 
 .feedback{
     font-size: 0.8rem;
     line-height: 19px;
-    /* position: absolute; */
     bottom: 0;
     font-weight: 500;
     text-align:justify;
@@ -1054,7 +995,6 @@ span.addBtn:hover{
     row-gap: 35px;
     padding: 50px 0 90px 0;
     background: var(--blue-dark);
-    /* color: var(--white); */
 }
 
 .newlyAddedSection h1{
@@ -1072,10 +1012,7 @@ span.addBtn:hover{
         flex-wrap: nowrap;
 }
 .newlyAddedRow .mainVehicleCard{
-    /* display: flex; */
-    /* flex-direction: column; */
     max-width: 250px;
-    /* row-gap: 15px; */
     padding: 10px;
     background-color: var(--white);
     border-radius: 15px;
@@ -1088,7 +1025,6 @@ span.addBtn:hover{
     width: 100%;
     height: 180px;
     box-shadow: 2px 5px 5px rgba(0, 0, 0, 0.1);
-    /* filter: drop-shadow(2px rgba(0,0,0,1)); */
 }
 
 
@@ -1101,14 +1037,12 @@ span.addBtn:hover{
     background-color: var(--white);
     border-radius: 15px;
     cursor: pointer;
-    /* margin-left: 25px; */
 }
 
 .newlyAddedRow .detailsContainer .nameBlock{
     display: flex;
     flex-direction: column;
     
-    /* gap: px; */
 }
 .newlyAddedRow .detailsContainer .nameBlock h3{
     width: 17ch;
@@ -1128,8 +1062,6 @@ span.addBtn:hover{
     column-gap: 15px;
     row-gap: 5px;
     color: var(--grey);
-    /* flex-wrap: wrap; */
-    /* background-color: #000000;    */
 }
 
 
@@ -1166,11 +1098,9 @@ span.addBtn:hover{
     border-radius: 8px;
     padding: 5px 10px;
     font-size: 0.8rem;
-    /* margin-right: 10px; */
     cursor: pointer;
     border: 1px solid var(--success);
     z-index: 10;
-    /* display: none; */
 
 }
 
@@ -1252,7 +1182,6 @@ span.addBtn:hover{
 
     .formContainer .lowerBlock {
         align-items: center;
-        /* flex-direction: column; */
         row-gap: 25px;
     }
 
@@ -1271,7 +1200,6 @@ span.addBtn:hover{
         align-items: flex-start;
         row-gap: 10px;
         max-width: none;
-        /* background-color: #00246b; */
     }
 
     .bookingForm input,
@@ -1363,13 +1291,10 @@ span.addBtn:hover{
 
     .formContainer {
         padding: 15px;
-        /* padding-bottom: 100px; */
     }
 
     .formContainer .lowerBlock {
-        /* align-items: center; */
         flex-direction: column;
-        /* row-gap: 25px; */
     }
 
 }
@@ -1398,7 +1323,6 @@ span.addBtn:hover{
 
     .formContainer {
         padding: 10px;
-        /* padding-bottom: 100px; */
     }
 
     .profileContainer .userFormContainer {

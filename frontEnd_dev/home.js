@@ -1,5 +1,5 @@
 let user = JSON.parse(localStorage.getItem("user"));
-console.log(user);
+
 if (user != null)
   document.querySelector(".circularPhoto").innerText =
     user.name.charAt(0).toUpperCase() + user.name.charAt(1).toUpperCase();
@@ -20,7 +20,7 @@ let startDate = today;
 let tomorrow = new Date();
 tomorrow.setDate(tomorrow.getDate() + 1);
 let endDate = tomorrow.toISOString().split("T")[0];
-console.log(endDate);
+
 
 // =============================================Event Listeners=========================
 let searchBar = document.getElementById("searchBarId");
@@ -170,9 +170,9 @@ window.onload = async function () {
 
 // ----------------getting newly added vehicles--------------
 function getNewlyAddedVehicles(type){
-  let newlyAddedVehicles = allVehicles.sort((a,b)=>b.vehicle_id - a.vehicle_id).filter((vehicle)=>{
+  let newlyAddedVehicles = allVehicles.filter((vehicle)=>{
     return vehicle.type == type;
-  });
+  }).sort((a,b)=>b.vehicle_id - a.vehicle_id);
 
   return newlyAddedVehicles;
 }
@@ -185,7 +185,7 @@ function printingOnClickVehicleNav() {
     haveFilter = true;
   }
   printingCardsForVehicle(allVehicles);
-  console.log("called in vehicle nav");
+  //console("called in vehicle nav");
 }
 
 function printingOnClickBookingNav() {
@@ -225,7 +225,7 @@ async function fetchingBookings() {
       `http://localhost:8080/booking/getByEmail?email=${userEmail}`,
       {
         method: "GET",
-        // headers: { "Content-Type": "application/json" }
+          
       }
     );
 
@@ -252,12 +252,12 @@ async function fetchingBookings() {
 async function fetchingReviews() {
   try {
     let userEmail = user.email;
-    console.log(userEmail);
+    //console(userEmail);
     let response = await fetch(
       `http://localhost:8080/review/getReviewsByUser?email=${userEmail}`,
       {
         method: "GET",
-        // headers: { "Content-Type": "application/json" }
+          
       }
     );
     if (response.ok) {
@@ -283,13 +283,13 @@ async function fetchingVehiclesAvailableWithType(
       `http://localhost:8080/vehicle/findingAvailable/${type}?startDate=${start}&endDate=${end}`,
       {
         method: "GET",
-        // headers: { "Content-Type": "application/json" }
+          
       }
     );
-    console.log("called the fetching vehicles");
+    //console("called the fetching vehicles");
     if (response.ok) {
       let data = await response.json();
-      console.log(data);
+      
       return data;
     }
 
@@ -310,13 +310,13 @@ async function fetchingVehiclesAvailable(start = startDate, end = endDate) {
       `http://localhost:8080/vehicle/findingAvailable?startDate=${start}&endDate=${end}`,
       {
         method: "GET",
-        // headers: { "Content-Type": "application/json" }
+          
       }
     );
-    console.log("called the fetching vehicles");
+    
     if (response.ok) {
       let data = await response.json();
-      console.log(data);
+      
       return data;
     }
 
@@ -332,7 +332,7 @@ async function fetchingVehicles() {
   try {
     let response = await fetch(`http://localhost:8080/vehicle/getAllVehicles`, {
       method: "GET",
-      // headers: { "Content-Type": "application/json" }
+        
     });
     if (response.ok) {
       let data = await response.json();
@@ -347,18 +347,18 @@ async function fetchingVehicles() {
 // -----fetching bookings from backend for specific vehicle
 async function fetchingBookingsByVehicle(registration_number) {
   try {
-    console.log(registration_number);
+    
     let response = await fetch(
       `http://localhost:8080/booking/getByRegistrationNumber?registration_number=${registration_number}`,
       {
         method: "GET",
-        // headers: { "Content-Type": "application/json" }
+          
       }
     );
     if (response.ok) {
       let data = await response.json();
-      console.log("Bookings Data");
-      console.log(data);
+      
+      
       return data;
     }
   } catch (error) {
@@ -371,17 +371,17 @@ async function fetchingBookingsByVehicle(registration_number) {
 // -----fetching reviews from backend for specific vehicle
 async function fetchingReviewsByVehicle(registration_number) {
   try {
-    console.log(registration_number);
+    
     let response = await fetch(
       `http://localhost:8080/review/getReviewsByVehicle?registration_number=${registration_number}`,
       {
         method: "GET",
-        // headers: { "Content-Type": "application/json" }
+          
       }
     );
     if (response.ok) {
       let data = await response.json();
-      console.log(data);
+      
       return data;
     }
   } catch (error) {
@@ -398,7 +398,7 @@ async function fetchingTopReviews() {
   try {
       let response = await fetch(`http://localhost:8080/review/getTopReviews`, {
           method: "GET"
-          // headers: { "Content-Type": "application/json" }
+            
       });
       if (response.ok) {
           let data = await response.json();
@@ -433,7 +433,7 @@ async function storingBookingInDB(
     if (response.ok) {
       let data = await response.text();
       alert("Booked successfully Successfully !!! Refresh to load the changes");
-      console.log(data);
+      
     } else {
       let msg = await response.text();
       alert("Failed to book bcz ' " + msg + " ' ");
@@ -462,7 +462,7 @@ async function storingReviewInDB(
     if (response.ok) {
       let data = await response.json();
       alert("Review Added successfully !!! Refresh to load the changes");
-      console.log(data);
+      
       allReviews.push(data);
     } else {
       alert("Failed to book bcz");
@@ -582,7 +582,7 @@ function printingBookingsDataInTable(
   }
 
   bookingsParam.forEach((element) => {
-    console.log(element);
+    
 
     let bookId = document.createElement("td");
     bookId.innerText = element.booking_id;
@@ -625,7 +625,7 @@ function printingBookingsDataInTable(
         cancelBtn.title = "Cancel Booking";
 
         cancelBtn.addEventListener("click", async () => {
-          console.log("Booking cancelling called");
+          
           if (confirm("Are you sure you want to cancel the booking ? "))
             await updatingBookingStatusInDB(element.booking_id);
         });
@@ -750,7 +750,7 @@ function printingReviewsDataInTable(reviewsParam, eraseBefore = true) {
 
 //printing the cards for all vehicles
 function printingCardsForVehicle(vehiclesParam,containerToPrint = cardContainer) {
-  console.log("i am inside the printing cards for vehicle");
+  
   containerToPrint.innerHTML = "";
 
   if (vehiclesParam.length == 0) {
@@ -916,7 +916,7 @@ function printingCompleteVehicleDetails(vehicle) {
   let bookingBtn = document.createElement("button");
   bookingBtn.classList.add("bookingBtn");
   bookingBtn.addEventListener("click", () => {
-    console.log("booking btn pressed");
+    
     showPage3();
     scheduleBookingForVehicle(vehicle);
   });
@@ -926,7 +926,7 @@ function printingCompleteVehicleDetails(vehicle) {
   addReviewBtn.innerHTML = "Add Review";
   addReviewBtn.classList.add("reviewBtn");
   addReviewBtn.addEventListener("click",()=>{
-    console.log("btn add Reveiw clicked");
+    
     showPage3();
     addingReviewForVehicle(vehicle);
   })
@@ -971,7 +971,7 @@ function printingReviewsOnCard(reviewsParam) {
         cardReview.classList.add("cardReview");
     // -------ratings block-----------
     let rating = review.rating;
-    console.log(rating);
+    
 
     let starsBlock = document.createElement("div");
     starsBlock.classList.add("starsBlock");
@@ -1041,7 +1041,7 @@ function printingFilters() {
       inputSelect.id = element.id;
 
       element.options.forEach((ele) => {
-        console.log(ele);
+        
         let option = document.createElement("option");
         option.text = ele;
         option.value = ele;
@@ -1074,16 +1074,16 @@ function printingFilters() {
     let ending = document.getElementById("endDate").value;
     let typeSelected = document.getElementById("type");
 
-    console.log(initial, ending);
+    
 
     let availableVehicles = null;
 
     if (initial && ending) {
       if (typeSelected.value == "ALL") {
-        console.log("called the initial without type");
+        
         availableVehicles = await fetchingVehiclesAvailable(initial, ending);
       } else {
-        console.log("called the initial and type");
+        
         availableVehicles = await fetchingVehiclesAvailableWithType(
           initial,
           ending,
@@ -1092,10 +1092,10 @@ function printingFilters() {
       }
     } else {
       if (typeSelected.value != "ALL") {
-        console.log("called the type without initial");
-        console.log("typeselected : ", typeSelected.value);
+        
+        
         let targetVehicles = searchingVehiclesForKeyword(typeSelected.value); //Using our search bar for reusability;
-        console.log("targetVehicles for type : ", targetVehicles);
+        
         showPage1();
         printingCardsForVehicle(targetVehicles);
       } else {
@@ -1173,16 +1173,14 @@ function printingFormLayout(headingContent, fieldsComing, entityType) {
     input.id = specificField.id;
     input.name = specificField.label;
     input.value = specificField.value;
-    // if(specificField.id=="userId" || specificField.id=="role"){
     input.readOnly = true;
-    // }
 
     input.type = specificField.type;
 
     inputContainer.append(label, input);
 
     userForm.appendChild(inputContainer);
-    // console.log(userForm);
+      
   });
 
   //==================Edit btn starts===========
@@ -1191,7 +1189,7 @@ function printingFormLayout(headingContent, fieldsComing, entityType) {
 
   editBtn.innerText = "Update Details";
 
-  // console.log("callled");
+    
 
   editBtn.addEventListener("click", async () => {
     if (!validateForm(fields)) {
@@ -1199,7 +1197,7 @@ function printingFormLayout(headingContent, fieldsComing, entityType) {
     } else {
       if (editBtn.innerText == "Save Changes") {
         let id = document.getElementById(fields[0].id).value;
-        console.log(" id : ", id);
+    
 
         if (isNaN(id)) {
           console.log("Invalid id or not a number");
@@ -1231,12 +1229,12 @@ function printingFormLayout(headingContent, fieldsComing, entityType) {
         }
       });
 
-      console.log(inputs[2].readOnly);
+      
       editBtn.innerText = inputs[1].readOnly
         ? "Update Details"
         : "Save Changes";
     }
-    // console.log(inputs);
+      
   });
 
   userFormContainer.appendChild(userForm);
@@ -1441,7 +1439,7 @@ function scheduleBookingForVehicle(vehicle) {
 
 // ----------------------------adding the rating of user -----------------------------
 function addingReviewForVehicle(vehicle) {
-  console.log("inside adding review fun");
+  
 
   formContainer.innerHTML = "";
 
@@ -1577,12 +1575,12 @@ function addingReviewForVehicle(vehicle) {
 
 // ========================================================Search Bar Implementation starts ==========================================
 function searchBarClick() {
-  console.log("seach bar key up");
+  
   let keyword = searchBar.value.toLowerCase();
 
   let targetVehicles = searchingVehiclesForKeyword(keyword);
 
-  console.log(targetVehicles);
+  
 
   showPage1();
   printingCardsForVehicle(targetVehicles);
@@ -1635,7 +1633,7 @@ function getDateDifference(startDateStr, endDateStr) {
   // Convert milliseconds to days
   const millisecondsPerDay = 1000 * 3600 * 24;
   const diffDays = diffMs / millisecondsPerDay;
-  console.log("difference be : ", diffDays);
+  
 
   return diffDays;
 }

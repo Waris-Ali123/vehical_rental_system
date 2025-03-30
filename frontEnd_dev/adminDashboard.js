@@ -23,7 +23,7 @@ let cardContainer = document.querySelector(".cardContainer");
 let list = document.querySelectorAll(".listOfMenus .listItem");
 
 function activeLink() {
-    console.log(list);
+      
     list.forEach((item) => {
         item.classList.remove("active");
     });
@@ -154,10 +154,8 @@ function profileClick() {
 
 
 function printingDashBoardData() {
-    // let firstTenUsers = allUsers.slice(0, Math.min(10, allUsers.length));
     let mostRecentTenBookings = allBookings.slice(-Math.min(10, allBookings.length));
     printingBookingsDataInTable(mostRecentTenBookings.reverse(),true,"Recent Bookings");
-    // printingUsersDataInTable(firstTenUsers,false);
     printingOverviewOnDashBoard();
     showActiveNavItem("dashboardNav");
 }
@@ -170,7 +168,6 @@ async function fetchingUsers() {
         let adminEmail = admin.email;
         let response = await fetch(`http://localhost:8080/auth/getAllUsers?email=${adminEmail}`, {
             method: "GET"
-            // headers: { "Content-Type": "application/json" }
         });
         if (response.ok) {
             let data = await response.json();
@@ -198,7 +195,6 @@ async function fetchingBookings() {
 
         let response = await fetch(`http://localhost:8080/booking/getAllBookings?email=${adminEmail}`, {
             method: "GET"
-            // headers: { "Content-Type": "application/json" }
         });
 
         if (response.ok) {
@@ -232,8 +228,7 @@ async function fetchingVehicles() {
         let adminEmail = admin.email;
         let response = await fetch(`http://localhost:8080/vehicle/getAllVehicles?email=${adminEmail}`, {
             method: "GET"
-            // headers: { "Content-Type": "application/json" }
-        });
+                      });
         if (response.ok) {
             let data = await response.json();
             allVehicles = data;
@@ -253,11 +248,10 @@ async function fetchingVehicles() {
 async function fetchingReviews() {
     try {
         let adminEmail = admin.email;
-        console.log(adminEmail)
+
         let response = await fetch(`http://localhost:8080/review/getAllReviews?email=${adminEmail}`, {
             method: "GET"
-            // headers: { "Content-Type": "application/json" }
-        });
+                      });
         if (response.ok) {
             let data = await response.json();
             allReviews = data;
@@ -337,7 +331,7 @@ function printingBookingsDataInTable(bookingsParam,eraseBefore = true,headingPar
     //resetting the totalEarning before calculating again
     // totalEarnings = 0;
     bookingsParam.forEach(element => {
-        console.log(element);
+         (element);
 
 
         let bookId = document.createElement("td");
@@ -549,7 +543,7 @@ function printingUsersDataInTable(usersParam,eraseBefore=true) {
 
 
     addBtn.addEventListener("click",async ()=>{
-        console.log("add btn clicked");
+          
 
         let fields = [
             { label: "Name", value: "", id: "name", type: "text",required : true },
@@ -766,7 +760,6 @@ async function deletingUserFromDB(userToDelete) {
         );
 
         if (response.ok) {
-            // let result = await response.json();
 
             allUsers = allUsers.filter(user => user.user_id !== userToDelete.user_id);
             totalUsers--;
@@ -804,12 +797,11 @@ async function deletingVehicleFromDB(vehicleToDelete) {
         );
 
         if (response.ok) {
-            // let result = await response.json();
 
             allVehicles = allVehicles.filter(vehicle => vehicle.vehicle_id !== vehicleToDelete.vehicle_id);
             totalVehicles--;
 
-            // console.log("Updated allVehicles :", allVehicles);
+             
 
             printingVehiclesDataInTable(allVehicles);
 
@@ -879,7 +871,7 @@ function printingFormLayout(headingContent, fieldsComing, entityType,isAdding=fa
             inputSelect.id = specificField.id;
             
             specificField.options.forEach((ele) => {
-                console.log(ele);
+                  
                 let option = document.createElement("option");
                 option.text = ele;
                 option.value = ele;
@@ -901,10 +893,7 @@ function printingFormLayout(headingContent, fieldsComing, entityType,isAdding=fa
 
             
             let input = document.createElement("input");
-            // if(input.value == null){
-                //     input.value = "Not Specified yet";
-                // }
-                    input.id = specificField.id;
+            input.id = specificField.id;
             input.name = specificField.label;
             input.value = specificField.value;
             if(!isAdding || specificField.id=="role"){
@@ -919,7 +908,7 @@ function printingFormLayout(headingContent, fieldsComing, entityType,isAdding=fa
         }   
         
         userForm.appendChild(inputContainer);
-        // console.log(userForm);
+         
     });
 
     //==================Edit btn starts===========
@@ -935,7 +924,7 @@ function printingFormLayout(headingContent, fieldsComing, entityType,isAdding=fa
         editBtn.innerText = "Update Details";
     }
 
-    // console.log("callled");
+     
 
     editBtn.addEventListener("click", async () => {
 
@@ -979,7 +968,7 @@ function printingFormLayout(headingContent, fieldsComing, entityType,isAdding=fa
         if (editBtn.innerText == "Save Changes") {
 
             let id = document.getElementById(fields[0].id).value;
-            console.log(" id : ", id);
+              
 
             if (isNaN(id)) {
                 console.log("Invalid id or not a number");
@@ -1013,11 +1002,11 @@ function printingFormLayout(headingContent, fieldsComing, entityType,isAdding=fa
                     seatingCapacity: parseInt(document.getElementById("seatingCapacity").value)
                 };
 
-                console.log("updated vehicle : ", updatedVehicle);
+                  
 
                 let registration_number = document.getElementById("registration_number").value;
                 await updatingVehicleInDB(registration_number,updatedVehicle, fromSection);
-                console.log("updatingVehicleInDB called");
+                  
             }
         }
         
@@ -1045,13 +1034,13 @@ function printingFormLayout(headingContent, fieldsComing, entityType,isAdding=fa
             }
         });
 
-        // console.log(inputs);
+         
 
         if(inputs!=null && inputs.length!=0)
             editBtn.innerText = inputs[2].readOnly ? "Update Details" : "Save Changes";
 
     }
-        // console.log(inputs);
+         
     });
 
 
@@ -1110,7 +1099,7 @@ function printingProfile(element, fromUsersSection = false) {
 //printing a vehicle profile
 function printingVehicleProfile(element,fromVehicleSection=false){
 
-    console.log(element);
+      
 
     let vehicleId = element.vehicle_id;
 let name = element.name;
@@ -1150,39 +1139,6 @@ printingFormLayout("Vehicle Details", fields, "VEHICLE", false, fromVehicleSecti
 
 
 // ==================================== Storing In Databases =================================
-// async function storingNewUserInDB(newUser){
-//     try {
-//         let adminEmail = admin.email;
-//         let response = await fetch(
-//             `http://localhost:8080/auth/createAdmin?alreadyAdminEmail=${adminEmail}`, {
-//             method: 'POST',
-//             headers: {
-//                 "Content-type": "application/json"
-//             },
-//             body: JSON.stringify(newUser)
-//         }
-//         );
-
-//         if (response.ok) {
-//             let result = await response.json();
-
-//             allUsers.push(result);
-//             totalUsers++;
-
-
-//             alert("Admin added succesfully");
-//             printingUsersDataInTable(allUsers);
-
-
-//         }
-//         else {
-//             console.error("Error updating user:", response.statusText);
-//         }
-//     } catch (error) {
-//         console.error(error);
-//     }
-
-// }
 
 async function storingNewUserInDB(newUser){
     try {
@@ -1368,14 +1324,14 @@ async function searchingByVehicleKeywords() {
     
 
     let input = document.getElementById("searchBarId").value;
-    console.log(input);
+      
 
     tablesContainer.innerHTML = "";
     cardContainer.innerHTML = "";
 
     //Fetching all vehicles
     let outputVehicle = await fetchingVehiclesOnKeyword(input);
-    console.log(outputVehicle);
+      
     if(outputVehicle!=null)
         printingVehiclesDataInTable(outputVehicle);
     
@@ -1406,14 +1362,13 @@ async function fetchingVehiclesOnKeyword(keyword) {
     try {
         let response = await fetch(`http://localhost:8080/vehicle/searching/${keyword}`, {
             method: "GET"
-            // headers: { "Content-Type": "application/json" }
-        });
+                      });
         if (response.ok) {
             let data = await response.json();
             let searchedVehicles = data;
-            console.log(searchedVehicles);
+              
             return searchedVehicles;
-            //total result found has to be implemented
+                
         }
 
 
@@ -1430,14 +1385,13 @@ async function fetchingUsersOnKeyword(keyword) {
     try {
         let response = await fetch(`http://localhost:8080/auth/searching/${keyword}`, {
             method: "GET"
-            // headers: { "Content-Type": "application/json" }
-        });
+                      });
         if (response.ok) {
             let data = await response.json();
             let searchedUsers = data;
-            console.log(searchedUsers);
+              
             return searchedUsers;
-            //total result found has to be implemented
+                
         }
 
 
@@ -1453,14 +1407,13 @@ async function fetchingReviewsOnKeywords(keyword) {
     try {
         let response = await fetch(`http://localhost:8080/review/searching/${keyword}`, {
             method: "GET"
-            // headers: { "Content-Type": "application/json" }
-        });
+                      });
         if (response.ok) {
             let data = await response.json();
             let searchedReviews = data;
-            console.log(searchedReviews);
+              
             return searchedReviews;
-            //total result found has to be implemented
+                
         }
 
 
@@ -1476,13 +1429,12 @@ async function fetchingBookingsOnKeywords(keyword) {
     try {
         let response = await fetch(`http://localhost:8080/booking/searching/${keyword}`, {
             method: "GET"
-            // headers: { "Content-Type": "application/json" }
-        });
+                      });
         if (response.ok) {
             let data = await response.json();
-            console.log(data);
+              
             return data;
-            //total result found has to be implemented
+                
         }
 
 
