@@ -186,7 +186,7 @@ body {
 /* ======================================cards starts ======================= */
 .cardContainer{
     display: grid;
-    grid-template-columns: repeat(4,1fr);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 25px;
     justify-content: space-between;
 }
@@ -202,15 +202,6 @@ body {
     cursor: pointer;
     
 }
-
-
-/* .cards:nth-child(5){
-    grid-column: 2;
-}
-
-.cards:nth-child(6){
-    grid-column: 3;
-} */
 
 .cards .top{
     font-size: 2.3rem;
@@ -518,6 +509,25 @@ Responsive design implementation starts ------- media query   -----------1
 
 @media (max-width: 1024px) {
 
+    /* ------home page ----------- */
+
+    .cards .top {
+        font-size: 1.8rem;
+    }
+
+    .cards span.icon {
+        font-size: 40px;
+    }
+
+    .cards .label {
+        font-size: 15px;
+    }
+
+    .cardContainer {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+    }
+
 
 }
 
@@ -574,4 +584,32 @@ Responsive design implementation starts ------- media query   -----------1
         background-color: var(--warning);
     }
 
+}
+
+
+@media (max-width:430px){
+    .cards {
+        padding: 10px 15px;
+        border-radius: 15px;
+        box-shadow: 5px 3px 10px rgba(0, 0, 0, 0.1);
+    }
+
+
+    /* -------form --------- */
+    .userForm {
+        display: grid;
+        gap: 10px 10px;
+        grid-template-columns: 1fr;
+    }
+
+    .editBtn {
+        padding: 8px 30px;
+        font-size: 1rem;
+        white-space: nowrap;
+        
+    }
+
+    .userForm label {
+        font-size: 1rem;
+    }
 }
