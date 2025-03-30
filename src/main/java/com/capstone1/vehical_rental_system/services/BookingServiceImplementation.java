@@ -188,8 +188,8 @@ public class BookingServiceImplementation implements BookingService {
             List<Booking> bookings =  bookingRepo.SearchingByKeyword(keyword);
 
             //if data not found we give not found status
-            if(bookings.size()<=0)
-                return ResponseEntity.notFound().build();
+            // if(bookings.size()<=0)
+            //     return ResponseEntity.notFound().build();
 
             return ResponseEntity.ok().body(bookings);
         } catch (Exception e) {

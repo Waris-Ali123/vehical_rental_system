@@ -1002,6 +1002,8 @@ function printingFormLayout(headingContent, fieldsComing, entityType,isAdding=fa
                     seatingCapacity: parseInt(document.getElementById("seatingCapacity").value)
                 };
 
+                console.log(updatedVehicle);
+
                   
 
                 let registration_number = document.getElementById("registration_number").value;
@@ -1286,6 +1288,7 @@ async function updatingVehicleInDB(registration_number,updatedVehicle,fromVehicl
 
         if (response.ok) {
             let result = await response.json();
+            console.log(result);
 
             let index = allVehicles.findIndex(vehicle => vehicle.vehicle_id === result.vehicle_id);
             if (index !== -1) {
@@ -1321,35 +1324,37 @@ async function updatingVehicleInDB(registration_number,updatedVehicle,fromVehicl
 // ==============================================Searching Starts======================================
 //searching by keywords
 async function searchingByVehicleKeywords() {
-    
-
-    let input = document.getElementById("searchBarId").value;
-      
-
     tablesContainer.innerHTML = "";
     cardContainer.innerHTML = "";
+
+    let input = document.getElementById("searchBarId").value;
 
     //Fetching all vehicles
     let outputVehicle = await fetchingVehiclesOnKeyword(input);
       
-    if(outputVehicle!=null)
+    if(outputVehicle && outputVehicle.length != 0)
         printingVehiclesDataInTable(outputVehicle);
+
     
     //Fetching all users
     let outputUser = await fetchingUsersOnKeyword(input);
-    if(outputUser!=null)
+    if(outputUser && outputUser.length != 0)
         printingUsersDataInTable(outputUser,false);
+    
+    
     
     //Fetching all Reviews
     let outputReview = await fetchingReviewsOnKeywords(input);
-    if(outputReview!=null)
+    if(outputReview && outputReview.length != 0)
         printingReviewsDataInTable(outputReview,false);
+    
+
     
     //Fetching all Bookings
     let outputBooking = await fetchingBookingsOnKeywords(input);
-    if(outputBooking!=null)
+    if(outputBooking && outputBooking.length != 0)
         printingBookingsDataInTable(outputBooking,false);
-    
+
 
     if(outputUser==null && outputVehicle==null&&outputReview==null&&outputBooking==null){
         tablesContainer.innerHTML = "<h2> No Content found <h2>"
@@ -1375,7 +1380,6 @@ async function fetchingVehiclesOnKeyword(keyword) {
     } catch (error) {
         console.log(error);
         return null;
-
     }
 }
 

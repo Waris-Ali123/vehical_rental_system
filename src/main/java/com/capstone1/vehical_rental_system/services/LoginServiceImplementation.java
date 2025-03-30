@@ -150,8 +150,8 @@ public class LoginServiceImplementation implements LoginService  {
             List<User> users =  userRepo.SearchingByKeyword(keyword);
 
             //if data not found we give not found status
-            if(users.size()<=0)
-                return ResponseEntity.notFound().build();
+            // if(users.size()<=0)
+            //     return ResponseEntity.notFound().build();
 
             return ResponseEntity.ok().body(users);
         } catch (Exception e) {
