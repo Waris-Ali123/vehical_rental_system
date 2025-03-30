@@ -254,7 +254,7 @@ body {
 
 /* =================================tablesContainer starts============================= */
 .tablesContainer{
-    margin:30px 10px;
+    margin:30px 0px;
     padding: 20px;
     background-color: var(--white);
     border-radius: 15px;
@@ -512,3 +512,66 @@ span.addBtn:hover{
 }
 
 
+/* ============================
+Responsive design implementation starts ------- media query   -----------1
+============================ */
+
+@media (max-width: 1024px) {
+
+
+}
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 768px) {
+    .navigation{
+        width: 80px;
+        ;
+    }
+
+    .main{
+        left: 80px;
+        width: 100%;
+    }
+
+    .main {
+        padding: 0 15px;
+    }
+
+    .entityTable {
+        margin-top: 15px;
+    }
+
+    .entityTable  tr td, .entityTable thead th {
+        font-size: .8rem;
+    }
+
+    .tablesContainer h2 {
+        font-size: 1.1rem;
+    }
+
+    .entityTable .addBtn {
+        font-size: 1.8rem;
+        top: -45px;
+    }
+
+    .entityTable .statusBox .success {
+        font-size: 10px;
+    }
+
+    .entityTable .statusBox .danger {
+        padding: 2px 4px;
+        font-size: 10px;
+        font-weight: 550;
+        color: var(--danger);
+        background-color: var(--warning);
+    }
+
+}
