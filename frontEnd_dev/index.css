@@ -22,8 +22,7 @@
 }
 
 body {
-    background-color: whitesmoke;
-
+    background-color: #b3fafa;
 }
 
 .container {
@@ -62,6 +61,7 @@ body {
     font-size: 1.5rem;
 
 }
+
 #loginForm {
     display: flex;
     flex-direction: column;

@@ -85,7 +85,6 @@ public class BookingController {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
-
     }
 
 
