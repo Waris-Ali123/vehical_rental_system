@@ -1069,10 +1069,29 @@ function validateForm(fields) {
                 return false;
             }
         }
+
+        if (field.id === "contactNumber" && inputElement.value.length !== 10) {
+            alert("Mobile No must be exactly 10 digits!");
+            isValid = false;
+            return false;
+          }
+      
+          if(inputElement && inputElement.type == "email"){
+      
+            if (!inputElement.checkValidity()) {
+                  alert(`Invalid value in ${inputElement.name}`);
+                  isValid = false;
+                  return false;
+            }
+          }
+
+
+          
+
+
     });
     return isValid;
 }
-
 
 
 //Printing a user profile
