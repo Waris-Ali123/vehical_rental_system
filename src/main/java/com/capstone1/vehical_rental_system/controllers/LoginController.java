@@ -45,17 +45,6 @@ public class LoginController {
             return ResponseEntity.internalServerError().build();
         }
     }
-
-
-    @PostMapping("/initialize")
-    public void initializing() {
-        repo.save(new User("waris", "waris@gmail.com", "waris"));
-        repo.save(new User("ali", "ali@gmail.com", "ali"));
-        repo.save(new User("sheikh", "sheikhj@gmail.com", "sheikh"));
-        repo.save(new User("nayab","nayab@gmail.com","nayab","562565984",Role.ADMIN));
-    }
-
-
     @PostMapping("/signUp")
     public ResponseEntity<User> SignUp(@RequestBody User user) {
         User u1 ;

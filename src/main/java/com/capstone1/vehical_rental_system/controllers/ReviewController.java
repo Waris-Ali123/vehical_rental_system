@@ -81,17 +81,16 @@ public class ReviewController {
     }
     
 
-    @PutMapping("/update")
-    public ResponseEntity<Review> putMethodName(@RequestParam String email,@RequestParam String registrationNumber, @RequestParam String rating,@RequestParam String feedback ) {
-        try {
-            return reviewService.updateReview(email, registrationNumber, rating, feedback);
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
-        }
-
-    }
+    //May be required in future.............
+    // @PutMapping("/update")
+    // public ResponseEntity<Review> putMethodName(@RequestParam String email,@RequestParam String registrationNumber, @RequestParam String rating,@RequestParam String feedback ) {
+    //     try {
+    //         return reviewService.updateReview(email, registrationNumber, rating, feedback);  
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //         return ResponseEntity.badRequest().build();
+    //     }
+    // }
 
     @GetMapping("/getTopReviews")
     public ResponseEntity<List<Review>> getTopReviews(){
@@ -102,7 +101,5 @@ public class ReviewController {
             return ResponseEntity.internalServerError().build();
         }
     }
-    
-
     
 }

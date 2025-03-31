@@ -61,13 +61,12 @@ public class BookingController {
     }
 
 
-    //Updating booking details or managing
-    @PutMapping("/updatingBooking/{booking_id}")
-    public ResponseEntity<Booking> putMethodName(@PathVariable("booking_id") String booking_id,@RequestBody Booking bookingModified) {
-        bookingService.updateBooking(booking_id,bookingModified);
-        
-        return ResponseEntity.ok().build();
-    }
+    // //Updating booking details or managing
+    // @PutMapping("/updatingBooking/{booking_id}")
+    // public ResponseEntity<Booking> putMethodName(@PathVariable("booking_id") String booking_id,@RequestBody Booking bookingModified) {
+    //     bookingService.updateBooking(booking_id,bookingModified); 
+    //     return ResponseEntity.ok().build();
+    // }
 
     //removing or cancel the bgitookings.
     @PutMapping("/cancelBooking/{booking_id}")

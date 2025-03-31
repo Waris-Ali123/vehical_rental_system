@@ -38,14 +38,6 @@ public class VehicleController {
         return vehicleService.getAllVehicles();
     }
 
-    @PostMapping("/initialize")
-    public void initializing() {
-        // vehicleService.addVehicle(new Vehicle("Raider 786",VehicleType.BIKE,"mp0976439",Availability.AVAILABLE,1000.58));
-        // vehicleService.addVehicle(new Vehicle("PASSION 786",VehicleType.BIKE,"mp09SL439",Availability.AVAILABLE,1000.58));
-        // vehicleService.addVehicle(new Vehicle("JII 786",VehicleType.BIKE,"mpSDF76439",Availability.AVAILABLE,100.58));
-        
-    }
-
 
     @GetMapping("/getByType")
     public ResponseEntity<List<Vehicle>> getVehicleByType(@RequestParam String type) {
@@ -79,7 +71,6 @@ public class VehicleController {
     public ResponseEntity<List<Vehicle>> findingAvailableVehicles( @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
             
         try {
-            System.out.println("findingAvailable called");
             return vehicleService.findingAvailableVehicles(startDate,endDate);
             
         } catch (Exception e) {
@@ -135,7 +126,6 @@ public class VehicleController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
-    
-    
+
     
 }
