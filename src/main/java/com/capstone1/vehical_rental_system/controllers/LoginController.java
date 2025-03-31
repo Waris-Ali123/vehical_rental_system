@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.capstone1.vehical_rental_system.entities.User;
-import com.capstone1.vehical_rental_system.entities.User.Role;
 import com.capstone1.vehical_rental_system.repositories.UserRepo;
 import com.capstone1.vehical_rental_system.services.LoginService;
 

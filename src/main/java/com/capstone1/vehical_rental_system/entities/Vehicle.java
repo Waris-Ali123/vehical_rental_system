@@ -69,8 +69,6 @@ public class Vehicle {
     private List<Review> reviewsOnVehicle = new ArrayList<>();
 
 
-    // =====Added later========
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private FuelType fuelType;  // PETROL, DIESEL, ELECTRIC, etc.
@@ -187,8 +185,6 @@ public class Vehicle {
         return reviewsOnVehicle;
     }
 
-
-    // ==========newly added getters and setters==============
     public FuelType getFuelType() {
         return fuelType;
     }

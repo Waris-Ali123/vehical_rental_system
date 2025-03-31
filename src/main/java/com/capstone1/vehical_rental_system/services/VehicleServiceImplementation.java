@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -76,8 +75,7 @@ public class VehicleServiceImplementation implements VehicleService {
                 oldVehicle.setPrice_per_day(vehicleModified.getPrice_per_day());
                 oldVehicle.setType(vehicleModified.getType());
                 oldVehicle.setAvailability(vehicleModified.getAvailability());
-
-                // ==newly added===
+                
                 oldVehicle.setFuelType(vehicleModified.getFuelType());
                 oldVehicle.setSeatingCapacity(vehicleModified.getSeatingCapacity());
                 oldVehicle.setMileage(vehicleModified.getMileage());

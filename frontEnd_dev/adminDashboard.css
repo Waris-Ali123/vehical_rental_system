@@ -23,7 +23,12 @@
 
 body {
     background-color: var(--blue-light);
+    
 }
+
+body::-webkit-scrollbar {
+    display: none;
+  }
 
 .container {
     display: grid;

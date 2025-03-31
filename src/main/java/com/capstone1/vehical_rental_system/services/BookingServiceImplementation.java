@@ -151,19 +151,6 @@ public class BookingServiceImplementation implements BookingService {
         }
     }
 
-    @Override
-    public ResponseEntity<Booking> updateBooking(String Booking_id,Booking bookingModified){
-        try {
-            //  Booking oldBooking = bookingRepo.findById(Integer.parseInt(Booking_id)).get();
-            //  oldBooking.set;
-             
-        } catch (Exception e) {
-            e.printStackTrace();
-            
-        }
-
-        return ResponseEntity.ok().build();
-    }
 
 
     public ResponseEntity<String> cancleBooking(int booking_id){
@@ -186,10 +173,6 @@ public class BookingServiceImplementation implements BookingService {
     public ResponseEntity<List<Booking>> searching(String keyword) {
         try {
             List<Booking> bookings =  bookingRepo.SearchingByKeyword(keyword);
-
-            //if data not found we give not found status
-            // if(bookings.size()<=0)
-            //     return ResponseEntity.notFound().build();
 
             return ResponseEntity.ok().body(bookings);
         } catch (Exception e) {

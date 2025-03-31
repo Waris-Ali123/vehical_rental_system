@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -81,17 +80,6 @@ public class ReviewController {
     }
     
 
-    //May be required in future.............
-    // @PutMapping("/update")
-    // public ResponseEntity<Review> putMethodName(@RequestParam String email,@RequestParam String registrationNumber, @RequestParam String rating,@RequestParam String feedback ) {
-    //     try {
-    //         return reviewService.updateReview(email, registrationNumber, rating, feedback);  
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //         return ResponseEntity.badRequest().build();
-    //     }
-    // }
-
     @GetMapping("/getTopReviews")
     public ResponseEntity<List<Review>> getTopReviews(){
         try {
@@ -101,5 +89,5 @@ public class ReviewController {
             return ResponseEntity.internalServerError().build();
         }
     }
-    
+        
 }

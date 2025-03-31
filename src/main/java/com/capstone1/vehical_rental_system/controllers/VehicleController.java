@@ -102,7 +102,6 @@ public class VehicleController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        // return ResponseEntity.ok("Added succesfully");
     }
 
 

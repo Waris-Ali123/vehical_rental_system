@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -26,7 +25,6 @@ public class User {
         ADMIN,USER;
     }
 
-    // private static int idCounter = 1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY )
@@ -63,7 +61,6 @@ public class User {
 
 
     public User(){ 
-        // this.user_id = idCounter++;
     }
     
 

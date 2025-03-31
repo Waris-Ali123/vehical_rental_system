@@ -3,7 +3,6 @@ package com.capstone1.vehical_rental_system.services;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.capstone1.vehical_rental_system.entities.Review;
 

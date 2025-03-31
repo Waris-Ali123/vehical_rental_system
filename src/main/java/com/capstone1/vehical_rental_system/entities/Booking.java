@@ -3,8 +3,6 @@ package com.capstone1.vehical_rental_system.entities;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -61,7 +59,7 @@ public class Booking {
         this.endDate = endDate;
         this.totalPrice = totalPrice;
         this.bookingStatus = bookingStatus;
-    }         //just for checking purpose
+    }       
 
     public int getBooking_id() {
         return booking_id;
