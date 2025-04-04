@@ -1,30 +1,27 @@
 package com.capstone1.vehical_rental_system.services;
 
-import java.util.List;
-
+import com.capstone1.vehical_rental_system.entities.User;
 import org.springframework.http.ResponseEntity;
 
-import com.capstone1.vehical_rental_system.entities.User;
+import java.util.List;
 
-public interface LoginService {    
+public interface LoginService {
 
-    User getUserByEmailAndPass(String email,String password);
+    User getUserByEmailAndPass(final String email, final String password);
 
-    User getUserByEmail(String email);
+    User getUserByEmail(final String email);
 
-    User getById(int id);
+    User getById(final int id);
 
-    User storeUser(User user);
+    User storeUser(final User user);
 
-    ResponseEntity<User>  creatingAdmin(User newAdmin,String alreadyAdminEmail);
+    public boolean isAdmin(final String alreadyAdminEmail);
 
-    public boolean isAdmin(String alreadyAdminEmail);
+    public ResponseEntity<List<User>> getAllUsers(final String email);
 
-    public ResponseEntity<List<User>> getAllUsers( String email);
+    public ResponseEntity<String> deletingUser(final User userToDelete);
 
-    public ResponseEntity<String> deletingUser(User userToDelete);
+    public ResponseEntity<User> updatingExistingUser(final int id, final User userDetailstoUpdate);
 
-    public ResponseEntity<User> updatingExistingUser(int id,User userDetailstoUpdate);
-
-    public ResponseEntity<List<User>> searching(String keyword);
+    public ResponseEntity<List<User>> searching(final String keyword);
 }

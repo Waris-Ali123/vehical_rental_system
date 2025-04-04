@@ -1,6 +1,7 @@
 package com.capstone1.vehical_rental_system.controllers;
-import java.util.List;
 
+import com.capstone1.vehical_rental_system.entities.User;
+import com.capstone1.vehical_rental_system.services.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,122 +16,89 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.capstone1.vehical_rental_system.entities.User;
-import com.capstone1.vehical_rental_system.repositories.UserRepo;
-import com.capstone1.vehical_rental_system.services.LoginService;
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/auth") 
+@RequestMapping("/auth")
 public class LoginController {
 
-
-
     @Autowired
-    LoginService loginService;
-    @Autowired
-    UserRepo repo;
+    private LoginService loginService;
 
     @GetMapping("/login")
-    public ResponseEntity<User> getUserByEmailAndPassword(@RequestParam String email,@RequestParam String password) {
+    public ResponseEntity<User> getUserByEmailAndPassword(
+            final String email,
+            final String password) {
         try {
-            User u1 = loginService.getUserByEmailAndPass(email,password);
-            if(u1 != null)
+            final User u1 = loginService.getUserByEmailAndPass(email, password);
+            if (u1 != null) {
                 return ResponseEntity.ok().body(u1);
-            else
+            } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
     }
+
     @PostMapping("/signUp")
-    public ResponseEntity<User> SignUp(@RequestBody User user) {
-        User u1 ;
+    public ResponseEntity<User> signUp(final @RequestBody User user) {
+        User u1;
         try {
-            u1 =  loginService.storeUser(user);
-            if(u1!=null){
+            u1 = loginService.storeUser(user);
+            if (u1 != null) {
                 return ResponseEntity.ok().body(u1);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<User> updatingExistingUser(@PathVariable int id, @RequestBody User userDetailstoUpdate) {
-
+    public ResponseEntity<User> updatingExistingUser(
+            final @PathVariable int id,
+            final @RequestBody User userDetailsToUpdate) {
         try {
-        System.out.println("woking");
-            return loginService.updatingExistingUser(id, userDetailstoUpdate);
-
+            return loginService.updatingExistingUser(id, userDetailsToUpdate);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
         return ResponseEntity.internalServerError().build();
     }
 
-
-
-
-    // Admin Specific fucntionalities
-
+    // Admin Specific functionalities
     @GetMapping("/getAllUsers")
-    public ResponseEntity<List<User>> getAllUsers(@RequestParam String email){
+    public ResponseEntity<List<User>> getAllUsers(final String email) {
         try {
             return loginService.getAllUsers(email);
-            
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
         return ResponseEntity.internalServerError().build();
-
     }
 
     @GetMapping("/searching/{keyword}")
-    public ResponseEntity<List<User>> getMethodName(@PathVariable("keyword") String keyword) {
-        try{
-            return loginService.searching(keyword);
-
-        }catch(Exception e){
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
-        }
-
-    }
-
-
-    @PostMapping("/createAdmin")
-    public ResponseEntity<User>  creatingAdmin(@RequestParam String alreadyAdminEmail,@RequestBody User newAdmin) {
+    public ResponseEntity<List<User>> searching(final String keyword) {
         try {
-            return loginService.creatingAdmin(newAdmin,alreadyAdminEmail);
-                   
+            return loginService.searching(keyword);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
     }
 
+
     @DeleteMapping("/delete/{adminEmail}")
-    public ResponseEntity<String> deletingUserByAdmin(@PathVariable("adminEmail") String emailAdmin, @RequestBody User userToDelete){
-        if(loginService.isAdmin(emailAdmin)){
+    public ResponseEntity<String> deletingUserByAdmin(
+            final @PathVariable("adminEmail") String emailAdmin,
+            final @RequestBody User userToDelete) {
+        if (loginService.isAdmin(emailAdmin)) {
             System.out.println("admin is correct");
             return loginService.deletingUser(userToDelete);
         }
         return ResponseEntity.internalServerError().build();
     }
-
-    
-    
-    
-
-    
-   
-
 }
-

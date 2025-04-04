@@ -1,10 +1,6 @@
 package com.capstone1.vehical_rental_system.entities;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,24 +12,23 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "vehicles")
 public class Vehicle {
 
-    public enum VehicleType{
-        CAR,BIKE,TRUCK;
+    public enum VehicleType {
+        CAR, BIKE, TRUCK;
     }
 
-    public enum Availability{
-        AVAILABLE,UNDER_MAINTENANCE;
+    public enum Availability {
+        AVAILABLE, UNDER_MAINTENANCE;
     }
 
     public enum FuelType {
-        PETROL,
-        DIESEL,
-        ELECTRIC,
-        HYBRID,
-        CNG
+        PETROL, DIESEL, ELECTRIC, HYBRID, CNG
     }
 
     @Id
@@ -42,12 +37,12 @@ public class Vehicle {
 
     @Column(nullable = false)
     private String name;
-    
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private VehicleType type;
 
-    private String model ;
+    private String model;
 
     @Column(nullable = false, unique = true)
     private String registrationNumber;
@@ -85,16 +80,14 @@ public class Vehicle {
     @Column(length = 255)
     private String vehicleImage;  // URL or file path
 
-  
 
-
-
-    public Vehicle(){
+    public Vehicle() {
     }
 
-    public Vehicle(String name, VehicleType type, String model, String registrationNumber, Availability availability,
-            double price_per_day) {
-                
+    public Vehicle(String name, VehicleType type, String model,
+                   String registrationNumber, Availability availability,
+                   double price_per_day) {
+
         this();
         this.name = name;
         this.type = type;
@@ -103,9 +96,8 @@ public class Vehicle {
         this.availability = availability;
         this.price_per_day = price_per_day;
     }
-    
-    public Vehicle(String name, VehicleType type,String registrationNumber, Availability availability,
-            double price_per_day) {
+
+    public Vehicle(String name, VehicleType type, String registrationNumber, Availability availability, double price_per_day) {
         this(name, type, null, registrationNumber, availability, price_per_day);
     }
 
@@ -161,19 +153,19 @@ public class Vehicle {
         this.price_per_day = price_per_day;
     }
 
-    public void addBooking(Booking b){
+    public void addBooking(Booking b) {
         bookingsByVehicle.add(b);
     }
 
-    public void removeBooking(Booking b){
+    public void removeBooking(Booking b) {
         bookingsByVehicle.remove(b);
     }
 
-    public void addReview(Review b){
+    public void addReview(Review b) {
         reviewsOnVehicle.add(b);
     }
 
-    public void removeReview(Review b){
+    public void removeReview(Review b) {
         reviewsOnVehicle.remove(b);
     }
 
@@ -188,49 +180,47 @@ public class Vehicle {
     public FuelType getFuelType() {
         return fuelType;
     }
-    
+
     public void setFuelType(FuelType fuelType) {
         this.fuelType = fuelType;
     }
-    
+
     public int getSeatingCapacity() {
         return seatingCapacity;
     }
-    
+
     public void setSeatingCapacity(int seatingCapacity) {
         this.seatingCapacity = seatingCapacity;
     }
-    
+
     public double getMileage() {
         return mileage;
     }
-    
+
     public void setMileage(double mileage) {
         this.mileage = mileage;
     }
-    
+
     public String getColor() {
         return color;
     }
-    
+
     public void setColor(String color) {
         this.color = color;
     }
-    
+
     public String getVehicleImage() {
         return vehicleImage;
     }
-    
+
     public void setVehicleImage(String vehicleImage) {
         this.vehicleImage = vehicleImage;
     }
-    
+
 
     @Override
     public String toString() {
-        return "Vehicle [vehicle_id=" + vehicle_id + ", name=" + name + ", type=" + type + ", model=" + model
-                + ", registrationNumber=" + registrationNumber + ", availability=" + availability + ", price_per_day="
-                + price_per_day + "]";
+        return "Vehicle [vehicle_id=" + vehicle_id + ", name=" + name + ", type=" + type + ", model=" + model + ", registrationNumber=" + registrationNumber + ", availability=" + availability + ", price_per_day=" + price_per_day + "]";
     }
-    
+
 }

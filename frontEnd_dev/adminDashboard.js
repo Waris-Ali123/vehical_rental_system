@@ -584,13 +584,13 @@ function printingUsersDataInTable(usersParam,eraseBefore=true) {
 
     usersParam.forEach(element => {
         let userId = document.createElement("td");
-        userId.innerText = element.user_id;
+        userId.innerText = element.userId;
         let name = document.createElement("td");
         name.innerText = element.name;
         let email = document.createElement("td");
         email.innerText = element.email;
         let contactNumber = document.createElement("td");
-        contactNumber.innerText = element.contact_number;
+        contactNumber.innerText = element.contactNumber;
         let role = document.createElement("td");
         role.innerText = element.role;
         if (element.role == "ADMIN")
@@ -761,7 +761,7 @@ async function deletingUserFromDB(userToDelete) {
 
         if (response.ok) {
 
-            allUsers = allUsers.filter(user => user.user_id !== userToDelete.user_id);
+            allUsers = allUsers.filter(user => user.userId !== userToDelete.userId);
             totalUsers--;
 
             printingUsersDataInTable(allUsers);
@@ -937,7 +937,7 @@ function printingFormLayout(headingContent, fieldsComing, entityType,isAdding=fa
                 let newUser = {
                     name: (document.getElementById("name").value),
                     email: (document.getElementById("email").value),
-                    contact_number: String(document.getElementById("contactNumber").value),
+                    contactNumber: String(document.getElementById("contactNumber").value),
                     role: (document.getElementById("role").value).toUpperCase(),
                     password : (document.getElementById("password").value)
                 };
@@ -981,7 +981,7 @@ function printingFormLayout(headingContent, fieldsComing, entityType,isAdding=fa
                 let updatedUser = {
                     name: (document.getElementById("name").value),
                     email: (document.getElementById("email").value),
-                    contact_number: String(document.getElementById("contactNumber").value),
+                    contactNumber: String(document.getElementById("contactNumber").value),
                     role: (document.getElementById("role").value).toUpperCase(),
                 };
 
@@ -1098,10 +1098,10 @@ function validateForm(fields) {
 function printingProfile(element, fromUsersSection = false) {
 
     
-    let userId = element.user_id;
+    let userId = element.userId;
     let name = element.name;
     let email = element.email;
-    let contactNumber = element.contact_number;
+    let contactNumber = element.contactNumber;
     let role = element.role;
 
 
@@ -1238,11 +1238,11 @@ async function storingNewVehicleInDB(newVehicle){
 
 // ===================================START UPDATING IN DATABASE=======================================
 
-async function updatingUserInDB(user_id, updatedUser, fromUsersSection = false) {
+async function updatingUserInDB(userId, updatedUser, fromUsersSection = false) {
 
     try {
         let response = await fetch(
-            `http://localhost:8080/auth/update/${user_id}`, {
+            `http://localhost:8080/auth/update/${userId}`, {
             method: 'PUT',
             headers: {
                 "Content-type": "application/json"
@@ -1254,14 +1254,14 @@ async function updatingUserInDB(user_id, updatedUser, fromUsersSection = false) 
         if (response.ok) {
             let result = await response.json();
 
-            let index = allUsers.findIndex(user => user.user_id === result.user_id);
+            let index = allUsers.findIndex(user => user.userId === result.userId);
             if (index !== -1) {
                 allUsers[index] = result;  // Update user in the array
             }
 
 
             //Checking if the admin updating his own details
-            if (user_id == admin.user_id) {
+            if (userId == admin.userId) {
                 localStorage.setItem("admin", JSON.stringify(result));
                 admin = result;
             }

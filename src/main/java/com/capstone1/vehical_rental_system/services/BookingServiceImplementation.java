@@ -1,188 +1,167 @@
 package com.capstone1.vehical_rental_system.services;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-
 import com.capstone1.vehical_rental_system.entities.Booking;
 import com.capstone1.vehical_rental_system.entities.Booking.BookingStatus;
-import com.capstone1.vehical_rental_system.entities.Review;
 import com.capstone1.vehical_rental_system.entities.User;
 import com.capstone1.vehical_rental_system.entities.User.Role;
 import com.capstone1.vehical_rental_system.entities.Vehicle;
 import com.capstone1.vehical_rental_system.repositories.BookingRepo;
 import com.capstone1.vehical_rental_system.repositories.VehicleRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class BookingServiceImplementation implements BookingService {
 
-
     @Autowired
-    VehicleRepo vehicleRepo;
+    private VehicleRepo vehicleRepo;
     @Autowired
-    BookingRepo bookingRepo;
+    private BookingRepo bookingRepo;
     @Autowired
-    LoginService loginService;
+    private LoginService loginService;
     @Autowired
-    VehicleService vehicleService;
+    private VehicleService vehicleService;
 
-
-
-    public ResponseEntity<String> searchForExistingBookings(String registration_no,LocalDate starDate,LocalDate endDate){
-        Vehicle vehicle = vehicleService.getByRegistrationNumber(registration_no);
-
-        if(starDate.isAfter(endDate))
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Start Date must be before end date");
-
-        List<Booking> existingBookings = bookingRepo.findByVehicleAndStartDateLessThanEqualAndEndDateGreaterThanEqualAndBookingStatus(vehicle,endDate,starDate,BookingStatus.CONFIRMED);
-        if (existingBookings.size()>0) {
-            System.out.println(existingBookings.toString());
-            String[] bookedArr = new String[existingBookings.size()];
-            Arrays.setAll(bookedArr, (i)->existingBookings.get(i).getStartDate().toString()+" to "+existingBookings.get(i).getEndDate().toString());
-            
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                """
-                    The Vehicle "%s" is already booked between %s 
-                    
-                """.formatted(registration_no,String.join(" , ", bookedArr))
-            );
+    public ResponseEntity<String> searchForExistingBookings(
+            String registrationNo, LocalDate startDate, 
+            LocalDate endDate) {
+        Vehicle vehicle = 
+                vehicleService.getByRegistrationNumber(registrationNo);
+        if (startDate.isAfter(endDate)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Start Date must be before end date");
         }
-
+        List<Booking> existingBookings = 
+                bookingRepo.findByVehicleAndStartDateLessThanEqualAndEndDateGreaterThanEqualAndBookingStatus(
+                        vehicle, endDate, startDate, 
+                        BookingStatus.CONFIRMED);
+        if (!existingBookings.isEmpty()) {
+            StringBuilder bookedDates = new StringBuilder();
+            for (Booking booking : existingBookings) {
+                bookedDates.append(booking.getStartDate())
+                        .append(" to ")
+                        .append(booking.getEndDate())
+                        .append(", ");
+            }
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("The Vehicle \"" + registrationNo + 
+                            "\" is already booked between " + 
+                            bookedDates.toString());
+        }
         return ResponseEntity.ok("It is Available now");
     }
 
-
-    public ResponseEntity<String> addBooking(String email, String registration_no, String startDate,String endDate){
+    public ResponseEntity<String> addBooking(
+            String email, String registrationNo, 
+            String startDate, String endDate) {
         try {
-            User u1 = loginService.getUserByEmail(email);
-            Vehicle v1 = vehicleService.getByRegistrationNumber(registration_no);
+            User user = loginService.getUserByEmail(email);
+            Vehicle vehicle = 
+                    vehicleService.getByRegistrationNumber(registrationNo);
             LocalDate start = LocalDate.parse(startDate);
             LocalDate end = LocalDate.parse(endDate);
-
-            //Checking for already booked case
-            ResponseEntity<String> isAvailable = this.searchForExistingBookings(registration_no,start,end);
-
-            if(isAvailable.getStatusCode()!=HttpStatusCode.valueOf(200))
+            ResponseEntity<String> isAvailable = 
+                    this.searchForExistingBookings(registrationNo, start, end);
+            if (!isAvailable.getStatusCode().is2xxSuccessful()) {
                 return isAvailable;
-
-
-
-            //calculating total price;
-            long days = ChronoUnit.DAYS.between(start,end)+1; //including the initial too
+            }
+            long days = ChronoUnit.DAYS.between(start, end) + 1;
             System.out.println("Total Days are : " + days);
-            double totalPrice = v1.getPrice_per_day()*days;
-
-
+            double totalPrice = vehicle.getPrice_per_day() * days;
             Booking booking = new Booking();
-            booking.setUser(u1);
-            booking.setVehicle(v1);
+            booking.setUser(user);
+            booking.setVehicle(vehicle);
             booking.setBookingTime(LocalDateTime.now());
             booking.setStartDate(start);
             booking.setEndDate(end);
             booking.setTotalPrice(totalPrice);
             booking.setBooking_status(BookingStatus.CONFIRMED);
-
             Booking bookSaved = bookingRepo.save(booking);
-            u1.addBooking(bookSaved);
-            v1.addBooking(bookSaved);
+            user.addBooking(bookSaved);
+            vehicle.addBooking(bookSaved);
             System.out.println(bookSaved);
-
             return ResponseEntity.ok("Successfully Booked");
-
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong while booking");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Something went wrong while booking");
         }
-
     }
 
-
-    
-    public ResponseEntity<List<Booking>> getBookings(String email){
-
+    public ResponseEntity<List<Booking>> getBookings(String email) {
         try {
             User user = loginService.getUserByEmail(email);
             List<Booking> bookingsList = bookingRepo.findByUser(user);
-            return ResponseEntity.ok().body(bookingsList);
-
+            return ResponseEntity.ok(bookingsList);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ArrayList<>());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ArrayList<>());
         }
-
     }
 
-
-    //only for users not having the cancel bookings
-    @Override
-    public ResponseEntity<List<Booking>> getBookingsByRegistrationNumber(String registration_number) {
+    public ResponseEntity<List<Booking>> getBookingsByRegistrationNumber(
+            String registrationNumber) {
         try {
-            Vehicle vehicle = vehicleService.getByRegistrationNumber(registration_number);
-            List<Booking> bookingsList = bookingRepo.findByVehicleAndBookingStatus(vehicle,BookingStatus.CONFIRMED);
-            return ResponseEntity.ok().body(bookingsList);
-
+            Vehicle vehicle = 
+                    vehicleService.getByRegistrationNumber(registrationNumber);
+            List<Booking> bookingsList = 
+                    bookingRepo.findByVehicleAndBookingStatus(
+                            vehicle, BookingStatus.CONFIRMED);
+            return ResponseEntity.ok(bookingsList);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ArrayList<>());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ArrayList<>());
         }
     }
 
-
-    public ResponseEntity<List<Booking>> getAllBookings(String email){
+    public ResponseEntity<List<Booking>> getAllBookings(String email) {
         try {
             User user = loginService.getUserByEmail(email);
-            if(user.getRole()==Role.ADMIN)
-                return ResponseEntity.ok().body( (List<Booking>) bookingRepo.findAll() );
-            else
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ArrayList<>());
+            if (user.getRole() == Role.ADMIN) {
+                return ResponseEntity.ok(bookingRepo.findAll());
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(new ArrayList<>());
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ArrayList<>());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ArrayList<>());
         }
     }
 
-
-
-    public ResponseEntity<String> cancleBooking(int booking_id){
-
+    public ResponseEntity<String> cancelBooking(int bookingId) {
         try {
-            Booking booking = bookingRepo.findById(booking_id).get();
+            System.out.println("booking Id ; "+bookingId);
+            Booking booking = 
+                    bookingRepo.findById(bookingId).orElseThrow();
             booking.setBooking_status(BookingStatus.CANCELED);
             bookingRepo.save(booking);
             return ResponseEntity.ok("The booking has been canceled");
-            
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
     }
 
-
-
-    @Override
-    public ResponseEntity<List<Booking>> searching(String keyword) {
+    public ResponseEntity<List<Booking>> searchBookings(String keyword) {
         try {
-            List<Booking> bookings =  bookingRepo.SearchingByKeyword(keyword);
-
-            return ResponseEntity.ok().body(bookings);
+            List<Booking> bookings = 
+                    bookingRepo.searchingByKeyword(keyword);
+            return ResponseEntity.ok(bookings);
         } catch (Exception e) {
-           e.printStackTrace();
-           return ResponseEntity.internalServerError().build();
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
         }
     }
-
-
-
-    
 }
-

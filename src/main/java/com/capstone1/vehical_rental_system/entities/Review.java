@@ -1,16 +1,10 @@
 package com.capstone1.vehical_rental_system.entities;
 
-import java.time.LocalDateTime;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -24,21 +18,23 @@ public class Review {
     private LocalDateTime reviewTime;
 
     @ManyToOne
-    @JoinColumn(name = "user_id",nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    
+
     @ManyToOne
-    @JoinColumn(name = "vehicle_id",nullable = false)
+    @JoinColumn(name = "vehicle_id", nullable = false)
     private Vehicle vehicle;
 
     @Min(value = 1, message = "Rating can be atleast one")
-    @Max(value = 5 , message = "Rating can be atmost five")
+    @Max(value = 5, message = "Rating can be atmost five")
     private int rating;
 
     private String feedback;
 
     public Review() {
+        this.reviewTime = LocalDateTime.now();  // Automatically sets the current timestamp
     }
+    
 
     public long getReviewId() {
         return reviewId;
@@ -86,9 +82,8 @@ public class Review {
 
     @Override
     public String toString() {
-        return "Review [reviewId=" + reviewId + ", reviewTime=" + reviewTime + ", user=" + user + ", vehicle=" + vehicle
-                + ", rating=" + rating + ", feedback=" + feedback + "]";
+        return "Review [reviewId=" + reviewId + ", reviewTime=" + reviewTime + ", user=" + user + ", vehicle=" + vehicle + ", rating=" + rating + ", feedback=" + feedback + "]";
     }
-  
-        
+
+
 }

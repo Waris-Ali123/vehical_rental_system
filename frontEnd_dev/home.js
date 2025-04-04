@@ -477,9 +477,9 @@ async function storingReviewInDB(
 
 
 // ================================Updating the DB=================
-async function updatingUserInDB(user_id, updatedUser) {
+async function updatingUserInDB(userId, updatedUser) {
   try {
-    let response = await fetch(`http://localhost:8080/auth/update/${user_id}`, {
+    let response = await fetch(`http://localhost:8080/auth/update/${userId}`, {
       method: "PUT",
       headers: {
         "Content-type": "application/json",
@@ -491,7 +491,7 @@ async function updatingUserInDB(user_id, updatedUser) {
       let result = await response.json();
 
       //Checking if the admin updating his own details
-      if (user_id == user.user_id) {
+      if (userId == user.userId) {
         localStorage.setItem("user", JSON.stringify(result));
         user = result;
       }
@@ -508,6 +508,7 @@ async function updatingUserInDB(user_id, updatedUser) {
 
 // ---------fun to cancel the booking-------------
 async function updatingBookingStatusInDB(booking_id) {
+  console.log(booking_id);
   try {
     let response = await fetch(
       `http://localhost:8080/booking/cancelBooking/${booking_id}`,
@@ -582,7 +583,7 @@ function printingBookingsDataInTable(
   }
 
   bookingsParam.forEach((element) => {
-    
+  
 
     let bookId = document.createElement("td");
     bookId.innerText = element.booking_id;
@@ -625,7 +626,8 @@ function printingBookingsDataInTable(
         cancelBtn.title = "Cancel Booking";
 
         cancelBtn.addEventListener("click", async () => {
-          
+          // console.log(element);
+          console.log("clicked cancelBtn");
           if (confirm("Are you sure you want to cancel the booking ? "))
             await updatingBookingStatusInDB(element.booking_id);
         });
@@ -1118,10 +1120,10 @@ function printingFilters() {
 
 // -------------------Printing Profile-----------------------
 function printingProfile(element) {
-  let userId = element.user_id;
+  let userId = element.userId;
   let name = element.name;
   let email = element.email;
-  let contactNumber = element.contact_number;
+  let contactNumber = element.contactNumber;
   let role = element.role;
 
   let fields = [
@@ -1210,7 +1212,7 @@ function printingFormLayout(headingContent, fieldsComing, entityType) {
           let updatedUser = {
             name: document.getElementById("name").value,
             email: document.getElementById("email").value,
-            contact_number: String(
+            contactNumber: String(
               document.getElementById("contactNumber").value
             ),
             role: "USER",
@@ -1267,7 +1269,7 @@ function scheduleBookingForVehicle(vehicle) {
     },
     {
       label: "Contact No",
-      value: user.contact_number,
+      value: user.contactNumber,
       readOnly: true,
       type: "number",
       id: "b_UserContactNumber",

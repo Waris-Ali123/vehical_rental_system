@@ -9,9 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfiq {
 
     @Bean
-    public PasswordEncoder encodingPassword(){
-
+    public PasswordEncoder encodingPassword() {
         return new BCryptPasswordEncoder();
     }
-    
 }

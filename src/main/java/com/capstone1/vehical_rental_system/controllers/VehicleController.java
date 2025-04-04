@@ -1,9 +1,7 @@
 package com.capstone1.vehical_rental_system.controllers;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.capstone1.vehical_rental_system.entities.Vehicle;
+import com.capstone1.vehical_rental_system.services.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -19,60 +17,53 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.capstone1.vehical_rental_system.entities.Vehicle;
-import com.capstone1.vehical_rental_system.services.VehicleService;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/vehicle")
 public class VehicleController {
 
-
     @Autowired
-    VehicleService vehicleService;
+    private VehicleService vehicleService;
 
-    // @Autowired
-    
     @GetMapping("/getAllVehicles")
-    public ResponseEntity<List<Vehicle>> getMethodName() {
+    public ResponseEntity<List<Vehicle>> getAllVehicles() {
         return vehicleService.getAllVehicles();
     }
 
-
     @GetMapping("/getByType")
-    public ResponseEntity<List<Vehicle>> getVehicleByType(@RequestParam String type) {
+    public ResponseEntity<List<Vehicle>> getVehicleByType(final String type) {
         List<Vehicle> vehicle = new ArrayList<>();
         try {
             vehicle = vehicleService.getByType(type);
-            if(vehicle.size()>0)
+            if (!vehicle.isEmpty()) {
                 return ResponseEntity.ok(vehicle);
-            
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(vehicle);
-
     }
 
     @GetMapping("/searching/{keyword}")
-    public ResponseEntity<List<Vehicle>> getMethodName(@PathVariable("keyword") String keyword) {
-        try{
+    public ResponseEntity<List<Vehicle>> searchVehicles(final String keyword) {
+        try {
             return vehicleService.searching(keyword);
-
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
-
     }
 
-
     @GetMapping("/findingAvailable")
-    public ResponseEntity<List<Vehicle>> findingAvailableVehicles( @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-            
+    public ResponseEntity<List<Vehicle>> findingAvailableVehicles(
+            final @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            final @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         try {
-            return vehicleService.findingAvailableVehicles(startDate,endDate);
-            
+            return vehicleService.findingAvailableVehicles(startDate, endDate);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
@@ -80,51 +71,46 @@ public class VehicleController {
     }
 
     @GetMapping("/findingAvailable/{type}")
-    public ResponseEntity<List<Vehicle>> findingAvailableVehiclesByType(@PathVariable("type") String type, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-            
+    public ResponseEntity<List<Vehicle>> findingAvailableVehiclesByType(
+            final @PathVariable("type") String type,
+            final @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            final @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         try {
-            return vehicleService.findingAvailableVehiclesByType(type,startDate,endDate);
-            
+            return vehicleService.findingAvailableVehiclesByType(type, startDate, endDate);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
     }
-    
-    
 
-        // Admin Specific Functionalities
-
+    // Admin Specific Functionalities
     @PostMapping("/add")
-    public ResponseEntity<Vehicle> addingVehicleByAdminOnly(@RequestParam String email ,@RequestBody Vehicle vehicle) {
+    public ResponseEntity<Vehicle> addingVehicleByAdminOnly(
+            final String email, final @RequestBody Vehicle vehicle) {
         try {
-            return vehicleService.addVehicle(email,vehicle);
+            return vehicleService.addVehicle(email, vehicle);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-
-    //updatingVehicle
     @CrossOrigin(origins = "*")
-    @PutMapping("/update/{registration_no}/{email}")
-    public ResponseEntity<Vehicle> updatingVehicleDetails(@PathVariable("registration_no") String registration_no,@PathVariable("email") String email, @RequestBody Vehicle vehicle) {
-        
-        return vehicleService.updateVehicle(registration_no,email,vehicle);
-         
+    @PutMapping("/update/{registration_number}/{email}")
+    public ResponseEntity<Vehicle> updatingVehicleDetails(
+            final @PathVariable("registration_number") String registration_number,
+            final @PathVariable("email") String email, final @RequestBody Vehicle vehicle) {
+        return vehicleService.updateVehicle(registration_number, email, vehicle);
     }
 
-
-    @DeleteMapping("/delete/{registration_no}/{email}")
-    public ResponseEntity<String> deleteByRegistrationNumber(@PathVariable("registration_no") String registration_no,@PathVariable("email") String email){
+    @DeleteMapping("/delete/{registration_number}/{email}")
+    public ResponseEntity<String> deleteByRegistrationNumber(
+            final @PathVariable("registration_number") String registration_number,
+            final @PathVariable("email") String email) {
         try {
-            return vehicleService.removeVehicleByRegistrationNumber(registration_no,email);
+            return vehicleService.removeVehicleByRegistrationNumber(registration_number, email);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
-
-
-    
 }

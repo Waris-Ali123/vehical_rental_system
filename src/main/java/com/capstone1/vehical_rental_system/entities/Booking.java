@@ -1,8 +1,5 @@
 package com.capstone1.vehical_rental_system.entities;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -13,20 +10,22 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Version;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
 public class Booking {
 
     public enum BookingStatus {
-        CONFIRMED,CANCELED;
+        CONFIRMED, CANCELED;
     }
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int booking_id;
 
     private LocalDateTime bookingTime;
 
-    
 
     private LocalDate startDate;
 
@@ -39,27 +38,28 @@ public class Booking {
     private BookingStatus bookingStatus;
 
     @ManyToOne
-    @JoinColumn(name = "user_id",nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "vehicle_id",nullable = false)
+    @JoinColumn(name = "vehicle_id", nullable = false)
     private Vehicle vehicle;
 
 
     @Version
-    private int version; 
+    private int version;
 
 
-    public Booking(){}
+    public Booking() {
+    }
 
-    public Booking(LocalDate startDate, LocalDate endDate, double totalPrice, BookingStatus bookingStatus) {
+    public Booking(final LocalDate startDate, final LocalDate endDate, final double totalPrice, final BookingStatus bookingStatus) {
         this.bookingTime = LocalDateTime.now();
         this.startDate = startDate;
         this.endDate = endDate;
         this.totalPrice = totalPrice;
         this.bookingStatus = bookingStatus;
-    }       
+    }
 
     public int getBooking_id() {
         return booking_id;
@@ -105,7 +105,6 @@ public class Booking {
         this.bookingStatus = bookingStatus;
     }
 
-    
 
     public User getUser() {
         return user;
@@ -125,10 +124,8 @@ public class Booking {
 
     @Override
     public String toString() {
-        return "Booking [booking_id=" + booking_id + ", startDate=" + startDate + ", endDate=" + endDate
-                + ", totalPrice=" + totalPrice + ", bookingStatus=" + bookingStatus + "]";
+        return "Booking [booking_id=" + booking_id + ", " +
+                "startDate=" + startDate + ", endDate=" + endDate + "," +
+                " totalPrice=" + totalPrice + ", bookingStatus=" + bookingStatus + "]";
     }
-
-    
-
 }
