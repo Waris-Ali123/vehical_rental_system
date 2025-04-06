@@ -24,10 +24,10 @@ public class ReviewController {
 
     @PostMapping("/add")
     public ResponseEntity<Review> addingReview(
-            final String email,
-            final String registration_number,
-            final String rating,
-            final String feedback) {
+            @RequestParam("email") final String email,
+            @RequestParam("registration_number") final String registration_number,
+            @RequestParam("rating") final String rating,
+            @RequestParam("feedback") final String feedback) {
         try {
             return reviewService.addReview(email, registration_number, rating, feedback);
         } catch (Exception e) {
@@ -36,9 +36,11 @@ public class ReviewController {
         }
     }
 
-    @GetMapping("/getReviewsByVehicle")
-    public ResponseEntity<List<Review>> getReviewsByVehicle(final String registration_number) {
+    @CrossOrigin(origins = "*")
+    @GetMapping("/getReviewsByVehicle") // Changed to PathVariable
+    public ResponseEntity<List<Review>> getReviewsByVehicle(@RequestParam final String registration_number) {
         try {
+            System.out.println("Registration Number : " + registration_number);
             return reviewService.getReview(registration_number);
         } catch (Exception e) {
             e.printStackTrace();
@@ -46,8 +48,8 @@ public class ReviewController {
         }
     }
 
-    @GetMapping("/getReviewsByUser")
-    public ResponseEntity<List<Review>> getReviewsByUser(final String email) {
+    @GetMapping("/getReviewsByUser")  // Changed to PathVariable
+    public ResponseEntity<List<Review>> getReviewsByUser(@RequestParam("email") final String email) {
         try {
             return reviewService.getReviewsByEmail(email);
         } catch (Exception e) {
@@ -56,8 +58,9 @@ public class ReviewController {
         }
     }
 
-    @GetMapping("/searching/{keyword}")
-    public ResponseEntity<List<Review>> searchingReview(final String keyword) {
+    @CrossOrigin(origins = "*")
+    @GetMapping("/searching/{keyword}")  // Changed to PathVariable
+    public ResponseEntity<List<Review>> searchingReview(@PathVariable("keyword") final String keyword) {
         try {
             return reviewService.searching(keyword);
         } catch (Exception e) {
@@ -66,8 +69,8 @@ public class ReviewController {
         }
     }
 
-    @GetMapping("/getAllReviews")
-    public ResponseEntity<List<Review>> getAllReviews(final String email) {
+    @GetMapping("/getAllReviews") //changed to pathvariable
+    public ResponseEntity<List<Review>> getAllReviews(@RequestParam final String email) {
         return reviewService.getAllReviews(email);
     }
 

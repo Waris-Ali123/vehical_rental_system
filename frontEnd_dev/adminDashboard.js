@@ -154,10 +154,35 @@ function profileClick() {
 
 
 function printingDashBoardData() {
-    let mostRecentTenBookings = allBookings.slice(-Math.min(10, allBookings.length));
-    printingBookingsDataInTable(mostRecentTenBookings.reverse(),true,"Recent Bookings");
+    let mostRecentTenBookings = allBookings.slice(0,Math.min(10, allBookings.length));
+    printingBookingsDataInTable(mostRecentTenBookings,true,"Recent Bookings");
     printingOverviewOnDashBoard();
     showActiveNavItem("dashboardNav");
+}
+
+
+
+
+
+
+// ==========================Handling clicking on the navigations ============================
+let isBookingReversed = false;
+let isReviewReversed = false;
+let isUserReversed = false;
+let isVehicleReversed = false;
+
+function HandlingOnClickBookings(){
+    printingBookingsDataInTable(allBookings);
+}
+
+function HandlingOnClickReviews(){
+    printingReviewsDataInTable(allReviews);
+}
+function HandlingOnClickUsers(){
+    printingUsersDataInTable(allUsers);
+}
+function HandlingOnClickVehicles(){
+    printingVehiclesDataInTable(allVehicles);
 }
 
 // ====================== Start fetching entities========================================
@@ -171,7 +196,7 @@ async function fetchingUsers() {
         });
         if (response.ok) {
             let data = await response.json();
-            allUsers = data;
+            allUsers = data.reverse();
             totalUsers = allUsers.length;
 
         }
@@ -199,7 +224,8 @@ async function fetchingBookings() {
 
         if (response.ok) {
 
-            allBookings = await response.json();
+            let data = await response.json();
+            allBookings = data.reverse();
             totalBookings = allBookings.length;
 
             allBookings.forEach((element)=>{
@@ -225,13 +251,12 @@ async function fetchingBookings() {
 //Fetching all vehicles from backend
 async function fetchingVehicles() {
     try {
-        let adminEmail = admin.email;
-        let response = await fetch(`http://localhost:8080/vehicle/getAllVehicles?email=${adminEmail}`, {
+        let response = await fetch(`http://localhost:8080/vehicle/getAllVehicles`, {
             method: "GET"
                       });
         if (response.ok) {
             let data = await response.json();
-            allVehicles = data;
+            allVehicles = data.reverse();
             totalVehicles = allVehicles.length;
         }
 
@@ -254,7 +279,7 @@ async function fetchingReviews() {
                       });
         if (response.ok) {
             let data = await response.json();
-            allReviews = data;
+            allReviews = data.reverse();
             totalReviews = allReviews.length;
         }
 
@@ -746,6 +771,7 @@ function printingReviewsDataInTable(reviewsParam,eraseBefore=true) {
 
 //delete the user from db
 async function deletingUserFromDB(userToDelete) {
+    console.log(userToDelete);
 
     try {
         let adminEmail = admin.email;
@@ -760,6 +786,8 @@ async function deletingUserFromDB(userToDelete) {
         );
 
         if (response.ok) {
+
+            console.log("user delterd successfully");
 
             allUsers = allUsers.filter(user => user.userId !== userToDelete.userId);
             totalUsers--;
@@ -1347,6 +1375,7 @@ async function searchingByVehicleKeywords() {
     cardContainer.innerHTML = "";
 
     let input = document.getElementById("searchBarId").value;
+    console.log(input);
 
     //Fetching all vehicles
     let outputVehicle = await fetchingVehiclesOnKeyword(input);
@@ -1383,6 +1412,7 @@ async function searchingByVehicleKeywords() {
 
 //fetching the result for keyword from db
 async function fetchingVehiclesOnKeyword(keyword) {
+    console.log("input in fetching : ",keyword);
     try {
         let response = await fetch(`http://localhost:8080/vehicle/searching/${keyword}`, {
             method: "GET"

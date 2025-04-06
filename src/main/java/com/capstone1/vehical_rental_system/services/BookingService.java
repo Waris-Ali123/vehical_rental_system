@@ -7,15 +7,15 @@ import java.util.List;
 
 public interface BookingService {
 
-    public ResponseEntity<String> addBooking(final String email, final String registrationNumber, final String startDate, final String endDate);
+    ResponseEntity<String> addBooking(final String email, final String registrationNumber, final String startDate, final String endDate);
 
-    public ResponseEntity<List<Booking>> getBookings(final String email);
+    ResponseEntity<List<Booking>> getBookings(final String email);
 
-    public ResponseEntity<List<Booking>> getBookingsByRegistrationNumber(final String registrationNumber);
+    ResponseEntity<List<Booking>> getBookingsByRegistrationNumber(final String registrationNumber);
 
-    public ResponseEntity<List<Booking>> getAllBookings(final String email);
+    ResponseEntity<List<Booking>> getAllBookings(final String email);
 
-    public ResponseEntity<String> cancelBooking(final int booking_id);
+    ResponseEntity<String> cancelBooking(final int booking_id);
 
-    public ResponseEntity<List<Booking>> searchBookings(final String keyword);
+    ResponseEntity<List<Booking>> searchBookings(final String keyword);
 }

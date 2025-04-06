@@ -56,6 +56,7 @@ public class ReviewServiceImpl implements ReviewService {
         try {
             final Vehicle vehicle = vehicleService.getByRegistrationNumber(regNo);
             final List<Review> reviews = reviewRepo.findByVehicle(vehicle);
+            System.out.println("List of reviews : " + reviews);
             return ResponseEntity.ok().body(reviews);
         } catch (Exception e) {
             e.printStackTrace();

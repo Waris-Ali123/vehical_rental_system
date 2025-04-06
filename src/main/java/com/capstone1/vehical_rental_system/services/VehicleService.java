@@ -8,22 +8,23 @@ import java.util.List;
 
 public interface VehicleService {
 
-    public ResponseEntity<Vehicle> addVehicle(final String email, final Vehicle vehicle);
+    ResponseEntity<Vehicle> addVehicle(final String email, final Vehicle vehicle);
 
-    public ResponseEntity<List<Vehicle>> getAllVehicles();
+    ResponseEntity<List<Vehicle>> getAllVehicles();
 
-    public List<Vehicle> getByType(final String type);
+    List<Vehicle> getByType(final String type);
 
-    public Vehicle getByRegistrationNumber(final String registration_no);
+    Vehicle getByRegistrationNumber(final String registration_no);
 
-    public ResponseEntity<List<Vehicle>> searching(final String keyword);
+    ResponseEntity<List<Vehicle>> searching(final String keyword);
 
-    public ResponseEntity<Vehicle> updateVehicle(final String registration_no, final String email, final Vehicle vehicle);
+    ResponseEntity<Vehicle> updateVehicle(final String registration_no, final String email, final Vehicle vehicle);
 
-    public ResponseEntity<String> removeVehicleByRegistrationNumber(final String registration_no, final String email);
+    ResponseEntity<String> removeVehicleByRegistrationNumber(final String registration_no, final String email);
 
-    public ResponseEntity<List<Vehicle>> findingAvailableVehicles(final LocalDate startDate, final LocalDate endDate);
+    ResponseEntity<List<Vehicle>> findingAvailableVehicles(final LocalDate startDate, final LocalDate endDate);
 
-    public ResponseEntity<List<Vehicle>> findingAvailableVehiclesByType(final String type, final LocalDate startDate, final LocalDate endDate);
+    ResponseEntity<List<Vehicle>> findingAvailableVehiclesByType(final String type,
+                    final LocalDate startDate, final LocalDate endDate);
 
 }

@@ -2,7 +2,16 @@ package com.capstone1.vehical_rental_system.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.ArrayList;
@@ -13,12 +22,12 @@ import java.util.List;
 public class User {
 
     public enum Role {
-        ADMIN, USER;
+        ADMIN, USER
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int user_id;
+    private int userId;
 
     @Column(name = "name", nullable = false, length = 100)
     private String name;
@@ -39,12 +48,12 @@ public class User {
     @JsonIgnore
     @JsonBackReference(value = "booking-user")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Booking> bookings = new ArrayList<>();
+    private final List<Booking> bookings = new ArrayList<>();
 
     @JsonIgnore
     @JsonBackReference(value = "review-user")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Review> reviews = new ArrayList<>();
+    private final List<Review> reviews = new ArrayList<>();
 
     public User() {
     }
@@ -66,8 +75,8 @@ public class User {
         this.role = role;
     }
 
-    public int getUserId() { // Changed from getUser_id()
-        return user_id;
+    public int getUserId() { // Changed from getuserId()
+        return userId;
     }
 
     public String getName() {
@@ -136,20 +145,25 @@ public class User {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
         User user = (User) obj;
-        return user_id == user.user_id;
+        return userId == user.userId;
     }
 
     @Override
     public int hashCode() {
-        return Integer.hashCode(user_id);
+        return Integer.hashCode(userId);
     }
 
     @Override
     public String toString() {
-        return "User [name=" + name + ", email=" + email + ", contact_number=" + contact_number + ", role=" + role + "]";
+        return "User [userId = " + userId + ", name=" + name + ", email=" + email + ", contact_number=" +
+                contact_number + ", role=" + role + "]";
     }
 
     private String encodePassword(String password) { // Helper method for secure password storage

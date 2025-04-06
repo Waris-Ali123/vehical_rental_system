@@ -7,17 +7,17 @@ import java.util.List;
 
 public interface ReviewService {
 
-    public ResponseEntity<Review> addReview(final String email, final String registrationNumber, final String rating, final String feedback);
+    ResponseEntity<Review> addReview(final String email, final String registrationNumber, final String rating, final String feedback);
 
-    public ResponseEntity<List<Review>> getReview(final String registrationNumber);
+    ResponseEntity<List<Review>> getReview(final String registrationNumber);
 
-    public ResponseEntity<Review> updateReview(final String email, final String registrationNumber, final String rating, final String feedback);
+    ResponseEntity<Review> updateReview(final String email, final String registrationNumber, final String rating, final String feedback);
 
-    public ResponseEntity<List<Review>> getAllReviews(final String email);
+    ResponseEntity<List<Review>> getAllReviews(final String email);
 
-    public ResponseEntity<List<Review>> searching(final String keyword);
+    ResponseEntity<List<Review>> searching(final String keyword);
 
-    public ResponseEntity<List<Review>> getReviewsByEmail(final String email);
+    ResponseEntity<List<Review>> getReviewsByEmail(final String email);
 
-    public ResponseEntity<List<Review>> getTopReviews();
+    ResponseEntity<List<Review>> getTopReviews();
 }

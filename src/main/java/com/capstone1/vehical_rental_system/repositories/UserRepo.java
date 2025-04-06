@@ -21,6 +21,6 @@ public interface UserRepo extends JpaRepository<User, Integer> {
             " contact_number like (Concat('%',:keyword,'%')) Or " +
             " Lower(role) like Lower(Concat('%',:keyword,'%'))"
     )
-    public List<User> SearchingByKeyword(String keyword);
+    List<User> SearchingByKeyword(String keyword);
 
 }

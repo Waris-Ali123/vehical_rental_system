@@ -53,8 +53,8 @@ public class BookingServiceImplementation implements BookingService {
             }
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body("The Vehicle \"" + registrationNo + 
-                            "\" is already booked between " + 
-                            bookedDates.toString());
+                            "\" is already booked between " +
+                            bookedDates);
         }
         return ResponseEntity.ok("It is Available now");
     }

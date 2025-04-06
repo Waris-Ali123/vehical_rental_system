@@ -34,8 +34,48 @@ public class VehicleController {
         return vehicleService.getAllVehicles();
     }
 
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/searching/{keyword}")
+    public ResponseEntity<List<Vehicle>> searchVehicles(@PathVariable("keyword") final String keyword) {
+        try {
+            return vehicleService.searching(keyword);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/findingAvailable")
+    public ResponseEntity<List<Vehicle>> findingAvailableVehicles(
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final LocalDate endDate) {
+        try {
+            return vehicleService.findingAvailableVehicles(startDate, endDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/findingAvailable/{type}")
+    public ResponseEntity<List<Vehicle>> findingAvailableVehiclesByType(
+            @PathVariable("type") final String type,
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final LocalDate endDate) {
+        try {
+            return vehicleService.findingAvailableVehiclesByType(type, startDate, endDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+
+    // ================Admin specific details=====================
+
     @GetMapping("/getByType")
-    public ResponseEntity<List<Vehicle>> getVehicleByType(final String type) {
+    public ResponseEntity<List<Vehicle>> getVehicleByType(@RequestParam("type") final String type) {
         List<Vehicle> vehicle = new ArrayList<>();
         try {
             vehicle = vehicleService.getByType(type);
@@ -48,45 +88,10 @@ public class VehicleController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(vehicle);
     }
 
-    @GetMapping("/searching/{keyword}")
-    public ResponseEntity<List<Vehicle>> searchVehicles(final String keyword) {
-        try {
-            return vehicleService.searching(keyword);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
-        }
-    }
-
-    @GetMapping("/findingAvailable")
-    public ResponseEntity<List<Vehicle>> findingAvailableVehicles(
-            final @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            final @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        try {
-            return vehicleService.findingAvailableVehicles(startDate, endDate);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
-        }
-    }
-
-    @GetMapping("/findingAvailable/{type}")
-    public ResponseEntity<List<Vehicle>> findingAvailableVehiclesByType(
-            final @PathVariable("type") String type,
-            final @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            final @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        try {
-            return vehicleService.findingAvailableVehiclesByType(type, startDate, endDate);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
-        }
-    }
-
-    // Admin Specific Functionalities
     @PostMapping("/add")
     public ResponseEntity<Vehicle> addingVehicleByAdminOnly(
-            final String email, final @RequestBody Vehicle vehicle) {
+            @RequestParam("email") final String email,
+            @RequestBody final Vehicle vehicle) {
         try {
             return vehicleService.addVehicle(email, vehicle);
         } catch (Exception e) {
@@ -94,18 +99,18 @@ public class VehicleController {
         }
     }
 
-    @CrossOrigin(origins = "*")
     @PutMapping("/update/{registration_number}/{email}")
     public ResponseEntity<Vehicle> updatingVehicleDetails(
-            final @PathVariable("registration_number") String registration_number,
-            final @PathVariable("email") String email, final @RequestBody Vehicle vehicle) {
+            @PathVariable("registration_number") final String registration_number,
+            @PathVariable("email") final String email,
+            @RequestBody final Vehicle vehicle) {
         return vehicleService.updateVehicle(registration_number, email, vehicle);
     }
 
     @DeleteMapping("/delete/{registration_number}/{email}")
     public ResponseEntity<String> deleteByRegistrationNumber(
-            final @PathVariable("registration_number") String registration_number,
-            final @PathVariable("email") String email) {
+            @PathVariable("registration_number") final String registration_number,
+            @PathVariable("email") final String email) {
         try {
             return vehicleService.removeVehicleByRegistrationNumber(registration_number, email);
         } catch (Exception e) {

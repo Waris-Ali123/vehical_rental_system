@@ -81,7 +81,9 @@ public class VehicleServiceImplementation implements VehicleService {
     }
 
     @Override
-    public ResponseEntity<String> removeVehicleByRegistrationNumber(final String registrationNumber, final String email) {
+    public ResponseEntity<String> removeVehicleByRegistrationNumber(
+    final String registrationNumber,
+    final String email) {
         try {
             if (loginService.isAdmin(email)) {
                 final Vehicle vehicle = getByRegistrationNumber(registrationNumber);
@@ -119,10 +121,12 @@ public class VehicleServiceImplementation implements VehicleService {
     }
 
     @Override
-    public ResponseEntity<List<Vehicle>> findingAvailableVehiclesByType(final String type, final LocalDate startDate, final LocalDate endDate) {
+    public ResponseEntity<List<Vehicle>> findingAvailableVehiclesByType(final String type, 
+                                    final LocalDate startDate, final LocalDate endDate) {
         try {
             final VehicleType vehicleType = VehicleType.valueOf(type.toUpperCase());
-            final List<Vehicle> availableVehicles = vehicleRepo.SearchingAvailableVehiclesByType(vehicleType, startDate, endDate);
+            final List<Vehicle> availableVehicles = 
+                vehicleRepo.SearchingAvailableVehiclesByType(vehicleType, startDate, endDate);
             return ResponseEntity.ok(availableVehicles);
         } catch (Exception e) {
             e.printStackTrace();

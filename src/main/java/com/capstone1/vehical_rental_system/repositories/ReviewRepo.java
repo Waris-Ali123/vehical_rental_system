@@ -24,7 +24,7 @@ public interface ReviewRepo extends JpaRepository<Review, Integer> {
             " CAST(rating AS string)  = :keyword Or " +
             " Lower(feedback) like Lower(Concat('%',:keyword,'%'))"
     )
-    public List<Review> SearchingByKeyword(String keyword);
+    List<Review> SearchingByKeyword(String keyword);
 
-    public List<Review> findByRatingGreaterThanEqual(int rating);
+    List<Review> findByRatingGreaterThanEqual(int rating);
 }

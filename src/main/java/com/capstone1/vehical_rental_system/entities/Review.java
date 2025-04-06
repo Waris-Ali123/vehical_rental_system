@@ -34,7 +34,7 @@ public class Review {
     public Review() {
         this.reviewTime = LocalDateTime.now();  // Automatically sets the current timestamp
     }
-    
+
 
     public long getReviewId() {
         return reviewId;
@@ -82,7 +82,8 @@ public class Review {
 
     @Override
     public String toString() {
-        return "Review [reviewId=" + reviewId + ", reviewTime=" + reviewTime + ", user=" + user + ", vehicle=" + vehicle + ", rating=" + rating + ", feedback=" + feedback + "]";
+        return "Review [reviewId=" + reviewId + ", reviewTime=" + reviewTime + ", user=" + user + ", vehicle=" +
+                vehicle + ", rating=" + rating + ", feedback=" + feedback + "]";
     }
 
 

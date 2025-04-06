@@ -11,16 +11,16 @@ import java.util.List;
 
 @Repository
 public interface VehicleRepo extends JpaRepository<Vehicle, Integer> {
-    public List<Vehicle> findAllByType(VehicleType type);
+    List<Vehicle> findAllByType(VehicleType type);
 
-    public Vehicle findVehicleByRegistrationNumber(String registrationNumber);
+    Vehicle findVehicleByRegistrationNumber(String registrationNumber);
 
     @Query(value = "Select V from Vehicle V where " +
             " Lower(name) like Lower(Concat('%',:keyword,'%')) Or  " +
             " Lower(type) like Lower(Concat('%',:keyword,'%')) Or " +
-            " Lower(model) like Lower(Concat('%',:keyword,'%'))"
+            " Lower(model) like Lower(Concat('%',:keyword,'%')) "
     )
-    public List<Vehicle> SearchingByKeyword(String keyword);
+    List<Vehicle> SearchingByKeyword(String keyword);
 
 
     @Query(value = "select V from Vehicle V where " +
@@ -29,7 +29,7 @@ public interface VehicleRepo extends JpaRepository<Vehicle, Integer> {
             " ( Select B.vehicle.vehicle_id from Booking B where " +
             " B.startDate <=:endDate and B.endDate >=:startDate and B.bookingStatus = 'CONFIRMED')"
     )
-    public List<Vehicle> SearchingAvailableVehicles(LocalDate startDate, LocalDate endDate);
+    List<Vehicle> SearchingAvailableVehicles(LocalDate startDate, LocalDate endDate);
 
     @Query(value = "select V from Vehicle V where " +
             " V.type =:type And " +
@@ -38,5 +38,5 @@ public interface VehicleRepo extends JpaRepository<Vehicle, Integer> {
             " ( Select B.vehicle.vehicle_id from Booking B where " +
             " B.startDate <=:endDate and B.endDate >=:startDate and B.bookingStatus = 'CONFIRMED')"
     )
-    public List<Vehicle> SearchingAvailableVehiclesByType(Vehicle.VehicleType type, LocalDate startDate, LocalDate endDate);
+    List<Vehicle> SearchingAvailableVehiclesByType(Vehicle.VehicleType type, LocalDate startDate, LocalDate endDate);
 } 

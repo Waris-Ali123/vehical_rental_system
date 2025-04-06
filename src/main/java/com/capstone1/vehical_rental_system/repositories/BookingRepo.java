@@ -15,7 +15,7 @@ import java.util.List;
 public interface BookingRepo extends JpaRepository<Booking, Integer> {
 
     List<Booking> findByVehicleAndStartDateLessThanEqualAndEndDateGreaterThanEqualAndBookingStatus
-                    (Vehicle vehicle, LocalDate endDate, LocalDate startDate, BookingStatus bookingStatus);
+            (Vehicle vehicle, LocalDate endDate, LocalDate startDate, BookingStatus bookingStatus);
 
     List<Booking> findByUser(User user);
 
@@ -27,7 +27,7 @@ public interface BookingRepo extends JpaRepository<Booking, Integer> {
             " cast(B.totalPrice AS string) like CONCAT('%', :keyword, '%') Or  " +
             " Lower(bookingStatus) like Lower(Concat('%',:keyword,'%'))"
     )
-    public List<Booking> searchingByKeyword(String keyword);
+    List<Booking> searchingByKeyword(String keyword);
 
 
 }

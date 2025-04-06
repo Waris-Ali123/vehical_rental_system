@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class Booking {
 
     public enum BookingStatus {
-        CONFIRMED, CANCELED;
+        CONFIRMED, CANCELED
     }
 
     @Id
@@ -53,7 +53,8 @@ public class Booking {
     public Booking() {
     }
 
-    public Booking(final LocalDate startDate, final LocalDate endDate, final double totalPrice, final BookingStatus bookingStatus) {
+    public Booking(final LocalDate startDate, final LocalDate endDate, final double totalPrice,
+                   final BookingStatus bookingStatus) {
         this.bookingTime = LocalDateTime.now();
         this.startDate = startDate;
         this.endDate = endDate;

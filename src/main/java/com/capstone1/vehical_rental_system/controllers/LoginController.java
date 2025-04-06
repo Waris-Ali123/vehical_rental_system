@@ -28,8 +28,8 @@ public class LoginController {
 
     @GetMapping("/login")
     public ResponseEntity<User> getUserByEmailAndPassword(
-            final String email,
-            final String password) {
+            @RequestParam final String email,
+            @RequestParam final String password) {
         try {
             final User u1 = loginService.getUserByEmailAndPass(email, password);
             if (u1 != null) {
@@ -59,7 +59,7 @@ public class LoginController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<User> updatingExistingUser(
-            final @PathVariable int id,
+            final @PathVariable("id") int id,
             final @RequestBody User userDetailsToUpdate) {
         try {
             return loginService.updatingExistingUser(id, userDetailsToUpdate);
@@ -71,7 +71,7 @@ public class LoginController {
 
     // Admin Specific functionalities
     @GetMapping("/getAllUsers")
-    public ResponseEntity<List<User>> getAllUsers(final String email) {
+    public ResponseEntity<List<User>> getAllUsers(@RequestParam final String email) {
         try {
             return loginService.getAllUsers(email);
         } catch (Exception e) {
@@ -80,8 +80,9 @@ public class LoginController {
         return ResponseEntity.internalServerError().build();
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping("/searching/{keyword}")
-    public ResponseEntity<List<User>> searching(final String keyword) {
+    public ResponseEntity<List<User>> searching(@PathVariable("keyword") final String keyword) {
         try {
             return loginService.searching(keyword);
         } catch (Exception e) {
@@ -94,9 +95,10 @@ public class LoginController {
     @DeleteMapping("/delete/{adminEmail}")
     public ResponseEntity<String> deletingUserByAdmin(
             final @PathVariable("adminEmail") String emailAdmin,
-            final @RequestBody User userToDelete) {
+            @RequestBody User userToDelete) {
         if (loginService.isAdmin(emailAdmin)) {
             System.out.println("admin is correct");
+            System.out.println(userToDelete);
             return loginService.deletingUser(userToDelete);
         }
         return ResponseEntity.internalServerError().build();

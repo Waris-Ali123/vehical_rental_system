@@ -20,11 +20,11 @@ import java.util.List;
 public class Vehicle {
 
     public enum VehicleType {
-        CAR, BIKE, TRUCK;
+        CAR, BIKE, TRUCK
     }
 
     public enum Availability {
-        AVAILABLE, UNDER_MAINTENANCE;
+        AVAILABLE, UNDER_MAINTENANCE
     }
 
     public enum FuelType {
@@ -57,11 +57,11 @@ public class Vehicle {
 
     @JsonIgnore
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Booking> bookingsByVehicle = new ArrayList<>();
+    private final List<Booking> bookingsByVehicle = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Review> reviewsOnVehicle = new ArrayList<>();
+    private final List<Review> reviewsOnVehicle = new ArrayList<>();
 
 
     @Enumerated(EnumType.STRING)
@@ -97,7 +97,8 @@ public class Vehicle {
         this.price_per_day = price_per_day;
     }
 
-    public Vehicle(String name, VehicleType type, String registrationNumber, Availability availability, double price_per_day) {
+    public Vehicle(String name, VehicleType type, String registrationNumber, Availability availability,
+                   double price_per_day) {
         this(name, type, null, registrationNumber, availability, price_per_day);
     }
 
@@ -220,7 +221,9 @@ public class Vehicle {
 
     @Override
     public String toString() {
-        return "Vehicle [vehicle_id=" + vehicle_id + ", name=" + name + ", type=" + type + ", model=" + model + ", registrationNumber=" + registrationNumber + ", availability=" + availability + ", price_per_day=" + price_per_day + "]";
+        return "Vehicle [vehicle_id=" + vehicle_id + ", name=" + name + ", type=" + type + ", model=" + model +
+                ", registrationNumber=" + registrationNumber + ", availability=" + availability + ", price_per_day=" +
+                price_per_day + "]";
     }
 
 }

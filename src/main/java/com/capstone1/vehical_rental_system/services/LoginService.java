@@ -15,13 +15,13 @@ public interface LoginService {
 
     User storeUser(final User user);
 
-    public boolean isAdmin(final String alreadyAdminEmail);
+    boolean isAdmin(final String alreadyAdminEmail);
 
-    public ResponseEntity<List<User>> getAllUsers(final String email);
+    ResponseEntity<List<User>> getAllUsers(final String email);
 
-    public ResponseEntity<String> deletingUser(final User userToDelete);
+    ResponseEntity<String> deletingUser(final User userToDelete);
 
-    public ResponseEntity<User> updatingExistingUser(final int id, final User userDetailstoUpdate);
+    ResponseEntity<User> updatingExistingUser(final int id, final User userDetailstoUpdate);
 
-    public ResponseEntity<List<User>> searching(final String keyword);
+    ResponseEntity<List<User>> searching(final String keyword);
 }

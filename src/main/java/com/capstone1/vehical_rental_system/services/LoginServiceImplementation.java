@@ -73,7 +73,7 @@ public class LoginServiceImplementation implements LoginService {
         }
     }
 
-    public ResponseEntity<String> deletingUser(final User userToDelete) {
+    public ResponseEntity<String> deletingUser(User userToDelete) {
         try {
             userRepo.delete(userToDelete);
             return ResponseEntity.ok("User deleted Successfully");
@@ -100,7 +100,9 @@ public class LoginServiceImplementation implements LoginService {
     @Override
     public ResponseEntity<List<User>> searching(final String keyword) {
         try {
+            System.out.println(keyword);
             final List<User> users = userRepo.SearchingByKeyword(keyword);
+            System.out.println(users);
             return ResponseEntity.ok(users);
         } catch (Exception e) {
             e.printStackTrace();
