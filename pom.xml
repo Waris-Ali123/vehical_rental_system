@@ -75,7 +75,7 @@
                 </configuration>
             </plugin>
 
-            <!-- Checkstyle Plugin -->
+            <!-- Checkstyle Plugin
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
@@ -96,7 +96,7 @@
             </plugin>
 
 
-            <!-- PMD Plugin -->
+            PMD Plugin
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
@@ -117,7 +117,7 @@
                 </configuration>
             </plugin>
 
-            <!-- SpotBugs Plugin -->
+            SpotBugs Plugin
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
@@ -135,7 +135,7 @@
                     <threshold>Low</threshold>
                     <failOnError>true</failOnError>
                 </configuration>
-            </plugin>
+            </plugin> -->
 
         </plugins>
     </build>

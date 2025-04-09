@@ -8,7 +8,7 @@ if(admin!=null)
 let totalUsers;
 let totalBookings;
 let totalReviews;
-let totalVehicles;
+let totalVehicles ;
 let totalEarnings = 0;
 
 

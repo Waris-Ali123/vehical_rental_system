@@ -1,17 +1,21 @@
-let user = JSON.parse(localStorage.getItem("user"));
-
-if (user != null)
-  document.querySelector(".circularPhoto").innerText =
-    user.name.charAt(0).toUpperCase() + user.name.charAt(1).toUpperCase();
-
+//Global Variables
 let allBookings;
 let totalBookings;
-let totalEarnings = 0;
+// let totalEarnings = 0;
 let allReviews;
+let totalReviews = 0;
 let allVehicles;
 let totalVehicles = 0;
-let totalReviews = 0;
 let haveFilter = false;
+
+//Initially fetching the user from locatStorage whoever logged in
+let user = JSON.parse(localStorage.getItem("user"));
+
+//Showing the user name in an profile icon on the top right corner of screeen
+if (user != null){
+  document.querySelector(".circularPhoto").innerText =
+      user.name.charAt(0).toUpperCase() + user.name.charAt(1).toUpperCase();
+}
 
 //providing default date for fetching the availables initially
 // Get today's date in YYYY-MM-DD format
@@ -20,7 +24,6 @@ let startDate = today;
 let tomorrow = new Date();
 tomorrow.setDate(tomorrow.getDate() + 1);
 let endDate = tomorrow.toISOString().split("T")[0];
-
 
 // =============================================Event Listeners=========================
 let searchBar = document.getElementById("searchBarId");
@@ -96,13 +99,14 @@ let reviewSection = document.querySelector(".reviewSection");
 //Review Row that will have all the dynamic reviews;
 let reviewRow = document.querySelector(".reviewRow");
 //Newly added car section in home page that contains the cars that are newly added or modified;
-let newlyAddedCarRow  = document.querySelector(".newlyAddedCarRow");
+let newlyAddedCarRow = document.querySelector(".newlyAddedCarRow");
 //Newly added car section in home page that contains the cars that are newly added or modified;
-let newlyAddedBikeRow  = document.querySelector(".newlyAddedBikeRow");
+let newlyAddedBikeRow = document.querySelector(".newlyAddedBikeRow");
 // add hovered class to selected list item
 let list = document.querySelectorAll(".listOfMenus .listItem");
 list.forEach((item) => item.addEventListener("click", activeLink));
 
+//Function that is used to highlight the active link in nav bar links
 function activeLink() {
   list.forEach((item) => {
     item.classList.remove("active");
@@ -110,17 +114,7 @@ function activeLink() {
   this.classList.add("active");
 }
 
-
-// ==making the nav item active if there respective method is called===
-function showActiveNavItem(navId) {
-  let list = document.querySelectorAll(".listOfMenus .listItem");
-
-  list.forEach((item) => item.classList.remove("active"));
-
-  document.getElementById(navId).classList.add("active");
-}
-
-// toggling the navbar
+// toggling the navbar i.e. showing and hiding the navbar based on clicking on menu icon
 let toggle = document.querySelector(".toggle");
 let navigation = document.querySelector(".navigation");
 let main = document.querySelector(".main");
@@ -133,53 +127,57 @@ toggle.onclick = function () {
 // ==================END js used mainly for css manipulations========================
 
 window.onload = async function () {
-
+  //Showing the homepage to the user
   showPage0();
-  
+
+  //Fetching the bookings , reviews given by the user as well as the vehicles that can be booked
   await Promise.all([
     fetchingBookings(),
     fetchingReviews(),
     fetchingVehicles(),
   ]);
 
+  //Since we are first showing the homepage thus fetching and printing the top reveiws in home page
   let topReviews = await fetchingTopReviews();
-  topReviews = topReviews.filter((review)=> review.feedback != "");
+  topReviews = topReviews.filter((review) => review.feedback != "");
   printingReviewsOnCard(topReviews.slice(-5));
 
+  // NewlyAdded section on homepage that will contain the vehicles that are recently newlyAddedBikeRow..
 
-  //wanted to print the cars on the home page the logic is as: 
+  //Initially fetching only recently added cars
+  let newlyAddedCarVehicles = getNewlyAddedVehicles("CAR");
 
-  // sorting the vehicles in the descending order to get the newest first
-  let newlyAddedCarVehicles =  getNewlyAddedVehicles("CAR");
   //printing only the first four
-  printingCardsForVehicle(newlyAddedCarVehicles.slice(0,Math.min(allVehicles.length,4)),newlyAddedCarRow);
-  
-  // sorting the vehicles in the descending order to get the newest first
-  let newlyAddedBikeVehicles =  getNewlyAddedVehicles("BIKE");
-  //printing only the first four
-  printingCardsForVehicle(newlyAddedBikeVehicles.slice(0,Math.min(allVehicles.length,4)),newlyAddedBikeRow);
+  printingCardsForVehicle(
+    newlyAddedCarVehicles.slice(0, Math.min(allVehicles.length, 4)),
+    newlyAddedCarRow
+  );
 
+  //fetching only recently added bikes here and printing them on home page
+  let newlyAddedBikeVehicles = getNewlyAddedVehicles("BIKE");
+  //printing only the first four
+  printingCardsForVehicle(
+    newlyAddedBikeVehicles.slice(0, Math.min(allVehicles.length, 4)),
+    newlyAddedBikeRow
+  );
 };
 
-
-
-
-
-
-
-
-// ----------------getting newly added vehicles--------------
-function getNewlyAddedVehicles(type){
-  let newlyAddedVehicles = allVehicles.filter((vehicle)=>{
-    return vehicle.type == type;
-  }).sort((a,b)=>b.vehicle_id - a.vehicle_id);
+// ----------------getting newly added vehicles --------------
+function getNewlyAddedVehicles(type) {
+  let newlyAddedVehicles = allVehicles
+    .filter((vehicle) => {
+      return vehicle.type == type;
+    })
+    .sort((a, b) => b.vehicle_id - a.vehicle_id);
 
   return newlyAddedVehicles;
 }
 
 // ======================================NAVBAR functions start ===============
 function printingOnClickVehicleNav() {
+  //Showing the page which contains the vehicles
   showPage1();
+  //Printing the filters once only then directly showing the page later, enhancing the productivity.
   if (!haveFilter) {
     printingFilters();
     haveFilter = true;
@@ -189,60 +187,63 @@ function printingOnClickVehicleNav() {
 }
 
 function printingOnClickBookingNav() {
+  //Since the page 2 needs tablesContainer and vehicleContainers we are first making them empty to write our new content.
   showPage2();
+
+  //Tables Container is used to show the bookings and reviews whether in specific vehicle page or the pages containing history.
   tablesContainer.innerHTML = "";
+  //While the vehicle container refers to dom element that will contain and display the details of specific vehicle only.
   vehicleContainer.innerHTML = "";
+
+  //Since the user clicked on the bookings tab to see his history of bookings, we only print the tablesContainer containing bookings history.
   printingBookingsDataInTable(allBookings, true);
 }
 
 function printingOnClickReviewNav() {
+  //Since the page 2 needs tablesContainer and vehicleContainers we are first making them empty to write our new content.
   showPage2();
+  //Tables Container is used to show the bookings and reviews whether in specific vehicle page or the pages containing history.
   tablesContainer.innerHTML = "";
+  //While the vehicle container refers to dom element that will contain and display the details of specific vehicle only.
   vehicleContainer.innerHTML = "";
+
+  //Since the user clicked on the review tab to see his history of reviews, we only print the tablesContainer containing reviews history.
   printingReviewsDataInTable(allReviews);
 }
 
 function printingOnClickProfileNav() {
+  // page 4 is only used to display the user profile and to update it
   showPage4();
   printingProfile(user);
 }
 
 function printingOnClickHomeNav() {
+  //Since our home page is made while the window loaded thus we simply hiding everything and showing it
   showPage0();
 }
-
-
-
-
 
 // ====================== Start fetching entities========================================
 
 //Get the bookingData
 async function fetchingBookings() {
   try {
-    let user = JSON.parse(localStorage.getItem("user"));
     let userEmail = user.email;
 
     let response = await fetch(
       `http://localhost:8080/booking/getByEmail?email=${userEmail}`,
       {
         method: "GET",
-          
       }
     );
 
     if (response.ok) {
       let data = await response.json();
+      //Inorder to make it more user friendly, we reversed the list coming from backend thus we will be having recent bookings first.
       allBookings = data.reverse();
+      //Calculating total bookings.
       totalBookings = allBookings.length;
-
-      allBookings.forEach((element) => {
-        if (element.booking_status == "CONFIRMED") {
-          totalEarnings += element.totalPrice;
-        }
-      });
     }
-
+    
     if (!response.ok) {
       throw new Error(`Error: ${response.status}`);
     }
@@ -255,16 +256,15 @@ async function fetchingBookings() {
 async function fetchingReviews() {
   try {
     let userEmail = user.email;
-    //console(userEmail);
     let response = await fetch(
       `http://localhost:8080/review/getReviewsByUser?email=${userEmail}`,
       {
         method: "GET",
-          
       }
     );
     if (response.ok) {
       let data = await response.json();
+      //Inorder to make it more user friendly, we reversed the list coming from backend thus we will be having recent reviews first.
       allReviews = data.reverse();
       totalReviews = allReviews.length;
     }
@@ -280,21 +280,19 @@ async function fetchingVehiclesAvailableWithType(
   type = "BIKE"
 ) {
   try {
+    //If the start date coming here is different we will modify our start date to hold the current updated value to use it later while the user clicks on book now to show the bookings dates as searched by the user previously again enhancing user experience.
     startDate = start;
     endDate = end;
     let response = await fetch(
       `http://localhost:8080/vehicle/findingAvailable/${type}?startDate=${start}&endDate=${end}`,
       {
         method: "GET",
-          
       }
     );
     //console("called the fetching vehicles");
     if (response.ok) {
       let data = await response.json();
 
-      
-      
       return data;
     }
 
@@ -315,13 +313,12 @@ async function fetchingVehiclesAvailable(start = startDate, end = endDate) {
       `http://localhost:8080/vehicle/findingAvailable?startDate=${start}&endDate=${end}`,
       {
         method: "GET",
-          
       }
     );
-    
+
     if (response.ok) {
       let data = await response.json();
-      
+      // Since the backend is already eleminating the under maintenance vehicle, we dont need to eliminate it.
       return data;
     }
 
@@ -337,13 +334,14 @@ async function fetchingVehicles() {
   try {
     let response = await fetch(`http://localhost:8080/vehicle/getAllVehicles`, {
       method: "GET",
-        
     });
     if (response.ok) {
       let data = await response.json();
 
       //removing the vehicles that are under maintenance
-      data = data.filter((vehicle)=> vehicle.availability != "UNDER_MAINTENANCE");
+      data = data.filter(
+        (vehicle) => vehicle.availability != "UNDER_MAINTENANCE"
+      );
 
       allVehicles = data;
       totalVehicles = allVehicles.length;
@@ -356,18 +354,15 @@ async function fetchingVehicles() {
 // -----fetching bookings using registration number from backend for specific vehicle
 async function fetchingBookingsByVehicle(registration_number) {
   try {
-    
     let response = await fetch(
       `http://localhost:8080/booking/getByRegistrationNumber?registration_number=${registration_number}`,
       {
         method: "GET",
-          
       }
     );
     if (response.ok) {
       let data = await response.json();
-      
-      
+
       return data;
     }
   } catch (error) {
@@ -380,17 +375,15 @@ async function fetchingBookingsByVehicle(registration_number) {
 // -----fetching reviews using vehicle registration number from backend for specific vehicle
 async function fetchingReviewsByVehicle(registration_number) {
   try {
-    
     let response = await fetch(
       `http://localhost:8080/review/getReviewsByVehicle?registration_number=${registration_number}`,
       {
         method: "GET",
-          
       }
     );
     if (response.ok) {
       let data = await response.json();
-      
+
       return data;
     }
   } catch (error) {
@@ -400,28 +393,24 @@ async function fetchingReviewsByVehicle(registration_number) {
   }
 }
 
-
-
 //Fetching top reviews from backend used in home page.
 async function fetchingTopReviews() {
   try {
-      let response = await fetch(`http://localhost:8080/review/getTopReviews`, {
-          method: "GET"
-            
-      });
-      if (response.ok) {
-          let data = await response.json();
-          return data;
-      }
-
+    let response = await fetch(`http://localhost:8080/review/getTopReviews`, {
+      method: "GET",
+    });
+    if (response.ok) {
+      let data = await response.json();
+      return data;
+    }
   } catch (error) {
-      console.log(error);
+    console.log(error);
   }
 }
 
-
-
 // ==========================Storing in DB starts  =================================
+
+//Storing a new booking in the db. this function is used to book a vehicle.
 async function storingBookingInDB(
   email,
   registration_number,
@@ -439,7 +428,6 @@ async function storingBookingInDB(
     if (response.ok) {
       let data = await response.text();
       alert("Booked successfully Successfully !!! Refresh to load the changes");
-      
     } else {
       let msg = await response.text();
       alert("Failed to book bcz ' " + msg + " ' ");
@@ -451,12 +439,7 @@ async function storingBookingInDB(
   }
 }
 
-async function storingReviewInDB(
-  email,
-  registration_number,
-  rating,
-  feedback
-) {
+async function storingReviewInDB(email, registration_number, rating, feedback) {
   try {
     let response = await fetch(
       `http://localhost:8080/review/add?email=${email}&registration_number=${registration_number}&rating=${rating}&feedback=${feedback}`,
@@ -468,7 +451,7 @@ async function storingReviewInDB(
     if (response.ok) {
       let data = await response.json();
       alert("Review Added successfully... ");
-      
+
       allReviews.push(data);
     } else {
       alert("Failed to book bcz");
@@ -479,8 +462,6 @@ async function storingReviewInDB(
     console.error(error);
   }
 }
-
-
 
 // ================================Updating the DB=================
 async function updatingUserInDB(userId, updatedUser) {
@@ -513,22 +494,28 @@ async function updatingUserInDB(userId, updatedUser) {
 }
 
 // ---------fun to cancel the booking-------------
-async function updatingBookingStatusInDB(booking_id) {
+async function updatingBookingStatusInDB(booking) {
   try {
+    let password = prompt("Enter your password please : ");
     let response = await fetch(
-      `http://localhost:8080/booking/cancelBooking/${booking_id}`,
+      `http://localhost:8080/booking/cancelBooking/${password}`,
       {
         method: "PUT",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body : JSON.stringify(booking)
       }
     );
 
     if (response.ok) {
+
       let index = allBookings.findIndex(
-        (booking) => booking.booking_id == booking_id
+        (elem) => elem == booking
       );
       if (index != -1) {
         allBookings[index].booking_status = "CANCELED";
-        printingBookingsDataInTable(allBookings, true);
+        printingBookingsDataInTable(allBookings,true);
       }
       alert("The booking has been cancled successfully");
     } else {
@@ -539,9 +526,6 @@ async function updatingBookingStatusInDB(booking_id) {
     console.error("Error Msg : ", error);
   }
 }
-
-
-
 
 // ===============================Printing starts===========================================
 
@@ -591,8 +575,6 @@ function printingBookingsDataInTable(
   }
 
   bookingsParam.forEach((element) => {
-  
-
     let bookId = document.createElement("td");
     bookId.innerText = element.booking_id;
     let startDate = document.createElement("td");
@@ -636,7 +618,7 @@ function printingBookingsDataInTable(
 
         cancelBtn.addEventListener("click", async () => {
           if (confirm("Are you sure you want to cancel the booking ? "))
-            await updatingBookingStatusInDB(element.booking_id);
+            await updatingBookingStatusInDB(element);
         });
 
         cancelCell.appendChild(cancelBtn);
@@ -758,8 +740,10 @@ function printingReviewsDataInTable(reviewsParam, eraseBefore = true) {
 }
 
 //printing the cards for all vehicles
-function printingCardsForVehicle(vehiclesParam,containerToPrint = cardContainer) {
-  
+function printingCardsForVehicle(
+  vehiclesParam,
+  containerToPrint = cardContainer
+) {
   containerToPrint.innerHTML = "";
 
   if (vehiclesParam.length == 0) {
@@ -916,7 +900,6 @@ function printingCompleteVehicleDetails(vehicle) {
     vehicle.price_per_day.toFixed(0) + "/-Rs" + "<span> per day</span>";
   price_per_day.classList.add("vehiclePrice");
 
-
   // --------------------Adding booking and review btn --------------
   let btnContainer = document.createElement("div");
   btnContainer.classList.add("btnContainer");
@@ -925,7 +908,6 @@ function printingCompleteVehicleDetails(vehicle) {
   let bookingBtn = document.createElement("button");
   bookingBtn.classList.add("bookingBtn");
   bookingBtn.addEventListener("click", () => {
-    
     showPage3();
     scheduleBookingForVehicle(vehicle);
   });
@@ -934,13 +916,12 @@ function printingCompleteVehicleDetails(vehicle) {
   let addReviewBtn = document.createElement("button");
   addReviewBtn.innerHTML = "Add Review";
   addReviewBtn.classList.add("reviewBtn");
-  addReviewBtn.addEventListener("click",()=>{
-    
+  addReviewBtn.addEventListener("click", () => {
     showPage3();
     addingReviewForVehicle(vehicle);
-  })
+  });
 
-  btnContainer.append(addReviewBtn,bookingBtn);
+  btnContainer.append(addReviewBtn, bookingBtn);
   // ----------------appending All --------------------
   sideDetails.append(nameBlock, iconBlock, price_per_day, btnContainer);
   mainDetailsContainer.append(sideImg, sideDetails);
@@ -966,24 +947,26 @@ async function printingReviewsBasedOnVehicle(vehicle) {
 //used in printingCompleteVehicleDetails for printing the bookings for that specific vehicle
 async function printingBookingsBasedOnVehicle(vehicle) {
   let bookings = await fetchingBookingsByVehicle(vehicle.registration_number);
-  bookings = bookings.filter((booking)=>{
+  bookings = bookings.filter((booking) => {
     return booking.endDate >= today;
   });
 
   if (bookings != null) {
-    printingBookingsDataInTable(bookings.reverse(), false, false, "Already Booked for");
+    printingBookingsDataInTable(
+      bookings.reverse(),
+      false,
+      false,
+      "Already Booked for"
+    );
   }
 }
 
 function printingReviewsOnCard(reviewsParam) {
-    
-    reviewsParam.forEach((review) => {
-        
-        let cardReview = document.createElement("div");
-        cardReview.classList.add("cardReview");
+  reviewsParam.forEach((review) => {
+    let cardReview = document.createElement("div");
+    cardReview.classList.add("cardReview");
     // -------ratings block-----------
     let rating = review.rating;
-    
 
     let starsBlock = document.createElement("div");
     starsBlock.classList.add("starsBlock");
@@ -1008,17 +991,11 @@ function printingReviewsOnCard(reviewsParam) {
     reviewerName.innerText = "~" + review.user.name;
 
     // ------appeding all in the card---------------
-    cardReview.append(starsBlock,feedback,reviewerName);
-
+    cardReview.append(starsBlock, feedback, reviewerName);
 
     reviewRow.appendChild(cardReview);
-
   });
-
-
-
 }
-
 
 // -------------------Printing Profile-----------------------
 function printingProfile(element) {
@@ -1084,7 +1061,6 @@ function printingFormLayout(headingContent, fieldsComing, entityType) {
     inputContainer.append(label, input);
 
     userForm.appendChild(inputContainer);
-      
   });
 
   //==================Edit btn starts===========
@@ -1093,16 +1069,12 @@ function printingFormLayout(headingContent, fieldsComing, entityType) {
 
   editBtn.innerText = "Update Details";
 
-    
-
   editBtn.addEventListener("click", async () => {
     if (!validateForm(fields)) {
       return; // Stop if form is invalid
     } else {
       if (editBtn.innerText == "Save Changes") {
-        
         let id = document.getElementById(fields[0].id).value;
-    
 
         if (isNaN(id)) {
           console.log("Invalid id or not a number");
@@ -1134,12 +1106,10 @@ function printingFormLayout(headingContent, fieldsComing, entityType) {
         }
       });
 
-      
       editBtn.innerText = inputs[1].readOnly
         ? "Update Details"
         : "Save Changes";
     }
-      
   });
 
   userFormContainer.appendChild(userForm);
@@ -1147,10 +1117,6 @@ function printingFormLayout(headingContent, fieldsComing, entityType) {
   profileContainer.appendChild(heading);
   profileContainer.appendChild(userFormContainer);
 }
-
-
-
-
 
 //=----------------------Putting filters in filter container--------
 
@@ -1179,7 +1145,6 @@ function printingFilters() {
       inputSelect.id = element.id;
 
       element.options.forEach((ele) => {
-        
         let option = document.createElement("option");
         option.text = ele;
         option.value = ele;
@@ -1210,22 +1175,18 @@ function printingFilters() {
   filterBtn.addEventListener("click", async () => {
     let initial = document.getElementById("startDate").value;
     let ending = document.getElementById("endDate").value;
-    if(initial > ending){
+    if (initial > ending) {
       alert("Start Date must be smaller than or equal to End Date ");
-      return ;
+      return;
     }
     let typeSelected = document.getElementById("type");
-
-    
 
     let availableVehicles = null;
 
     if (initial && ending) {
       if (typeSelected.value == "ALL") {
-        
         availableVehicles = await fetchingVehiclesAvailable(initial, ending);
       } else {
-        
         availableVehicles = await fetchingVehiclesAvailableWithType(
           initial,
           ending,
@@ -1234,15 +1195,13 @@ function printingFilters() {
       }
     } else {
       if (typeSelected.value != "ALL") {
-        
-        
         availableVehicles = searchingVehiclesForKeyword(typeSelected.value); //Using our search bar for reusability;
-        
       } else {
         availableVehicles = allVehicles;
       }
     }
 
+    //Available vehicles having already available vehicles thus no need to remove them from here.
     if (availableVehicles != null) {
       if (availableVehicles.length === 0) {
         alert("No Vehicle Found");
@@ -1255,8 +1214,6 @@ function printingFilters() {
 
   filterContainer.appendChild(filterBtn);
 }
-
-
 
 // ===============================Printing filters container ENDS===========================================
 
@@ -1394,7 +1351,6 @@ function scheduleBookingForVehicle(vehicle) {
         startDate = initial.value;
         endDate = final.value;
 
-
         let finalPrice =
           vehicle.price_per_day * getDateDifference(initial.value, final.value);
         totalPriceBooking.innerText = finalPrice.toFixed(0);
@@ -1435,9 +1391,9 @@ function scheduleBookingForVehicle(vehicle) {
     let userEmail = user.email;
     let registration_number = vehicle.registration_number;
     // let startDate = startDate;
-    if(startDate > endDate){
+    if (startDate > endDate) {
       alert("The Start Date must be smaller than or equal to the end date");
-      return ;
+      return;
     }
 
     await storingBookingInDB(
@@ -1454,11 +1410,8 @@ function scheduleBookingForVehicle(vehicle) {
   formContainer.appendChild(lowerBlock);
 }
 
-
 // ----------------------------adding the rating of user -----------------------------
 function addingReviewForVehicle(vehicle) {
-  
-
   formContainer.innerHTML = "";
 
   let fields = [
@@ -1503,7 +1456,7 @@ function addingReviewForVehicle(vehicle) {
       readOnly: false,
       type: "select",
       id: "b_Rating",
-      options : [1,2,3,4,5]
+      options: [1, 2, 3, 4, 5],
     },
     {
       label: "Feedback",
@@ -1530,20 +1483,17 @@ function addingReviewForVehicle(vehicle) {
     let label = document.createElement("label");
     label.innerText = field.label;
 
-    
-
     if (field.type == "select") {
       let selectInput = document.createElement("select");
       selectInput.id = field.id;
-      field.options.forEach((op)=>{
+      field.options.forEach((op) => {
         let option = document.createElement("option");
         option.value = op;
         option.innerText = op;
         selectInput.appendChild(option);
-      })
+      });
       inputBox.append(label, selectInput);
-    }
-    else{
+    } else {
       let input = document.createElement("input");
       input.value = field.value;
       input.readOnly = field.readOnly;
@@ -1556,7 +1506,6 @@ function addingReviewForVehicle(vehicle) {
   });
 
   // ------------------creating a add btn---------------
-  
 
   // ------Book it Btn to store directly into the database ---------------
   let addReveiwBtn = document.createElement("button");
@@ -1581,29 +1530,18 @@ function addingReviewForVehicle(vehicle) {
     printingReviewsDataInTable(allReviews);
   });
 
-
-  formContainer.append(bookingForm,addReveiwBtn);
+  formContainer.append(bookingForm, addReveiwBtn);
 }
-
-
-
-
-
-
 
 // ========================================================Search Bar Implementation starts ==========================================
 function searchBarClick() {
-  
   let keyword = searchBar.value.toLowerCase();
 
   let targetVehicles = searchingVehiclesForKeyword(keyword);
 
-  
-
   showPage1();
   printingCardsForVehicle(targetVehicles);
 }
-
 
 function searchingVehiclesForKeyword(keyword) {
   keyword = keyword.toLowerCase();
@@ -1631,29 +1569,12 @@ function searchingVehiclesForKeyword(keyword) {
   return targetVehicles;
 }
 
-
-
-
-
-
-
-
-
-
-
 //=============================================================implementing logout=====================================================
 
 function logout() {
   localStorage.removeItem("user");
   window.location.href = "index.html";
 }
-
-
-
-
-
-
-
 
 // ==============================================================helpers=====================================================================
 
@@ -1668,7 +1589,6 @@ function getDateDifference(startDateStr, endDateStr) {
   // Convert milliseconds to days
   const millisecondsPerDay = 1000 * 3600 * 24;
   const diffDays = diffMs / millisecondsPerDay;
-  
 
   return diffDays;
 }
@@ -1687,23 +1607,19 @@ function validateForm(fields) {
       }
     }
 
-
     if (field.id === "contactNumber" && inputElement.value.length !== 10) {
       alert("Mobile No must be exactly 10 digits!");
       isValid = false;
       return false;
     }
 
-    if(inputElement && inputElement.type == "email"){
-
+    if (inputElement && inputElement.type == "email") {
       if (!inputElement.checkValidity()) {
-            alert(`Invalid value in ${inputElement.name}`);
-            isValid = false;
-            return false;
+        alert(`Invalid value in ${inputElement.name}`);
+        isValid = false;
+        return false;
       }
     }
-    
   });
   return isValid;
 }
- 

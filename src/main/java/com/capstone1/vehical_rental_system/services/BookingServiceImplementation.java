@@ -74,7 +74,7 @@ public class BookingServiceImplementation implements BookingService {
                 return isAvailable;
             }
             long days = ChronoUnit.DAYS.between(start, end) + 1;
-            System.out.println("Total Days are : " + days);
+
             double totalPrice = vehicle.getPrice_per_day() * days;
             Booking booking = new Booking();
             booking.setUser(user);
@@ -87,7 +87,7 @@ public class BookingServiceImplementation implements BookingService {
             Booking bookSaved = bookingRepo.save(booking);
             user.addBooking(bookSaved);
             vehicle.addBooking(bookSaved);
-            System.out.println(bookSaved);
+
             return ResponseEntity.ok("Successfully Booked");
         } catch (Exception e) {
             e.printStackTrace();
@@ -142,7 +142,7 @@ public class BookingServiceImplementation implements BookingService {
 
     public ResponseEntity<String> cancelBooking(int bookingId) {
         try {
-            System.out.println("booking Id ; "+bookingId);
+
             Booking booking = 
                     bookingRepo.findById(bookingId).orElseThrow();
             booking.setBooking_status(BookingStatus.CANCELED);

@@ -40,7 +40,7 @@ public class ReviewController {
     @GetMapping("/getReviewsByVehicle") // Changed to PathVariable
     public ResponseEntity<List<Review>> getReviewsByVehicle(@RequestParam final String registration_number) {
         try {
-            System.out.println("Registration Number : " + registration_number);
+
             return reviewService.getReview(registration_number);
         } catch (Exception e) {
             e.printStackTrace();

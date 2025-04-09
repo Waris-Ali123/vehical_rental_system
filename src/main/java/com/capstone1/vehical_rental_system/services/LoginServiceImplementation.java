@@ -100,9 +100,9 @@ public class LoginServiceImplementation implements LoginService {
     @Override
     public ResponseEntity<List<User>> searching(final String keyword) {
         try {
-            System.out.println(keyword);
+
             final List<User> users = userRepo.SearchingByKeyword(keyword);
-            System.out.println(users);
+
             return ResponseEntity.ok(users);
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,18 +1,13 @@
 package com.capstone1.vehical_rental_system.controllers;
 
 import com.capstone1.vehical_rental_system.entities.Booking;
+import com.capstone1.vehical_rental_system.entities.User;
 import com.capstone1.vehical_rental_system.services.BookingService;
+import com.capstone1.vehical_rental_system.services.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,6 +18,8 @@ public class BookingController {
 
     @Autowired
     private BookingService bookingService;
+    @Autowired
+    private LoginService loginService;
 
     // Adding the Booking
     @PostMapping("/add")
@@ -57,11 +54,16 @@ public class BookingController {
     }
 
     // Removing or canceling the bookings
-    @PutMapping("/cancelBooking/{booking_id}")
+    @PutMapping("/cancelBooking/{password}")
     public ResponseEntity<String> cancelBooking(
-            @PathVariable("booking_id") final Integer booking_id) { // Made booking_id final
-        if (booking_id != null) {
-            System.out.println(booking_id);
+            @PathVariable("password") final String password,
+            @RequestBody Booking booking) {
+        String bookerEmail = booking.getUser().getEmail();
+
+        User userAuthenticated = loginService.getUserByEmailAndPass(bookerEmail,password);
+
+        if (userAuthenticated != null) {
+            final int booking_id = booking.getBooking_id();
             return bookingService.cancelBooking(booking_id);
         } else {
             System.out.println("booking id is null");

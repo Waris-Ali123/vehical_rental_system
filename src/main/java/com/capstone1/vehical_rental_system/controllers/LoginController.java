@@ -97,10 +97,11 @@ public class LoginController {
             final @PathVariable("adminEmail") String emailAdmin,
             @RequestBody User userToDelete) {
         if (loginService.isAdmin(emailAdmin)) {
-            System.out.println("admin is correct");
-            System.out.println(userToDelete);
+
+
             return loginService.deletingUser(userToDelete);
         }
         return ResponseEntity.internalServerError().build();
     }
+
 }
