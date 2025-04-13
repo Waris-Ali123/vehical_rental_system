@@ -31,7 +31,8 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ResponseEntity<Review> addReview(final String email, final String regNo, final String rating, final String feedback) {
+    public ResponseEntity<?> addReview(final String email, final String regNo, final String rating,
+                                       final String feedback) {
         try {
             final User user = loginService.getUserByEmail(email);
             final Vehicle vehicle = vehicleService.getByRegistrationNumber(regNo);
@@ -44,15 +45,15 @@ public class ReviewServiceImpl implements ReviewService {
             final Review savedReview = reviewRepo.save(review);
             user.addReview(savedReview);
             vehicle.addReview(savedReview);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(savedReview);
+            return ResponseEntity.status(HttpStatus.OK).body(savedReview);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add review!");
         }
     }
 
     @Override
-    public ResponseEntity<List<Review>> getReview(final String regNo) {
+    public ResponseEntity<?> getReview(final String regNo) {
         try {
             final Vehicle vehicle = vehicleService.getByRegistrationNumber(regNo);
             final List<Review> reviews = reviewRepo.findByVehicle(vehicle);
@@ -60,7 +61,7 @@ public class ReviewServiceImpl implements ReviewService {
             return ResponseEntity.ok().body(reviews);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.internalServerError().body("Failed to get all reviews for this vehicle");
         }
     }
 

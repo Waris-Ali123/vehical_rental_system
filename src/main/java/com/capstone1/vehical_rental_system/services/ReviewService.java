@@ -7,9 +7,10 @@ import java.util.List;
 
 public interface ReviewService {
 
-    ResponseEntity<Review> addReview(final String email, final String registrationNumber, final String rating, final String feedback);
+    ResponseEntity<?> addReview(final String email, final String registrationNumber, final String rating,
+                                final String feedback);
 
-    ResponseEntity<List<Review>> getReview(final String registrationNumber);
+    ResponseEntity<?> getReview(final String registrationNumber);
 
     ResponseEntity<Review> updateReview(final String email, final String registrationNumber, final String rating, final String feedback);
 

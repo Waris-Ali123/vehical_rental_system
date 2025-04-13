@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface VehicleService {
 
-    ResponseEntity<Vehicle> addVehicle(final String email, final Vehicle vehicle);
+    ResponseEntity<?> addVehicle(final String email, final Vehicle vehicle);
 
     ResponseEntity<List<Vehicle>> getAllVehicles();
 
@@ -18,7 +18,7 @@ public interface VehicleService {
 
     ResponseEntity<List<Vehicle>> searching(final String keyword);
 
-    ResponseEntity<Vehicle> updateVehicle(final String registration_no, final String email, final Vehicle vehicle);
+    ResponseEntity<?> updateVehicle(final String registration_no, final String email, final Vehicle vehicle);
 
     ResponseEntity<String> removeVehicleByRegistrationNumber(final String registration_no, final String email);
 

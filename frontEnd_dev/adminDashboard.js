@@ -153,6 +153,7 @@ function profileClick() {
 
 
 
+
 function printingDashBoardData() {
     let mostRecentTenBookings = allBookings.slice(0,Math.min(10, allBookings.length));
     printingBookingsDataInTable(mostRecentTenBookings,true,"Recent Bookings");
@@ -786,8 +787,9 @@ async function deletingUserFromDB(userToDelete) {
         );
 
         if (response.ok) {
+            let backendMsg = await response.text();
 
-            console.log("user delterd successfully");
+            alert(backendMsg);
 
             allUsers = allUsers.filter(user => user.userId !== userToDelete.userId);
             totalUsers--;
@@ -796,10 +798,13 @@ async function deletingUserFromDB(userToDelete) {
 
         }
         else {
-            console.error("Error updating user:", response.statusText);
+            let errorMsg = await response.text();
+            console.error("Error updating user:", errorMsg);
+            alert(errorMsg);
         }
     } catch (error) {
         console.error(error);
+        alert("Something went wrong");
     }
 
 }
@@ -1214,7 +1219,9 @@ async function storingNewUserInDB(newUser){
 
         }
         else {
-            console.error("Error updating user:", response.statusText);
+            let errorMsg = await response.text();
+            alert(errorMsg);
+            console.error("Error updating user:", errorMsg);
         }
     } catch (error) {
         console.error(error);
@@ -1249,8 +1256,10 @@ async function storingNewVehicleInDB(newVehicle){
 
         }
         else {
-            alert("Error updating user : ", response.status);
-            console.error("Error updating user:", response.statusText);
+            let errorMsg = await response.text();
+
+            alert(errorMsg);
+            console.error("Error updating user:", errorMsg);
         }
     } catch (error) {
         console.error(error);
@@ -1351,7 +1360,9 @@ async function updatingVehicleInDB(registration_number,updatedVehicle,fromVehicl
 
         }
         else {
-            console.error("Error updating user:", response.statusText);
+            let errorMsg = await response.text();
+            alert(errorMsg);
+            console.error("Error updating user:", errorMsg);
         }
     } catch (error) {
         console.error(error);

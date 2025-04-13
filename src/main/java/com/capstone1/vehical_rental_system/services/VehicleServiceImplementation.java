@@ -23,17 +23,17 @@ public class VehicleServiceImplementation implements VehicleService {
     }
 
     @Override
-    public ResponseEntity<Vehicle> addVehicle(final String email, final Vehicle vehicle) {
+    public ResponseEntity<?> addVehicle(final String email, final Vehicle vehicle) {
         try {
             if (loginService.isAdmin(email)) {
                 final Vehicle storedVehicle = vehicleRepo.save(vehicle);
                 return ResponseEntity.ok(storedVehicle);
             } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Only admin can add vehicle");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().body("Something went wrong");
         }
     }
 
@@ -55,7 +55,8 @@ public class VehicleServiceImplementation implements VehicleService {
     }
 
     @Override
-    public ResponseEntity<Vehicle> updateVehicle(final String registrationNumber, final String email, final Vehicle vehicleModified) {
+    public ResponseEntity<?> updateVehicle(final String registrationNumber, final String email,
+                                           final Vehicle vehicleModified) {
         try {
             if (loginService.isAdmin(email)) {
                 final Vehicle oldVehicle = getByRegistrationNumber(registrationNumber);
@@ -72,11 +73,11 @@ public class VehicleServiceImplementation implements VehicleService {
                 final Vehicle updatedVehicle = vehicleRepo.save(oldVehicle);
                 return ResponseEntity.ok(updatedVehicle);
             } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Only Admin can add vehicle!");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().body("Something went wrong!!");
         }
     }
 

@@ -43,7 +43,9 @@ public class LoginServiceImplementation implements LoginService {
 
     @Override
     public User storeUser(final User user) {
+        //always setting the incoming user as user thus no one can create admin by changing the frontend code
         user.setRole(User.Role.USER);
+        //Encoding the password before storing
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepo.save(user);
     }
@@ -59,17 +61,17 @@ public class LoginServiceImplementation implements LoginService {
         }
     }
 
-    public ResponseEntity<List<User>> getAllUsers(final String email) {
+    public ResponseEntity<?> getAllUsers(final String email) {
         try {
             if (isAdmin(email)) {
                 final List<User> users = userRepo.findAll();
                 return ResponseEntity.ok(users);
             } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Only admin can see all users");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().body("Something went wrong while fetching all users");
         }
     }
 
@@ -79,11 +81,11 @@ public class LoginServiceImplementation implements LoginService {
             return ResponseEntity.ok("User deleted Successfully");
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().body("User did not delete. Check the arguments passed");
+            return ResponseEntity.internalServerError().body("Failed to delete the user");
         }
     }
 
-    public ResponseEntity<User> updatingExistingUser(final int id, final User userDetailsToUpdate) {
+    public ResponseEntity<?> updatingExistingUser(final int id, final User userDetailsToUpdate) {
         try {
             final User user = getById(id);
             user.setName(userDetailsToUpdate.getName());
@@ -93,20 +95,19 @@ public class LoginServiceImplementation implements LoginService {
             return ResponseEntity.ok(updatedUser);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().body("Failed to update existing user");
         }
     }
 
     @Override
-    public ResponseEntity<List<User>> searching(final String keyword) {
+    public ResponseEntity<?> searching(final String keyword) {
         try {
 
             final List<User> users = userRepo.SearchingByKeyword(keyword);
-
             return ResponseEntity.ok(users);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().body("Nothing found");
         }
     }
 }

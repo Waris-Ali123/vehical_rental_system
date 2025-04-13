@@ -27,15 +27,16 @@ async function login(event) {
         window.location.href = "home.html";
       }
     } else {
+      let backEndMsg = await response.text();
       let isExisting = document.querySelector(".invalidMsg");
       if (!isExisting) {
         let invalidMsg = document.createElement("div");
-        invalidMsg.innerText = "Invalid Username or Password";
+        invalidMsg.innerText = backEndMsg;
         invalidMsg.classList.add("invalidMsg");
 
         loginForm.insertBefore(invalidMsg, loginForm.firstChild);
       } else {
-        isExisting.innerHTML = "Invalid Username or Password";
+        isExisting.innerHTML = backEndMsg;
       }
     }
   } catch (error) {

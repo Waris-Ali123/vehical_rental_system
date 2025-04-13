@@ -88,7 +88,7 @@ public class BookingServiceImplementation implements BookingService {
             user.addBooking(bookSaved);
             vehicle.addBooking(bookSaved);
 
-            return ResponseEntity.ok("Successfully Booked");
+            return ResponseEntity.ok("Successfully Booked, Refresh the page to load changes");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -108,7 +108,7 @@ public class BookingServiceImplementation implements BookingService {
         }
     }
 
-    public ResponseEntity<List<Booking>> getBookingsByRegistrationNumber(
+    public ResponseEntity<?> getBookingsByRegistrationNumber(
             String registrationNumber) {
         try {
             Vehicle vehicle = 
@@ -119,8 +119,8 @@ public class BookingServiceImplementation implements BookingService {
             return ResponseEntity.ok(bookingsList);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ArrayList<>());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to fetch the bookings for this vehicle!");
         }
     }
 
@@ -147,10 +147,10 @@ public class BookingServiceImplementation implements BookingService {
                     bookingRepo.findById(bookingId).orElseThrow();
             booking.setBooking_status(BookingStatus.CANCELED);
             bookingRepo.save(booking);
-            return ResponseEntity.ok("The booking has been canceled");
+            return ResponseEntity.ok("The booking has been canceled successfully");
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().body("Something went wrong!");
         }
     }
 

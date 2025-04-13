@@ -89,18 +89,18 @@ public class VehicleController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Vehicle> addingVehicleByAdminOnly(
+    public ResponseEntity<?> addingVehicleByAdminOnly(
             @RequestParam("email") final String email,
             @RequestBody final Vehicle vehicle) {
         try {
             return vehicleService.addVehicle(email, vehicle);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
         }
     }
 
     @PutMapping("/update/{registration_number}/{email}")
-    public ResponseEntity<Vehicle> updatingVehicleDetails(
+    public ResponseEntity<?> updatingVehicleDetails(
             @PathVariable("registration_number") final String registration_number,
             @PathVariable("email") final String email,
             @RequestBody final Vehicle vehicle) {

@@ -23,7 +23,7 @@ public class ReviewController {
     private ReviewService reviewService;
 
     @PostMapping("/add")
-    public ResponseEntity<Review> addingReview(
+    public ResponseEntity<?> addingReview(
             @RequestParam("email") final String email,
             @RequestParam("registration_number") final String registration_number,
             @RequestParam("rating") final String rating,
@@ -32,19 +32,19 @@ public class ReviewController {
             return reviewService.addReview(email, registration_number, rating, feedback);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().body("Something went wrong");
         }
     }
 
     @CrossOrigin(origins = "*")
     @GetMapping("/getReviewsByVehicle") // Changed to PathVariable
-    public ResponseEntity<List<Review>> getReviewsByVehicle(@RequestParam final String registration_number) {
+    public ResponseEntity<?> getReviewsByVehicle(@RequestParam final String registration_number) {
         try {
 
             return reviewService.getReview(registration_number);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body("Something went wrong!");
         }
     }
 

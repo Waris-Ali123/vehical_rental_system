@@ -5,18 +5,7 @@ import com.capstone1.vehical_rental_system.services.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -27,7 +16,7 @@ public class LoginController {
     private LoginService loginService;
 
     @GetMapping("/login")
-    public ResponseEntity<User> getUserByEmailAndPassword(
+    public ResponseEntity<?> getUserByEmailAndPassword(
             @RequestParam final String email,
             @RequestParam final String password) {
         try {
@@ -35,16 +24,16 @@ public class LoginController {
             if (u1 != null) {
                 return ResponseEntity.ok().body(u1);
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid Username or Password");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().body("Something Went wrong");
         }
     }
 
     @PostMapping("/signUp")
-    public ResponseEntity<User> signUp(final @RequestBody User user) {
+    public ResponseEntity<?> signUp(final @RequestBody User user) {
         User u1;
         try {
             u1 = loginService.storeUser(user);
@@ -54,11 +43,11 @@ public class LoginController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to add the user");
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<User> updatingExistingUser(
+    public ResponseEntity<?> updatingExistingUser(
             final @PathVariable("id") int id,
             final @RequestBody User userDetailsToUpdate) {
         try {
@@ -66,42 +55,50 @@ public class LoginController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity.internalServerError().build();
+        return ResponseEntity.internalServerError().body("Failed to update user");
     }
 
     // Admin Specific functionalities
     @GetMapping("/getAllUsers")
-    public ResponseEntity<List<User>> getAllUsers(@RequestParam final String email) {
+    public ResponseEntity<?> getAllUsers(@RequestParam final String email) {
         try {
             return loginService.getAllUsers(email);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity.internalServerError().build();
+        return ResponseEntity.internalServerError().body("Something went wrong");
     }
 
     @CrossOrigin(origins = "*")
     @GetMapping("/searching/{keyword}")
-    public ResponseEntity<List<User>> searching(@PathVariable("keyword") final String keyword) {
+    public ResponseEntity<?> searching(@PathVariable("keyword") final String keyword) {
         try {
             return loginService.searching(keyword);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().body("Something went wrong");
         }
     }
-
 
     @DeleteMapping("/delete/{adminEmail}")
     public ResponseEntity<String> deletingUserByAdmin(
             final @PathVariable("adminEmail") String emailAdmin,
             @RequestBody User userToDelete) {
-        if (loginService.isAdmin(emailAdmin)) {
 
-
-            return loginService.deletingUser(userToDelete);
+        try {
+            if (loginService.isAdmin(emailAdmin)) {
+                return loginService.deletingUser(userToDelete);
+            }
+            else{
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Only admin can delete the user");
+            }
         }
-        return ResponseEntity.internalServerError().build();
+    
+        catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Something went wrong");
+        }      
+    
     }
 
 }

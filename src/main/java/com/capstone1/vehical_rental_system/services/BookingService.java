@@ -11,7 +11,7 @@ public interface BookingService {
 
     ResponseEntity<List<Booking>> getBookings(final String email);
 
-    ResponseEntity<List<Booking>> getBookingsByRegistrationNumber(final String registrationNumber);
+    ResponseEntity<?> getBookingsByRegistrationNumber(final String registrationNumber);
 
     ResponseEntity<List<Booking>> getAllBookings(final String email);
 

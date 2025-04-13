@@ -43,7 +43,7 @@ public class BookingController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/getByRegistrationNumber")
-    public ResponseEntity<List<Booking>> getBookingHistoryByVeqhicle(
+    public ResponseEntity<?> getBookingHistoryByVeqhicle(
             @RequestParam("registration_number") final String registration_number) {
         return bookingService.getBookingsByRegistrationNumber(registration_number);
     }
@@ -58,16 +58,22 @@ public class BookingController {
     public ResponseEntity<String> cancelBooking(
             @PathVariable("password") final String password,
             @RequestBody Booking booking) {
-        String bookerEmail = booking.getUser().getEmail();
 
-        User userAuthenticated = loginService.getUserByEmailAndPass(bookerEmail,password);
+        try {
+            String bookerEmail = booking.getUser().getEmail();
 
-        if (userAuthenticated != null) {
-            final int booking_id = booking.getBooking_id();
-            return bookingService.cancelBooking(booking_id);
-        } else {
-            System.out.println("booking id is null");
-            return ResponseEntity.badRequest().body("Booking id is null");
+            User userAuthenticated = loginService.getUserByEmailAndPass(bookerEmail,password);
+
+            if (userAuthenticated != null) {
+                final int booking_id = booking.getBooking_id();
+                return bookingService.cancelBooking(booking_id);
+            } else {
+                System.out.println("This user has no access to cancel the booking of another user");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized Access!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Something went wrong!");
         }
     }
 

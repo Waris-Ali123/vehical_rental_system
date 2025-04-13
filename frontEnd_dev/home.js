@@ -365,8 +365,12 @@ async function fetchingBookingsByVehicle(registration_number) {
 
       return data;
     }
+    else{
+    let errorMsg = await response.text();
+    alert(errorMsg);
+    }
   } catch (error) {
-    alert("something went wrong while fetching the bookings");
+    alert("something went wrong in frontEnd while fetching bookings");
     console.log(error);
     return null;
   }
@@ -386,8 +390,12 @@ async function fetchingReviewsByVehicle(registration_number) {
 
       return data;
     }
+    else{
+        let errorMsg = await response.text();
+        alert(errorMsg);
+    }
   } catch (error) {
-    alert("something went wrong while fetching the reviews");
+    alert("something went wrong in frontEnd while fetching reviews");
     console.log(error);
     return null;
   }
@@ -427,7 +435,7 @@ async function storingBookingInDB(
 
     if (response.ok) {
       let data = await response.text();
-      alert("Booked successfully Successfully !!! Refresh to load the changes");
+      alert(data);
     } else {
       let msg = await response.text();
       alert("Failed to book bcz ' " + msg + " ' ");
@@ -449,14 +457,15 @@ async function storingReviewInDB(email, registration_number, rating, feedback) {
     );
 
     if (response.ok) {
-      let data = await response.json();
+      let review = await response.json();
       alert("Review Added successfully... ");
 
-      allReviews.push(data);
+      allReviews.push(review);
+      printingReviewsDataInTable(allReviews);
     } else {
-      alert("Failed to book bcz");
-      console.log("error msg", response.status);
-      console.log("error msg", response.statusText);
+        let errorMsg = await response.text();
+      alert(errorMsg);
+      console.log("error msg", errorMsg);
     }
   } catch (error) {
     console.error(error);
@@ -485,8 +494,9 @@ async function updatingUserInDB(userId, updatedUser) {
 
       alert("User Update Succesfully");
     } else {
-      console.error("Error updating user:", response.statusText);
-      alert("Failed to update the user.");
+    let errorMsg = await response.text();
+      console.error("Error updating user:",errorMsg);
+      alert(errorMsg);
     }
   } catch (error) {
     console.error(error);
@@ -509,7 +519,9 @@ async function updatingBookingStatusInDB(booking) {
     );
 
     if (response.ok) {
+    let successMsg = await response.text();
 
+      alert(successMsg);
       let index = allBookings.findIndex(
         (elem) => elem == booking
       );
@@ -517,10 +529,10 @@ async function updatingBookingStatusInDB(booking) {
         allBookings[index].booking_status = "CANCELED";
         printingBookingsDataInTable(allBookings,true);
       }
-      alert("The booking has been cancled successfully");
     } else {
-      alert("Failed to cancel the booking");
-      console.log(response.status);
+    let errorMsg = await response.text();
+      alert(errorMsg);
+      console.log(errorMsg);
     }
   } catch (error) {
     console.error("Error Msg : ", error);
@@ -617,8 +629,9 @@ function printingBookingsDataInTable(
         cancelBtn.title = "Cancel Booking";
 
         cancelBtn.addEventListener("click", async () => {
-          if (confirm("Are you sure you want to cancel the booking ? "))
+          if (confirm("Are you sure you want to cancel the booking ? ")){
             await updatingBookingStatusInDB(element);
+          }
         });
 
         cancelCell.appendChild(cancelBtn);
@@ -945,6 +958,7 @@ async function printingReviewsBasedOnVehicle(vehicle) {
 }
 
 //used in printingCompleteVehicleDetails for printing the bookings for that specific vehicle
+//The bookings will only be shown that are for upcoming days Only or the one that has not ended yet.
 async function printingBookingsBasedOnVehicle(vehicle) {
   let bookings = await fetchingBookingsByVehicle(vehicle.registration_number);
   bookings = bookings.filter((booking) => {
@@ -955,7 +969,7 @@ async function printingBookingsBasedOnVehicle(vehicle) {
     printingBookingsDataInTable(
       bookings.reverse(),
       false,
-      false,
+      false,   //Passing false here bcz we dont want to remove the review table generated for the same vehicle.
       "Already Booked for"
     );
   }
@@ -1005,6 +1019,7 @@ function printingProfile(element) {
   let contactNumber = element.contactNumber;
   let role = element.role;
 
+  //Always remember our first field will be the id only.
   let fields = [
     { label: "User ID", value: userId, id: "userId", type: "number" },
     { label: "Name", value: name, id: "name", type: "text" },
@@ -1073,7 +1088,7 @@ function printingFormLayout(headingContent, fieldsComing, entityType) {
     if (!validateForm(fields)) {
       return; // Stop if form is invalid
     } else {
-      if (editBtn.innerText == "Save Changes") {
+      if (editBtn.innerText == "Save Changes") {   //It means we have to save the changes made by user.
         let id = document.getElementById(fields[0].id).value;
 
         if (isNaN(id)) {
@@ -1098,6 +1113,7 @@ function printingFormLayout(headingContent, fieldsComing, entityType) {
 
       let inputs = document.querySelectorAll(".userForm .inputContainer input");
 
+      //Making The fields toggling b/w readonly and vice versa.
       inputs.forEach((ele) => {
         //userId and role cannot be updated
         if (ele.id != "userId" && ele.id != "role") {
