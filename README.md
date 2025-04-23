@@ -84,7 +84,7 @@ The **Vehicle Rental System (VRS)** is a web-based platform designed to facilita
 ### 🛠️ Prerequisites
 
 - **Java JDK 11+**
-- **MySQL Database**
+- **PostgreSQL Database**
 - **Spring Boot CLI**
 
 ### 📦 Installation
