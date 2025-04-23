@@ -526,18 +526,18 @@ Responsive design implementation starts ------- media query   -----------1
 @media (max-width: 768px) {
     .navigation{
         width: 80px;
-        ;
+        
     }
 
+    
+    
     .main{
         left: 80px;
         width: 100%;
-    }
-
-    .main {
         padding: 0 15px;
     }
-
+    
+    
     .entityTable {
         margin-top: 15px;
     }
@@ -573,6 +573,18 @@ Responsive design implementation starts ------- media query   -----------1
 /* -----------------430px ------------ */
 
 @media (max-width:430px){
+
+    .navigation.active {
+        width: 100%;
+    }
+    .main.active{
+        display: none;
+    }
+
+
+
+
+
     .cards {
         padding: 10px 15px;
         border-radius: 15px;

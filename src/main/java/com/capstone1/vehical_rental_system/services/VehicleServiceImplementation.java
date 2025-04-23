@@ -42,7 +42,7 @@ public class VehicleServiceImplementation implements VehicleService {
         final List<Vehicle> all = vehicleRepo.findAll();
         return ResponseEntity.ok(all);
     }
-
+    
     @Override
     public List<Vehicle> getByType(final String type) {
         final VehicleType vType = VehicleType.valueOf(type.toUpperCase());

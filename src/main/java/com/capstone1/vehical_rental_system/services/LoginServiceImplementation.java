@@ -25,9 +25,12 @@ public class LoginServiceImplementation implements LoginService {
     @Override
     public User getUserByEmailAndPass(final String email, final String password) {
         final User user = userRepo.findUserByEmail(email).orElse(null);
+        System.out.println(user);
         if (user != null && passwordEncoder.matches(password, user.getPassword())) {
             return user;
         }
+        if(!passwordEncoder.matches(password, user.getPassword()))
+            System.out.println("password mismatch");
         return null;
     }
 
@@ -45,8 +48,9 @@ public class LoginServiceImplementation implements LoginService {
     public User storeUser(final User user) {
         //always setting the incoming user as user thus no one can create admin by changing the frontend code
         user.setRole(User.Role.USER);
+        System.out.println("In loginserviceimplementation : " + user);
         //Encoding the password before storing
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepo.save(user);
     }
 

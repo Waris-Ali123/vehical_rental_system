@@ -58,12 +58,13 @@ public class VehicleController {
         }
     }
 
-    @GetMapping("/findingAvailable/{type}")
+    @GetMapping("/findingAvailable/{type}/{all}")
     public ResponseEntity<List<Vehicle>> findingAvailableVehiclesByType(
             @PathVariable("type") final String type,
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final LocalDate startDate,
             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final LocalDate endDate) {
         try {
+            // System.out.println("type,startdate and
             return vehicleService.findingAvailableVehiclesByType(type, startDate, endDate);
         } catch (Exception e) {
             e.printStackTrace();

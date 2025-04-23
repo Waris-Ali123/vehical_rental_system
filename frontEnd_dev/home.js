@@ -492,7 +492,7 @@ async function updatingUserInDB(userId, updatedUser) {
         user = result;
       }
 
-      alert("User Update Succesfully");
+      alert("User Updated Succesfully");
     } else {
     let errorMsg = await response.text();
       console.error("Error updating user:",errorMsg);
@@ -1606,7 +1606,7 @@ function getDateDifference(startDateStr, endDateStr) {
   const millisecondsPerDay = 1000 * 3600 * 24;
   const diffDays = diffMs / millisecondsPerDay;
 
-  return diffDays;
+  return diffDays+1;
 }
 
 // ----validating entries-------

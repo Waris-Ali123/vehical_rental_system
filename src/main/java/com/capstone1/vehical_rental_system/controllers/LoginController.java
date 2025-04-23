@@ -36,7 +36,11 @@ public class LoginController {
     public ResponseEntity<?> signUp(final @RequestBody User user) {
         User u1;
         try {
+            System.out.print("In signup : ");
+            System.out.print(user);
+
             u1 = loginService.storeUser(user);
+            System.out.println("In login controller after saving the user in sign up : " + u1);
             if (u1 != null) {
                 return ResponseEntity.ok().body(u1);
             }

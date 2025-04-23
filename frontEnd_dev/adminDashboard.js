@@ -97,7 +97,7 @@ function printingOverviewOnDashBoard() {
         },
         {
             counts: totalEarnings.toFixed(2),
-            icon: "paid",
+            icon: "currency_rupee_circle",
             label: "Total Earnings",
             funToCall : () => "printingDashBoardData()"
         },
@@ -226,7 +226,10 @@ async function fetchingBookings() {
         if (response.ok) {
 
             let data = await response.json();
-            allBookings = data.reverse();
+            console.log(data);
+            allBookings = data;
+            
+            console.log(allBookings);
             totalBookings = allBookings.length;
 
             allBookings.forEach((element)=>{
@@ -775,6 +778,7 @@ async function deletingUserFromDB(userToDelete) {
     console.log(userToDelete);
 
     try {
+        
         let adminEmail = admin.email;
         let response = await fetch(
             `http://localhost:8080/auth/delete/${adminEmail}`, {
@@ -1351,7 +1355,7 @@ async function updatingVehicleInDB(registration_number,updatedVehicle,fromVehicl
                 allVehicles[index] = result;  // Update user in the array
             }
 
-            alert("vehicle updated successfully as" + result);
+            alert("vehicle updated successfully!");
 
 
             if (fromVehicleSection) {
