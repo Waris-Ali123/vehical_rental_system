@@ -23,11 +23,6 @@ public interface UserMapper {
     @Mapping(target = "reviews", ignore = true)
     User toEntity(UserCreateDTO dto);
 
-    // @Mapping(target = "userId", ignore = false)
-    // @Mapping(target = "bookings", ignore = true)
-    // @Mapping(target = "reviews", ignore = true)
-    // User toEntity(UserDTO dto);
-
     @Mapping(source = "contactNumber", target = "contactNumber")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateUserFromDto(UserUpdateDTO dto, @MappingTarget User user);

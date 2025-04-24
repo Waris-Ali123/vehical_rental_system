@@ -1,7 +1,13 @@
 package com.capstone1.vehical_rental_system.controllers;
 
+import com.capstone1.vehical_rental_system.dtos.VehicleCreateDTO;
+import com.capstone1.vehical_rental_system.dtos.VehicleDTO;
+import com.capstone1.vehical_rental_system.dtos.VehicleUpdateDTO;
 import com.capstone1.vehical_rental_system.entities.Vehicle;
 import com.capstone1.vehical_rental_system.services.VehicleService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -30,14 +36,14 @@ public class VehicleController {
     private VehicleService vehicleService;
 
     @GetMapping("/getAllVehicles")
-    public ResponseEntity<List<Vehicle>> getAllVehicles() {
+    public ResponseEntity<List<VehicleDTO>> getAllVehicles() {
         return vehicleService.getAllVehicles();
     }
 
 
     @CrossOrigin(origins = "*")
     @GetMapping("/searching/{keyword}")
-    public ResponseEntity<List<Vehicle>> searchVehicles(@PathVariable("keyword") final String keyword) {
+    public ResponseEntity<List<VehicleDTO>> searchVehicles(@PathVariable("keyword") final String keyword) {
         try {
             return vehicleService.searching(keyword);
         } catch (Exception e) {
@@ -47,7 +53,7 @@ public class VehicleController {
     }
 
     @GetMapping("/findingAvailable")
-    public ResponseEntity<List<Vehicle>> findingAvailableVehicles(
+    public ResponseEntity<List<VehicleDTO>> findingAvailableVehicles(
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final LocalDate startDate,
             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final LocalDate endDate) {
         try {
@@ -58,8 +64,8 @@ public class VehicleController {
         }
     }
 
-    @GetMapping("/findingAvailable/{type}/{all}")
-    public ResponseEntity<List<Vehicle>> findingAvailableVehiclesByType(
+    @GetMapping("/findingAvailable/{type}")
+    public ResponseEntity<List<VehicleDTO>> findingAvailableVehiclesByType(
             @PathVariable("type") final String type,
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final LocalDate startDate,
             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final LocalDate endDate) {
@@ -76,8 +82,8 @@ public class VehicleController {
     // ================Admin specific details=====================
 
     @GetMapping("/getByType")
-    public ResponseEntity<List<Vehicle>> getVehicleByType(@RequestParam("type") final String type) {
-        List<Vehicle> vehicle = new ArrayList<>();
+    public ResponseEntity<List<VehicleDTO>> getVehicleByType(@RequestParam("type") final String type) {
+        List<VehicleDTO> vehicle = new ArrayList<>();
         try {
             vehicle = vehicleService.getByType(type);
             if (!vehicle.isEmpty()) {
@@ -92,7 +98,7 @@ public class VehicleController {
     @PostMapping("/add")
     public ResponseEntity<?> addingVehicleByAdminOnly(
             @RequestParam("email") final String email,
-            @RequestBody final Vehicle vehicle) {
+            @Valid @RequestBody final VehicleCreateDTO vehicle) {
         try {
             return vehicleService.addVehicle(email, vehicle);
         } catch (Exception e) {
@@ -104,7 +110,7 @@ public class VehicleController {
     public ResponseEntity<?> updatingVehicleDetails(
             @PathVariable("registration_number") final String registration_number,
             @PathVariable("email") final String email,
-            @RequestBody final Vehicle vehicle) {
+            @RequestBody final VehicleUpdateDTO vehicle) {
         return vehicleService.updateVehicle(registration_number, email, vehicle);
     }
 

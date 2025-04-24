@@ -1,5 +1,8 @@
 package com.capstone1.vehical_rental_system.services;
 
+import com.capstone1.vehical_rental_system.dtos.VehicleCreateDTO;
+import com.capstone1.vehical_rental_system.dtos.VehicleDTO;
+import com.capstone1.vehical_rental_system.dtos.VehicleUpdateDTO;
 import com.capstone1.vehical_rental_system.entities.Vehicle;
 import org.springframework.http.ResponseEntity;
 
@@ -8,23 +11,23 @@ import java.util.List;
 
 public interface VehicleService {
 
-    ResponseEntity<?> addVehicle(final String email, final Vehicle vehicle);
+    ResponseEntity<?> addVehicle(final String email, final VehicleCreateDTO vehicle);
 
-    ResponseEntity<List<Vehicle>> getAllVehicles();
+    ResponseEntity<List<VehicleDTO>> getAllVehicles();
 
-    List<Vehicle> getByType(final String type);
+    List<VehicleDTO> getByType(final String type);
 
     Vehicle getByRegistrationNumber(final String registration_no);
 
-    ResponseEntity<List<Vehicle>> searching(final String keyword);
+    ResponseEntity<List<VehicleDTO>> searching(final String keyword);
 
-    ResponseEntity<?> updateVehicle(final String registration_no, final String email, final Vehicle vehicle);
+    ResponseEntity<?> updateVehicle(final String registration_no, final String email, final VehicleUpdateDTO vehicle);
 
     ResponseEntity<String> removeVehicleByRegistrationNumber(final String registration_no, final String email);
 
-    ResponseEntity<List<Vehicle>> findingAvailableVehicles(final LocalDate startDate, final LocalDate endDate);
+    ResponseEntity<List<VehicleDTO>> findingAvailableVehicles(final LocalDate startDate, final LocalDate endDate);
 
-    ResponseEntity<List<Vehicle>> findingAvailableVehiclesByType(final String type,
+    ResponseEntity<List<VehicleDTO>> findingAvailableVehiclesByType(final String type,
                     final LocalDate startDate, final LocalDate endDate);
 
 }

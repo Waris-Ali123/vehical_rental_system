@@ -42,6 +42,7 @@ public class Vehicle {
     @Column(nullable = false)
     private VehicleType type;
 
+    
     private String model;
 
     @Column(nullable = false, unique = true)
@@ -130,11 +131,11 @@ public class Vehicle {
         this.model = model;
     }
 
-    public String getRegistration_number() {
+    public String getRegistrationNumber() {
         return registrationNumber;
     }
 
-    public void setRegistration_number(String registrationNumber) {
+    public void setRegistrationNumber(String registrationNumber) {
         this.registrationNumber = registrationNumber;
     }
 
