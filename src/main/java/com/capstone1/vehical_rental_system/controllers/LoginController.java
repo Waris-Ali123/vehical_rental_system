@@ -1,7 +1,13 @@
 package com.capstone1.vehical_rental_system.controllers;
 
+import com.capstone1.vehical_rental_system.dtos.UserCreateDTO;
+import com.capstone1.vehical_rental_system.dtos.UserDTO;
+import com.capstone1.vehical_rental_system.dtos.UserUpdateDTO;
 import com.capstone1.vehical_rental_system.entities.User;
 import com.capstone1.vehical_rental_system.services.LoginService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +26,7 @@ public class LoginController {
             @RequestParam final String email,
             @RequestParam final String password) {
         try {
-            final User u1 = loginService.getUserByEmailAndPass(email, password);
+            final UserDTO u1 = loginService.getUserByEmailAndPass(email, password);
             if (u1 != null) {
                 return ResponseEntity.ok().body(u1);
             } else {
@@ -33,16 +39,14 @@ public class LoginController {
     }
 
     @PostMapping("/signUp")
-    public ResponseEntity<?> signUp(final @RequestBody User user) {
-        User u1;
+    public ResponseEntity<?> signUp(final @Valid @RequestBody UserCreateDTO userCreateDTO) {
+        UserDTO userDTO;
         try {
-            System.out.print("In signup : ");
-            System.out.print(user);
+        
 
-            u1 = loginService.storeUser(user);
-            System.out.println("In login controller after saving the user in sign up : " + u1);
-            if (u1 != null) {
-                return ResponseEntity.ok().body(u1);
+            userDTO = loginService.storeUser(userCreateDTO);
+            if (userDTO != null) {
+                return ResponseEntity.ok().body(userDTO);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -53,7 +57,7 @@ public class LoginController {
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updatingExistingUser(
             final @PathVariable("id") int id,
-            final @RequestBody User userDetailsToUpdate) {
+            final @Valid @RequestBody UserUpdateDTO userDetailsToUpdate) {
         try {
             return loginService.updatingExistingUser(id, userDetailsToUpdate);
         } catch (Exception e) {
@@ -87,7 +91,7 @@ public class LoginController {
     @DeleteMapping("/delete/{adminEmail}")
     public ResponseEntity<String> deletingUserByAdmin(
             final @PathVariable("adminEmail") String emailAdmin,
-            @RequestBody User userToDelete) {
+            @RequestBody UserDTO userToDelete) {
 
         try {
             if (loginService.isAdmin(emailAdmin)) {

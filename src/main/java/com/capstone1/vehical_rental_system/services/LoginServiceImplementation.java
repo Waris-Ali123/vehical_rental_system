@@ -1,6 +1,10 @@
 package com.capstone1.vehical_rental_system.services;
 
+import com.capstone1.vehical_rental_system.dtos.UserCreateDTO;
+import com.capstone1.vehical_rental_system.dtos.UserDTO;
+import com.capstone1.vehical_rental_system.dtos.UserUpdateDTO;
 import com.capstone1.vehical_rental_system.entities.User;
+import com.capstone1.vehical_rental_system.mappers.UserMapper;
 import com.capstone1.vehical_rental_system.repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,18 +20,20 @@ public class LoginServiceImplementation implements LoginService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepo userRepo;
 
-    @Autowired
-    public LoginServiceImplementation(PasswordEncoder passwordEncoder, UserRepo userRepo) {
+    private final UserMapper userMapper;
+
+    public LoginServiceImplementation(PasswordEncoder passwordEncoder, UserRepo userRepo,UserMapper userMapper) {
         this.passwordEncoder = passwordEncoder;
         this.userRepo = userRepo;
+        this.userMapper = userMapper;
     }
 
     @Override
-    public User getUserByEmailAndPass(final String email, final String password) {
+    public UserDTO getUserByEmailAndPass(final String email, final String password) {
         final User user = userRepo.findUserByEmail(email).orElse(null);
-        System.out.println(user);
+        // System.out.println(user);
         if (user != null && passwordEncoder.matches(password, user.getPassword())) {
-            return user;
+            return userMapper.toDto(user);
         }
         if(!passwordEncoder.matches(password, user.getPassword()))
             System.out.println("password mismatch");
@@ -45,13 +51,18 @@ public class LoginServiceImplementation implements LoginService {
     }
 
     @Override
-    public User storeUser(final User user) {
+    public UserDTO storeUser(final UserCreateDTO dto) {
         //always setting the incoming user as user thus no one can create admin by changing the frontend code
+        
+        
+        User user = userMapper.toEntity(dto);
         user.setRole(User.Role.USER);
-        System.out.println("In loginserviceimplementation : " + user);
-        //Encoding the password before storing
-        // user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepo.save(user);
+        
+        // Explicitly encode password here
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        
+        User savedUser = userRepo.save(user);
+        return userMapper.toDto(savedUser);
     }
 
     @Override
@@ -69,7 +80,8 @@ public class LoginServiceImplementation implements LoginService {
         try {
             if (isAdmin(email)) {
                 final List<User> users = userRepo.findAll();
-                return ResponseEntity.ok(users);
+                
+                return ResponseEntity.ok(userMapper.toDtoList(users));
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Only admin can see all users");
             }
@@ -79,9 +91,10 @@ public class LoginServiceImplementation implements LoginService {
         }
     }
 
-    public ResponseEntity<String> deletingUser(User userToDelete) {
+    public ResponseEntity<String> deletingUser(UserDTO userToDelete) {
         try {
-            userRepo.delete(userToDelete);
+            User user = userRepo.findById(userToDelete.getUserId()).get();
+            userRepo.delete(user);
             return ResponseEntity.ok("User deleted Successfully");
         } catch (Exception e) {
             e.printStackTrace();
@@ -89,14 +102,18 @@ public class LoginServiceImplementation implements LoginService {
         }
     }
 
-    public ResponseEntity<?> updatingExistingUser(final int id, final User userDetailsToUpdate) {
+    public ResponseEntity<?> updatingExistingUser(final int id, final UserUpdateDTO userDetailsToUpdate) {
         try {
             final User user = getById(id);
-            user.setName(userDetailsToUpdate.getName());
-            user.setEmail(userDetailsToUpdate.getEmail());
-            user.setContactNumber(userDetailsToUpdate.getContactNumber());
+            if(user == null){
+                new IllegalArgumentException(
+                    "Invalid Id for user"
+                );
+            }
+                userMapper.updateUserFromDto(userDetailsToUpdate, user);
             final User updatedUser = userRepo.save(user);
-            return ResponseEntity.ok(updatedUser);
+            UserDTO userDTO = userMapper.toDto(updatedUser);
+            return ResponseEntity.ok(userDTO);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body("Failed to update existing user");
@@ -108,7 +125,8 @@ public class LoginServiceImplementation implements LoginService {
         try {
 
             final List<User> users = userRepo.SearchingByKeyword(keyword);
-            return ResponseEntity.ok(users);
+
+            return ResponseEntity.ok(userMapper.toDtoList(users));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body("Nothing found");

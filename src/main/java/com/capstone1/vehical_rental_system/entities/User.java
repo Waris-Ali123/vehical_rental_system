@@ -100,7 +100,7 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password = encodePassword(password); // Secure password hashing
+        this.password = password;
     }
 
     public String getContactNumber() { // Changed from getContact_number()

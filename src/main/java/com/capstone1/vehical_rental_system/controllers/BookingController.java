@@ -1,5 +1,6 @@
 package com.capstone1.vehical_rental_system.controllers;
 
+import com.capstone1.vehical_rental_system.dtos.UserDTO;
 import com.capstone1.vehical_rental_system.entities.Booking;
 import com.capstone1.vehical_rental_system.entities.User;
 import com.capstone1.vehical_rental_system.services.BookingService;
@@ -62,7 +63,7 @@ public class BookingController {
         try {
             String bookerEmail = booking.getUser().getEmail();
 
-            User userAuthenticated = loginService.getUserByEmailAndPass(bookerEmail,password);
+            UserDTO userAuthenticated = loginService.getUserByEmailAndPass(bookerEmail,password);
 
             if (userAuthenticated != null) {
                 final int booking_id = booking.getBooking_id();
