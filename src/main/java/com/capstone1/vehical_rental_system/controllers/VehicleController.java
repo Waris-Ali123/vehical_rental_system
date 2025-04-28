@@ -1,12 +1,8 @@
 package com.capstone1.vehical_rental_system.controllers;
 
-import com.capstone1.vehical_rental_system.dtos.VehicleCreateDTO;
-import com.capstone1.vehical_rental_system.dtos.VehicleDTO;
-import com.capstone1.vehical_rental_system.dtos.VehicleUpdateDTO;
-import com.capstone1.vehical_rental_system.entities.Vehicle;
-import com.capstone1.vehical_rental_system.services.VehicleService;
-
-import jakarta.validation.Valid;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,9 +19,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import com.capstone1.vehical_rental_system.dtos.VehicleCreateDTO;
+import com.capstone1.vehical_rental_system.dtos.VehicleDTO;
+import com.capstone1.vehical_rental_system.dtos.VehicleUpdateDTO;
+import com.capstone1.vehical_rental_system.services.VehicleService;
+
+import jakarta.validation.Valid;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -110,7 +109,7 @@ public class VehicleController {
     public ResponseEntity<?> updatingVehicleDetails(
             @PathVariable("registration_number") final String registration_number,
             @PathVariable("email") final String email,
-            @RequestBody final VehicleUpdateDTO vehicle) {
+            @RequestBody @Valid final VehicleUpdateDTO vehicle) {
         return vehicleService.updateVehicle(registration_number, email, vehicle);
     }
 

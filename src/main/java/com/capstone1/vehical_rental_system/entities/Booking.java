@@ -98,11 +98,11 @@ public class Booking {
         this.totalPrice = totalPrice;
     }
 
-    public BookingStatus getBooking_status() {
+    public BookingStatus getBookingStatus() {
         return bookingStatus;
     }
 
-    public void setBooking_status(BookingStatus bookingStatus) {
+    public void setBookingStatus(BookingStatus bookingStatus) {
         this.bookingStatus = bookingStatus;
     }
 

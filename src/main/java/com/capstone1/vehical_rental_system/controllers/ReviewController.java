@@ -1,18 +1,23 @@
 package com.capstone1.vehical_rental_system.controllers;
 
-import com.capstone1.vehical_rental_system.entities.Review;
-import com.capstone1.vehical_rental_system.services.ReviewService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.capstone1.vehical_rental_system.dtos.ReviewCreateDTO;
+import com.capstone1.vehical_rental_system.dtos.ReviewDTO;
+import com.capstone1.vehical_rental_system.services.ReviewService;
+
+import jakarta.validation.Valid;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -24,12 +29,9 @@ public class ReviewController {
 
     @PostMapping("/add")
     public ResponseEntity<?> addingReview(
-            @RequestParam("email") final String email,
-            @RequestParam("registration_number") final String registration_number,
-            @RequestParam("rating") final String rating,
-            @RequestParam("feedback") final String feedback) {
+            @RequestBody @Valid final ReviewCreateDTO reviewCreateDTO) {
         try {
-            return reviewService.addReview(email, registration_number, rating, feedback);
+            return reviewService.addReview(reviewCreateDTO);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body("Something went wrong");
@@ -41,7 +43,7 @@ public class ReviewController {
     public ResponseEntity<?> getReviewsByVehicle(@RequestParam final String registration_number) {
         try {
 
-            return reviewService.getReview(registration_number);
+            return reviewService.getReviews(registration_number);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("Something went wrong!");
@@ -49,7 +51,7 @@ public class ReviewController {
     }
 
     @GetMapping("/getReviewsByUser")  // Changed to PathVariable
-    public ResponseEntity<List<Review>> getReviewsByUser(@RequestParam("email") final String email) {
+    public ResponseEntity<List<ReviewDTO>> getReviewsByUser(@RequestParam("email") final String email) {
         try {
             return reviewService.getReviewsByEmail(email);
         } catch (Exception e) {
@@ -60,7 +62,7 @@ public class ReviewController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/searching/{keyword}")  // Changed to PathVariable
-    public ResponseEntity<List<Review>> searchingReview(@PathVariable("keyword") final String keyword) {
+    public ResponseEntity<List<ReviewDTO>> searchingReview(@PathVariable("keyword") final String keyword) {
         try {
             return reviewService.searching(keyword);
         } catch (Exception e) {
@@ -70,12 +72,12 @@ public class ReviewController {
     }
 
     @GetMapping("/getAllReviews") //changed to pathvariable
-    public ResponseEntity<List<Review>> getAllReviews(@RequestParam final String email) {
+    public ResponseEntity<List<ReviewDTO>> getAllReviews(@RequestParam final String email) {
         return reviewService.getAllReviews(email);
     }
 
     @GetMapping("/getTopReviews")
-    public ResponseEntity<List<Review>> getTopReviews() {
+    public ResponseEntity<List<ReviewDTO>> getTopReviews() {
         try {
             return reviewService.getTopReviews();
         } catch (Exception e) {

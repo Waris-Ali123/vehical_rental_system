@@ -1,9 +1,12 @@
 package com.capstone1.vehical_rental_system.services;
 
+import com.capstone1.vehical_rental_system.dtos.BookingDTO;
+import com.capstone1.vehical_rental_system.dtos.UserDTO;
 import com.capstone1.vehical_rental_system.entities.Booking;
 import com.capstone1.vehical_rental_system.entities.Booking.BookingStatus;
 import com.capstone1.vehical_rental_system.entities.User;
 import com.capstone1.vehical_rental_system.entities.User.Role;
+import com.capstone1.vehical_rental_system.mappers.BookingMapper;
 import com.capstone1.vehical_rental_system.entities.Vehicle;
 import com.capstone1.vehical_rental_system.repositories.BookingRepo;
 import com.capstone1.vehical_rental_system.repositories.VehicleRepo;
@@ -11,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -29,6 +33,8 @@ public class BookingServiceImplementation implements BookingService {
     private LoginService loginService;
     @Autowired
     private VehicleService vehicleService;
+    @Autowired
+    private BookingMapper bookingMapper;
 
     public ResponseEntity<String> searchForExistingBookings(
             String registrationNo, LocalDate startDate, 
@@ -59,7 +65,7 @@ public class BookingServiceImplementation implements BookingService {
         return ResponseEntity.ok("It is Available now");
     }
 
-    public ResponseEntity<String> addBooking(
+    public ResponseEntity<?> addBooking(
             String email, String registrationNo, 
             String startDate, String endDate) {
         try {
@@ -83,12 +89,12 @@ public class BookingServiceImplementation implements BookingService {
             booking.setStartDate(start);
             booking.setEndDate(end);
             booking.setTotalPrice(totalPrice);
-            booking.setBooking_status(BookingStatus.CONFIRMED);
+            booking.setBookingStatus(BookingStatus.CONFIRMED);
             Booking bookSaved = bookingRepo.save(booking);
             user.addBooking(bookSaved);
             vehicle.addBooking(bookSaved);
 
-            return ResponseEntity.ok("Successfully Booked, Refresh the page to load changes");
+            return ResponseEntity.ok().body(bookingMapper.toDTO(bookSaved));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -96,11 +102,11 @@ public class BookingServiceImplementation implements BookingService {
         }
     }
 
-    public ResponseEntity<List<Booking>> getBookings(String email) {
+    public ResponseEntity<?> getBookings(String email) {
         try {
             User user = loginService.getUserByEmail(email);
             List<Booking> bookingsList = bookingRepo.findByUser(user);
-            return ResponseEntity.ok(bookingsList);
+            return ResponseEntity.ok(bookingMapper.toDTOList(bookingsList));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -116,7 +122,7 @@ public class BookingServiceImplementation implements BookingService {
             List<Booking> bookingsList = 
                     bookingRepo.findByVehicleAndBookingStatus(
                             vehicle, BookingStatus.CONFIRMED);
-            return ResponseEntity.ok(bookingsList);
+            return ResponseEntity.ok(bookingMapper.toDTOList(bookingsList));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -124,11 +130,12 @@ public class BookingServiceImplementation implements BookingService {
         }
     }
 
-    public ResponseEntity<List<Booking>> getAllBookings(String email) {
+    public ResponseEntity<List<BookingDTO>> getAllBookings(String email) {
         try {
             User user = loginService.getUserByEmail(email);
             if (user.getRole() == Role.ADMIN) {
-                return ResponseEntity.ok(bookingRepo.findAll());
+                List<Booking> allBookings = bookingRepo.findAll();
+                return ResponseEntity.ok(bookingMapper.toDTOList(allBookings));
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(new ArrayList<>());
@@ -140,25 +147,36 @@ public class BookingServiceImplementation implements BookingService {
         }
     }
 
-    public ResponseEntity<String> cancelBooking(int bookingId) {
+    public ResponseEntity<String> cancelBooking(final String password,final int id) {
         try {
+            final int bookingId = id;
 
             Booking booking = 
-                    bookingRepo.findById(bookingId).orElseThrow();
-            booking.setBooking_status(BookingStatus.CANCELED);
-            bookingRepo.save(booking);
-            return ResponseEntity.ok("The booking has been canceled successfully");
+            bookingRepo.findById(bookingId).orElseThrow();
+
+            String bookerEmail = booking.getUser().getEmail();
+            
+            UserDTO userAuthenticated = loginService.getUserByEmailAndPass(bookerEmail,password);
+            
+            if (userAuthenticated == null) {
+                System.out.println("This user has no access to cancel the booking of another user");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized Access!");
+            }else{   
+                booking.setBookingStatus(BookingStatus.CANCELED);
+                bookingRepo.save(booking);
+                return ResponseEntity.ok("The booking has been canceled successfully");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body("Something went wrong!");
         }
     }
 
-    public ResponseEntity<List<Booking>> searchBookings(String keyword) {
+    public ResponseEntity<List<BookingDTO>> searchBookings(String keyword) {
         try {
             List<Booking> bookings = 
                     bookingRepo.searchingByKeyword(keyword);
-            return ResponseEntity.ok(bookings);
+            return ResponseEntity.ok(bookingMapper.toDTOList(bookings));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();

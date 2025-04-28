@@ -1,16 +1,26 @@
 package com.capstone1.vehical_rental_system.controllers;
 
-import com.capstone1.vehical_rental_system.dtos.UserDTO;
-import com.capstone1.vehical_rental_system.entities.Booking;
-import com.capstone1.vehical_rental_system.entities.User;
-import com.capstone1.vehical_rental_system.services.BookingService;
-import com.capstone1.vehical_rental_system.services.LoginService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.capstone1.vehical_rental_system.dtos.BookingCreateDTO;
+import com.capstone1.vehical_rental_system.dtos.BookingDTO;
+import com.capstone1.vehical_rental_system.services.BookingService;
+import com.capstone1.vehical_rental_system.services.LoginService;
+
+import jakarta.validation.Valid;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -24,13 +34,14 @@ public class BookingController {
 
     // Adding the Booking
     @PostMapping("/add")
-    public ResponseEntity<String> addingBooking(
-            @RequestParam("email") final String email,
-            @RequestParam("registration_number") final String registration_number,
-            @RequestParam("startDate") final String startDate,
-            @RequestParam("endDate") final String endDate) {
+    public ResponseEntity<?> addingBooking(
+            @RequestBody @Valid BookingCreateDTO bookingDTO) {
         try {
-            return bookingService.addBooking(email, registration_number, startDate, endDate);
+            return bookingService.addBooking(
+            bookingDTO.getEmail(),
+            bookingDTO.getRegistrationNumber(),
+            bookingDTO.getStartDate().toString(),
+            bookingDTO.getEndDate().toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -38,7 +49,7 @@ public class BookingController {
     }
 
     @GetMapping("/getByEmail")
-    public ResponseEntity<List<Booking>> getBookingHistoryByMail(@RequestParam("email") final String email) {
+    public ResponseEntity<?> getBookingHistoryByMail(@RequestParam("email") final String email) {
         return bookingService.getBookings(email);
     }
 
@@ -50,28 +61,19 @@ public class BookingController {
     }
 
     @GetMapping("/getAllBookings")
-    public ResponseEntity<List<Booking>> getAllBookings(@RequestParam("email") final String email) {
+    public ResponseEntity<List<BookingDTO>> getAllBookings(@RequestParam("email") final String email) {
         return bookingService.getAllBookings(email);
     }
 
     // Removing or canceling the bookings
-    @PutMapping("/cancelBooking/{password}")
+    @PutMapping("/cancelBooking/{password}/{id}")
     public ResponseEntity<String> cancelBooking(
             @PathVariable("password") final String password,
-            @RequestBody Booking booking) {
+            @PathVariable("id") final int bookingId) {
 
         try {
-            String bookerEmail = booking.getUser().getEmail();
-
-            UserDTO userAuthenticated = loginService.getUserByEmailAndPass(bookerEmail,password);
-
-            if (userAuthenticated != null) {
-                final int booking_id = booking.getBooking_id();
-                return bookingService.cancelBooking(booking_id);
-            } else {
-                System.out.println("This user has no access to cancel the booking of another user");
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized Access!");
-            }
+            
+            return bookingService.cancelBooking(password, bookingId);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body("Something went wrong!");
@@ -80,7 +82,7 @@ public class BookingController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/searching/{keyword}")
-    public ResponseEntity<List<Booking>> searching(@PathVariable("keyword") final String keyword) { //made keyword final
+    public ResponseEntity<List<BookingDTO>> searching(@PathVariable("keyword") final String keyword) { //made keyword final
         try {
             return bookingService.searchBookings(keyword);
         } catch (Exception e) {

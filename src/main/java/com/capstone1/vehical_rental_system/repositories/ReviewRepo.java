@@ -16,6 +16,7 @@ public interface ReviewRepo extends JpaRepository<Review, Integer> {
 
     List<Review> findByVehicle(Vehicle vehicle);
 
+    @Query("SELECT r FROM Review r WHERE r.vehicle = :vehicle AND r.user = :user")
     Review findByVehicleAndUser(Vehicle vehicle, User user);
 
     @Query(value = "Select R from Review R where " +

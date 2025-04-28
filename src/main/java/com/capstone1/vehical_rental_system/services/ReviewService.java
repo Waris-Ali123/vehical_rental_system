@@ -1,5 +1,7 @@
 package com.capstone1.vehical_rental_system.services;
 
+import com.capstone1.vehical_rental_system.dtos.ReviewCreateDTO;
+import com.capstone1.vehical_rental_system.dtos.ReviewDTO;
 import com.capstone1.vehical_rental_system.entities.Review;
 import org.springframework.http.ResponseEntity;
 
@@ -7,18 +9,17 @@ import java.util.List;
 
 public interface ReviewService {
 
-    ResponseEntity<?> addReview(final String email, final String registrationNumber, final String rating,
-                                final String feedback);
+    ResponseEntity<?> addReview(final ReviewCreateDTO reviewCreateDTO);
 
-    ResponseEntity<?> getReview(final String registrationNumber);
+    ResponseEntity<?> getReviews(final String registrationNumber);
 
-    ResponseEntity<Review> updateReview(final String email, final String registrationNumber, final String rating, final String feedback);
+    ResponseEntity<?> updateReview(final String email, final String registrationNumber, final String rating, final String feedback);
 
-    ResponseEntity<List<Review>> getAllReviews(final String email);
+    ResponseEntity<List<ReviewDTO>> getAllReviews(final String email);
 
-    ResponseEntity<List<Review>> searching(final String keyword);
+    ResponseEntity<List<ReviewDTO>> searching(final String keyword);
 
-    ResponseEntity<List<Review>> getReviewsByEmail(final String email);
+    ResponseEntity<List<ReviewDTO>> getReviewsByEmail(final String email);
 
-    ResponseEntity<List<Review>> getTopReviews();
+    ResponseEntity<List<ReviewDTO>> getTopReviews();
 }

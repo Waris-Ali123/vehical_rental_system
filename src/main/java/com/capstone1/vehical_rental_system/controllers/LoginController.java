@@ -1,17 +1,25 @@
 package com.capstone1.vehical_rental_system.controllers;
 
-import com.capstone1.vehical_rental_system.dtos.UserCreateDTO;
-import com.capstone1.vehical_rental_system.dtos.UserDTO;
-import com.capstone1.vehical_rental_system.dtos.UserUpdateDTO;
-import com.capstone1.vehical_rental_system.entities.User;
-import com.capstone1.vehical_rental_system.services.LoginService;
-
-import jakarta.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.capstone1.vehical_rental_system.dtos.UserCreateDTO;
+import com.capstone1.vehical_rental_system.dtos.UserDTO;
+import com.capstone1.vehical_rental_system.dtos.UserUpdateDTO;
+import com.capstone1.vehical_rental_system.services.LoginService;
+
+import jakarta.validation.Valid;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -91,7 +99,7 @@ public class LoginController {
     @DeleteMapping("/delete/{adminEmail}")
     public ResponseEntity<String> deletingUserByAdmin(
             final @PathVariable("adminEmail") String emailAdmin,
-            @RequestBody UserDTO userToDelete) {
+            @Valid @RequestBody UserDTO userToDelete) {
 
         try {
             if (loginService.isAdmin(emailAdmin)) {
