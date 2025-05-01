@@ -1,8 +1,9 @@
 package com.capstone1.vehical_rental_system.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,13 +18,17 @@ import org.springframework.web.bind.annotation.RestController;
 import com.capstone1.vehical_rental_system.dtos.UserCreateDTO;
 import com.capstone1.vehical_rental_system.dtos.UserDTO;
 import com.capstone1.vehical_rental_system.dtos.UserUpdateDTO;
+import com.capstone1.vehical_rental_system.exceptions.ResourceNotFoundException;
 import com.capstone1.vehical_rental_system.services.LoginService;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/auth")
+@Validated // Enables validation for @RequestParam and @PathVariable
 public class LoginController {
 
     @Autowired
@@ -31,90 +36,53 @@ public class LoginController {
 
     @GetMapping("/login")
     public ResponseEntity<?> getUserByEmailAndPassword(
-            @RequestParam final String email,
-            @RequestParam final String password) {
-        try {
-            final UserDTO u1 = loginService.getUserByEmailAndPass(email, password);
-            if (u1 != null) {
-                return ResponseEntity.ok().body(u1);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid Username or Password");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body("Something Went wrong");
+            @RequestParam @NotBlank(message = "Email cannot be blank") @Email(message = "Invalid email format") String email,
+            @RequestParam @NotBlank(message = "Password cannot be blank") String password) {
+        final UserDTO u1 = loginService.getUserByEmailAndPass(email, password);
+        if (u1 != null) {
+            return ResponseEntity.ok().body(u1);
+        } else {
+            throw new ResourceNotFoundException("User not found with this email and password");
         }
     }
 
     @PostMapping("/signUp")
     public ResponseEntity<?> signUp(final @Valid @RequestBody UserCreateDTO userCreateDTO) {
-        UserDTO userDTO;
-        try {
-        
-
-            userDTO = loginService.storeUser(userCreateDTO);
-            if (userDTO != null) {
-                return ResponseEntity.ok().body(userDTO);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        UserDTO userDTO = loginService.storeUser(userCreateDTO);
+        if (userDTO == null) {
+            throw new ResourceNotFoundException("User cannot be created with this email");
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to add the user");
+    return ResponseEntity.ok().body(userDTO);
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updatingExistingUser(
             final @PathVariable("id") int id,
             final @Valid @RequestBody UserUpdateDTO userDetailsToUpdate) {
-        try {
             return loginService.updatingExistingUser(id, userDetailsToUpdate);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return ResponseEntity.internalServerError().body("Failed to update user");
     }
 
-    // Admin Specific functionalities
     @GetMapping("/getAllUsers")
-    public ResponseEntity<?> getAllUsers(@RequestParam final String email) {
-        try {
-            return loginService.getAllUsers(email);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return ResponseEntity.internalServerError().body("Something went wrong");
+    public ResponseEntity<?> getAllUsers(
+            @RequestParam @NotBlank(message = "Email cannot be blank") @Email(message = "Invalid email format") String email) {
+                
+                return loginService.getAllUsers(email);
     }
 
-    @CrossOrigin(origins = "*")
     @GetMapping("/searching/{keyword}")
-    public ResponseEntity<?> searching(@PathVariable("keyword") final String keyword) {
-        try {
-            return loginService.searching(keyword);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body("Something went wrong");
-        }
+public ResponseEntity<?> searching(
+        @PathVariable("keyword") @NotBlank(message = "Keyword cannot be blank") String keyword) {
+    return loginService.searching(keyword);
+}
+
+@DeleteMapping("/delete/{adminEmail}")
+public ResponseEntity<String> deletingUserByAdmin(
+        final @PathVariable("adminEmail") @NotBlank(message = "Admin email cannot be blank") @Email(message = "Invalid email format") String emailAdmin,
+        @Valid @RequestBody UserDTO userToDelete) {
+    if (loginService.isAdmin(emailAdmin)) {
+        return loginService.deletingUser(userToDelete);
+    } else {
+        throw new AccessDeniedException("Only admin can delete the user");
     }
-
-    @DeleteMapping("/delete/{adminEmail}")
-    public ResponseEntity<String> deletingUserByAdmin(
-            final @PathVariable("adminEmail") String emailAdmin,
-            @Valid @RequestBody UserDTO userToDelete) {
-
-        try {
-            if (loginService.isAdmin(emailAdmin)) {
-                return loginService.deletingUser(userToDelete);
-            }
-            else{
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Only admin can delete the user");
-            }
-        }
-    
-        catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body("Something went wrong");
-        }      
-    
-    }
-
+}
 }
