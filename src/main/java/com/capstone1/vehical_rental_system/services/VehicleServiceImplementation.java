@@ -128,14 +128,21 @@ public class VehicleServiceImplementation implements VehicleService {
         
 
         // Check for existing bookings using Feign client
-    LocalDate today = LocalDate.now();
-    List<BookingDTO> existingBookings = bookingServiceFeignClient.searchForUpcomingOrCurrentBookings(
-            vehicle.getVehicle_id(), today.toString(), "CONFIRMED");
-    if (!existingBookings.isEmpty()) {
-        logger.warn("Vehicle with registration number: {} has current or future bookings and cannot be deleted.", registrationNumber);
-        throw new IllegalArgumentException("The vehicle has current or future bookings and cannot be deleted.");
-    }
+        LocalDate today = LocalDate.now();
+        List<BookingDTO> existingBookings = bookingServiceFeignClient.searchForUpcomingOrCurrentBookings(
+                vehicle.getVehicle_id(), today.toString(), "CONFIRMED");
+        if (!existingBookings.isEmpty()) {
+            logger.warn("Vehicle with registration number: {} has current or future bookings and cannot be deleted.", registrationNumber);
+            throw new IllegalArgumentException("The vehicle has current or future bookings and cannot be deleted.");
+        }
 
+        
+        // Dissociate the vehicle from its bookings
+        
+        // Set the vehicle field to null in all associated bookings
+        bookingServiceFeignClient.dissociateVehicleFromBookings(vehicle.getRegistrationNumber());
+        logger.info("Dissociated vehicle with registration number: {} from all associated bookings", registrationNumber);
+        
         // Proceed with deleting the vehicle
         vehicleRepo.delete(vehicle);
         logger.info("Vehicle deleted successfully with registration number: {}", registrationNumber);

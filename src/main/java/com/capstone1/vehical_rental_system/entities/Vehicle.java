@@ -57,7 +57,7 @@ public class Vehicle {
 
 
     @JsonIgnore
-    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "vehicle")
     private final List<Booking> bookingsByVehicle = new ArrayList<>();
 
     @JsonIgnore

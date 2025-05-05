@@ -628,7 +628,7 @@ function printingBookingsDataInTable(
     let userEmail = document.createElement("td");
     userEmail.innerText = element.user.email;
     let vehicleName = document.createElement("td");
-    vehicleName.innerText = element.vehicle.name;
+    vehicleName.innerText = element.vehicle==null ? "--Deleted--" :  element.vehicle.name;
     let totalPrice = document.createElement("td");
     totalPrice.innerText = element.totalPrice.toFixed(0);
 
@@ -764,7 +764,7 @@ function printingReviewsDataInTable(reviewsParam, eraseBefore = true) {
     let userMail = document.createElement("td");
     userMail.innerText = element.user.email;
     let vehicle = document.createElement("td");
-    vehicle.innerText = element.vehicle.name;
+    vehicle.innerText = element.vehicle==null ? "--Deleted--" :  element.vehicle.name;
     let rating = document.createElement("td");
     rating.innerText = element.rating;
     let feedback = document.createElement("td");

@@ -2,6 +2,7 @@ package com.capstone1.vehical_rental_system.controllers;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.capstone1.vehical_rental_system.dtos.BookingCreateDTO;
 import com.capstone1.vehical_rental_system.dtos.BookingDTO;
+import com.capstone1.vehical_rental_system.entities.Booking;
+import com.capstone1.vehical_rental_system.entities.Booking.BookingStatus;
 import com.capstone1.vehical_rental_system.services.BookingService;
 
 import jakarta.validation.Valid;
@@ -85,5 +88,30 @@ public class BookingController {
             @RequestParam("status") String status) {
         // Logic to fetch bookings based on vehicleId, endDate, and status
         return bookingService.searchForUpcomingOrCurrentBookings(vehicleId, LocalDate.parse(endDate), status);
+    }
+
+    @GetMapping("/searchForUpcomingOrCurrentBookingsUsingUserId")
+    public List<Booking> searchForUpcomingOrCurrentBookingsUsingUserId(
+            @RequestParam("userId") int userId,
+            @RequestParam("endDate") String endDate,
+            @RequestParam("status") String status) {
+        LocalDate parsedEndDate = LocalDate.parse(endDate);
+        BookingStatus bookingStatus = BookingStatus.valueOf(status.toUpperCase());
+        List<Booking> bookings = bookingService.getCurrentOrUpcomingBookingsForUser(userId, parsedEndDate, bookingStatus);
+        return bookings;
+    }
+
+
+    @PutMapping("/dissociateVehicle")
+    public ResponseEntity<Void> dissociateVehicleFromBookings(@RequestParam("registrationNumber") String registrationNumber) {
+        bookingService.dissociateVehicleFromBookings(registrationNumber);
+        return ResponseEntity.ok().build();
+    }
+
+
+    @PutMapping("/dissociateUser")
+    public ResponseEntity<Void> dissociateUserFromBookings(@RequestParam("userId") int userId) {
+        bookingService.dissociateUserFromBookings(userId);
+        return ResponseEntity.ok().build();
     }
 }

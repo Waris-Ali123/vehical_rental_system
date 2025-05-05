@@ -1,6 +1,8 @@
 package com.capstone1.vehical_rental_system.services;
 
 import com.capstone1.vehical_rental_system.dtos.BookingDTO;
+import com.capstone1.vehical_rental_system.entities.Booking;
+import com.capstone1.vehical_rental_system.entities.Booking.BookingStatus;
 import com.capstone1.vehical_rental_system.entities.Vehicle;
 
 import java.time.LocalDate;
@@ -21,4 +23,12 @@ public interface BookingService {
     List<BookingDTO> searchBookings(final String keyword);
 
     List<BookingDTO> searchForUpcomingOrCurrentBookings(int vehicleId,LocalDate endDate,String status);
+
+    List<Booking> getCurrentOrUpcomingBookingsForUser(int userId, LocalDate endDate, BookingStatus status);
+
+    void dissociateVehicleFromBookings(String registrationNumber);
+
+    void dissociateUserFromBookings(int userId);
+
+
 }

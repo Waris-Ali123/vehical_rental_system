@@ -11,6 +11,9 @@ import com.capstone1.vehical_rental_system.entities.Vehicle;
 import com.capstone1.vehical_rental_system.exceptions.ResourceNotFoundException;
 import com.capstone1.vehical_rental_system.repositories.BookingRepo;
 import com.capstone1.vehical_rental_system.repositories.VehicleRepo;
+
+import jakarta.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,4 +149,30 @@ public class BookingServiceImplementation implements BookingService {
         logger.info("Found {} {} bookings for vehicle with registration number: {}", bookings.size(), status, vehicle.getRegistrationNumber());
         return bookingMapper.toDTOList(bookings);
     }
+
+    public List<Booking> getCurrentOrUpcomingBookingsForUser(int userId, LocalDate endDate, BookingStatus status) {
+        return bookingRepo.findByUserUserIdAndEndDateGreaterThanEqualAndBookingStatus(userId, endDate, status);
+    }
+
+    @Transactional
+    public void dissociateVehicleFromBookings(String registrationNumber) {
+        List<Booking> bookings = bookingRepo.findByVehicleRegistrationNumber(registrationNumber);
+        for (Booking booking : bookings) {
+            booking.setVehicle(null); // Set the vehicle field to null
+        }
+        bookingRepo.saveAll(bookings); // Save the updated bookings
+    }
+
+
+    @Transactional
+    public void dissociateUserFromBookings(int userId) {
+        List<Booking> bookings = bookingRepo.findByUserUserId(userId);
+        for (Booking booking : bookings) {
+            booking.setUser(null); // Set the user field to null
+        }
+        bookingRepo.saveAll(bookings); // Save the updated bookings
+    }
+
+
+    
 }

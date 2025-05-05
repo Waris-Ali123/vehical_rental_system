@@ -1,5 +1,6 @@
 package com.capstone1.vehical_rental_system.services;
 
+import com.capstone1.vehical_rental_system.dtos.BookingDTO;
 import com.capstone1.vehical_rental_system.dtos.UserCreateDTO;
 import com.capstone1.vehical_rental_system.dtos.UserDTO;
 import com.capstone1.vehical_rental_system.dtos.UserUpdateDTO;
@@ -7,13 +8,17 @@ import com.capstone1.vehical_rental_system.entities.User;
 import com.capstone1.vehical_rental_system.mappers.UserMapper;
 import com.capstone1.vehical_rental_system.repositories.UserRepo;
 import com.capstone1.vehical_rental_system.exceptions.ResourceNotFoundException;
+import com.capstone1.vehical_rental_system.feignclients.BookingServiceFeignClient;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -24,6 +29,10 @@ public class LoginServiceImplementation implements LoginService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepo userRepo;
     private final UserMapper userMapper;
+    
+    @Autowired
+    @Lazy
+    private BookingServiceFeignClient bookingServiceFeignClient; // Lazy initialization to avoid circular dependency
 
     public LoginServiceImplementation(PasswordEncoder passwordEncoder, UserRepo userRepo, UserMapper userMapper) {
         this.passwordEncoder = passwordEncoder;
@@ -111,6 +120,21 @@ public class LoginServiceImplementation implements LoginService {
             logger.warn("Attempt to delete admin user with ID: {}", userToDelete.getUserId());
             throw new IllegalArgumentException("Admin cannot be deleted.");
         }
+
+         // Check for current or upcoming bookings
+        LocalDate today = LocalDate.now();
+        List<BookingDTO> currentOrUpcomingBookings = bookingServiceFeignClient.searchForUpcomingOrCurrentBookingsUsingUserId(
+                userToDelete.getUserId(), today.toString(), "CONFIRMED");
+
+        if (currentOrUpcomingBookings != null && !currentOrUpcomingBookings.isEmpty()) {
+            logger.warn("User with ID: {} has current or upcoming bookings and cannot be deleted.", userToDelete.getUserId());
+            throw new IllegalArgumentException("The user has current or upcoming bookings and cannot be deleted.");
+        }
+
+        // Dissociate the user from its bookings using Feign client
+        bookingServiceFeignClient.dissociateUserFromBookings(userToDelete.getUserId());
+        logger.info("Dissociated user with ID: {} from all associated bookings", userToDelete.getUserId());
+
 
         // Proceed with deletion if the user is not an admin
         userRepo.delete(user);
