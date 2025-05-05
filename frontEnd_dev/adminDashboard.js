@@ -204,6 +204,7 @@ async function fetchingUsers() {
 
     } catch (error) {
         console.log(error);
+        showOverlayMessage("error","Something went wrong in frontEnd while fetching users");
 
     }
 }
@@ -233,7 +234,7 @@ async function fetchingBookings() {
             totalBookings = allBookings.length;
 
             allBookings.forEach((element)=>{
-                if(element.booking_status=="CONFIRMED"){
+                if(element.bookingStatus=="CONFIRMED"){
                     totalEarnings += element.totalPrice;
                 }
             });
@@ -245,6 +246,7 @@ async function fetchingBookings() {
 
     } catch (error) {
         console.error("Error fetching data:", error);
+        showOverlayMessage("error","Something went wrong in frontEnd while fetching bookings");
     }
 
 }
@@ -267,6 +269,7 @@ async function fetchingVehicles() {
 
     } catch (error) {
         console.log(error);
+        showOverlayMessage("error","Something went wrong in frontEnd while fetching vehicles");
 
     }
 }
@@ -289,6 +292,7 @@ async function fetchingReviews() {
 
     } catch (error) {
         console.log(error);
+        showOverlayMessage("error","Something went wrong in frontEnd while fetching reviews");
     }
 }
 
@@ -364,7 +368,7 @@ function printingBookingsDataInTable(bookingsParam,eraseBefore = true,headingPar
 
 
         let bookId = document.createElement("td");
-        bookId.innerText = element.booking_id;
+        bookId.innerText = element.bookingId;
         let startDate = document.createElement("td");
         startDate.innerText = element.startDate;
         let endDate = document.createElement("td");
@@ -381,8 +385,8 @@ function printingBookingsDataInTable(bookingsParam,eraseBefore = true,headingPar
         let statusBox = document.createElement("td");
         statusBox.classList.add("statusBox");
         let status = document.createElement("span");
-        status.innerText = element.booking_status;
-        if(element.booking_status=="CONFIRMED")
+        status.innerText = element.bookingStatus;
+        if(element.bookingStatus=="CONFIRMED")
             status.classList.add("success");
         else
             status.classList.add("danger");
@@ -439,8 +443,8 @@ function printingVehiclesDataInTable(vehiclesParam,eraseBefore = true) {
     { label: "Type", value: "", id: "type", type: "select",options:["CAR","BIKE","TRUCK"], required : true },
     { label: "Model", value: "", id: "model", type: "text", required : true },
     { label: "Availability Status", value: "", id: "availability", type: "select",options : ["AVAILABLE","UNDER_MAINTENANCE"], required : true },
-    { label: "Price per Day", value: "", id: "price_per_day", type: "number", required : true },
-    { label: "Registration Number", value: "", id: "registration_number", type: "text", required : true },
+    { label: "Price per Day", value: "", id: "pricePerDay", type: "number", required : true },
+    { label: "Registration Number", value: "", id: "registrationNumber", type: "text", required : true },
     { label: "Color", value: "", id: "color", type: "text", required : true },
     { label: "Vehicle Image URL", value: "", id: "vehicleImage", type: "text", required : true },
     { label: "Fuel Type", value: "", id: "fuelType", type: "select", options : ["PETROL", "DIESEL", "ELECTRIC","HYBRID","CNG"], required : true },
@@ -484,7 +488,7 @@ function printingVehiclesDataInTable(vehiclesParam,eraseBefore = true) {
 
     vehiclesParam.forEach(element => {
         let vehicleId = document.createElement("td");
-        vehicleId.innerText = element.vehicle_id;
+        vehicleId.innerText = element.vehicleId;
         let name = document.createElement("td");
         name.innerText = element.name;
         let type = document.createElement("td");
@@ -499,7 +503,7 @@ function printingVehiclesDataInTable(vehiclesParam,eraseBefore = true) {
         let availability = document.createElement("td");
         availability.innerText = element.availability;
         let pricePerDay = document.createElement("td");
-        pricePerDay.innerText = element.price_per_day;
+        pricePerDay.innerText = element.pricePerDay;
 
 
         //Providing to edit or delete the vehicles
@@ -634,7 +638,7 @@ function printingUsersDataInTable(usersParam,eraseBefore=true) {
 
         deleteBtn.addEventListener("click", async () => {
             if(element.role == "ADMIN"){
-                alert("You cannot delete ADMIN");
+                showOverlayMessage("warning", "You cannot delete ADMIN", null, false);
                 return;
             }
             if (confirm("Are you sure you want to delete this user?")) {
@@ -793,7 +797,7 @@ async function deletingUserFromDB(userToDelete) {
         if (response.ok) {
             let backendMsg = await response.text();
 
-            alert(backendMsg);
+            showOverlayMessage("success",backendMsg);
 
             allUsers = allUsers.filter(user => user.userId !== userToDelete.userId);
             totalUsers--;
@@ -802,13 +806,13 @@ async function deletingUserFromDB(userToDelete) {
 
         }
         else {
-            let errorMsg = await response.text();
-            console.error("Error updating user:", errorMsg);
-            alert(errorMsg);
+            let errorObj = await response.json();
+            console.error("Error updating user:", errorObj.message);
+            showOverlayMessage("error",errorObj.message,errorObj.errors);
         }
     } catch (error) {
         console.error(error);
-        alert("Something went wrong");
+        showOverlayMessage("error","Something went wrong");
     }
 
 }
@@ -822,7 +826,7 @@ async function deletingVehicleFromDB(vehicleToDelete) {
             console.log("vehicle is null can't fetch the registration number to delete");
             return;
         }
-        let vehicleRegistrationNumber = vehicleToDelete.registration_number;
+        let vehicleRegistrationNumber = vehicleToDelete.registrationNumber;
         let adminEmail = admin.email;
         let response = await fetch(
             `http://localhost:8080/vehicle/delete/${vehicleRegistrationNumber}/${adminEmail}`, {
@@ -834,21 +838,24 @@ async function deletingVehicleFromDB(vehicleToDelete) {
         );
 
         if (response.ok) {
+            let successMsg  = await response.text();
+            showOverlayMessage("success",successMsg);
 
-            allVehicles = allVehicles.filter(vehicle => vehicle.vehicle_id !== vehicleToDelete.vehicle_id);
+            allVehicles = allVehicles.filter(vehicle => vehicle.vehicleId !== vehicleToDelete.vehicleId);
             totalVehicles--;
-
-             
 
             printingVehiclesDataInTable(allVehicles);
 
         }
         else {
-            console.error("Response status : ", response.status);
-            console.error("Error updating user:", response.statusText);
+            let errorObject = await response.json();
+            showOverlayMessage("error", errorObject.message, errorObject.errors);
+            console.error("Error updating user:", errorObject.message);
+            console.error("Error object : ", errorObject.errors);
         }
     } catch (error) {
         console.error(error);
+        showOverlayMessage("error","Something went wrong in frontEnd while deleting vehicle");
     }
 
 }
@@ -987,8 +994,8 @@ function printingFormLayout(headingContent, fieldsComing, entityType,isAdding=fa
                     type: document.getElementById("type").value.toUpperCase(),
                     model: String(document.getElementById("model").value),
                     availability: document.getElementById("availability").value.toUpperCase(),
-                    price_per_day: parseFloat(document.getElementById("price_per_day").value),
-                    registration_number: document.getElementById("registration_number").value,
+                    pricePerDay: parseFloat(document.getElementById("pricePerDay").value),
+                    registrationNumber: document.getElementById("registrationNumber").value,
                     color: document.getElementById("color").value,
                     vehicleImage: document.getElementById("vehicleImage").value,
                     fuelType: document.getElementById("fuelType").value.toUpperCase(),
@@ -1030,8 +1037,8 @@ function printingFormLayout(headingContent, fieldsComing, entityType,isAdding=fa
                     type: document.getElementById("type").value.toUpperCase(),
                     model: String(document.getElementById("model").value),
                     availability: document.getElementById("availability").value.toUpperCase(),
-                    price_per_day: parseFloat(document.getElementById("price_per_day").value),
-                    registration_number: document.getElementById("registration_number").value,
+                    pricePerDay: parseFloat(document.getElementById("pricePerDay").value),
+                    registrationNumber: document.getElementById("registrationNumber").value,
                     color: document.getElementById("color").value,
                     vehicleImage: document.getElementById("vehicleImage").value,
                     fuelType: document.getElementById("fuelType").value.toUpperCase(),
@@ -1043,8 +1050,8 @@ function printingFormLayout(headingContent, fieldsComing, entityType,isAdding=fa
 
                   
 
-                let registration_number = document.getElementById("registration_number").value;
-                await updatingVehicleInDB(registration_number,updatedVehicle, fromSection);
+                let registrationNumber = document.getElementById("registrationNumber").value;
+                await updatingVehicleInDB(registrationNumber,updatedVehicle, fromSection);
                   
             }
         }
@@ -1056,7 +1063,7 @@ function printingFormLayout(headingContent, fieldsComing, entityType,isAdding=fa
 
         inputs.forEach((ele) => {
             //userId and role cannot be updated
-            if (ele.id != "userId" && ele.id != "vehicle_id" && ele.id != "role" && ele.id != "registration_number") {
+            if (ele.id != "userId" && ele.id != "vehicleId" && ele.id != "role" && ele.id != "registrationNumber") {
                 ele.readOnly = !ele.readOnly;
                 ele.classList.toggle("editable");
             }
@@ -1100,25 +1107,24 @@ function validateForm(fields) {
         let inputElement = document.getElementById(field.id);
         if (inputElement && inputElement.hasAttribute("required")) {
             if (!inputElement.value || inputElement.value.trim() === "") {
-                alert(`Please fill in the required field: ${field.label}`);
-                isValid = false;
+                showOverlayMessage("error", `Please fill in the required field: ${field.label}`);                isValid = false;
                 inputElement.focus();
                 return false;
             }
         }
 
         if (field.id === "contactNumber" && inputElement.value.length !== 10) {
-            alert("Mobile No must be exactly 10 digits!");
-            isValid = false;
+            showOverlayMessage("error", "Mobile No must be exactly 10 digits!");            isValid = false;
             return false;
           }
       
           if(inputElement && inputElement.type == "email"){
       
             if (!inputElement.checkValidity()) {
-                  alert(`Invalid value in ${inputElement.name}`);
-                  isValid = false;
-                  return false;
+                showOverlayMessage("error", `Invalid value in ${inputElement.name}`);                  isValid = false;
+
+                isValid = false;
+                return false;
             }
           }
 
@@ -1159,13 +1165,13 @@ function printingVehicleProfile(element,fromVehicleSection=false){
 
       
 
-    let vehicleId = element.vehicle_id;
+    let vehicleId = element.vehicleId;
 let name = element.name;
 let type = element.type;
 let model = element.model;
 let availability = element.availability;
-let price_per_day = element.price_per_day;
-let registration_number = element.registration_number;
+let pricePerDay = element.pricePerDay;
+let registrationNumber = element.registrationNumber;
 let color = element.color;
 let vehicleImage = element.vehicleImage;
 let fuelType = element.fuelType;
@@ -1173,13 +1179,13 @@ let mileage = element.mileage;
 let seatingCapacity = element.seatingCapacity;
 
 let fields = [
-    { label: "Vehicle ID", value: vehicleId, id: "vehicle_id", type: "number" },
+    { label: "Vehicle ID", value: vehicleId, id: "vehicleId", type: "number" },
     { label: "Name", value: name, id: "name", type: "text" },
     { label: "Type", value: type, id: "type", type: "select",options:["CAR","BIKE","TRUCK"] },
     { label: "Model", value: model, id: "model", type: "text" },
     { label: "Availability Status", value: availability, id: "availability",  type: "select",options : ["AVAILABLE","UNDER_MAINTENANCE"]},
-    { label: "Price per Day", value: price_per_day, id: "price_per_day", type: "number" },
-    { label: "Registration Number", value: registration_number, id: "registration_number", type: "text" },
+    { label: "Price per Day", value: pricePerDay, id: "pricePerDay", type: "number" },
+    { label: "Registration Number", value: registrationNumber, id: "registrationNumber", type: "text" },
     { label: "Color", value: color, id: "color", type: "text" },
     { label: "Vehicle Image URL", value: vehicleImage, id: "vehicleImage", type: "text" },
     { label: "Fuel Type", value: fuelType, id: "fuelType", type: "select", options : ["PETROL", "DIESEL", "ELECTRIC","HYBRID","CNG"] },
@@ -1217,18 +1223,20 @@ async function storingNewUserInDB(newUser){
             totalUsers++;
 
 
-            alert("User added succesfully");
+            showOverlayMessage("success", "User added successfully");
             printingUsersDataInTable(allUsers);
 
 
         }
         else {
-            let errorMsg = await response.text();
-            alert(errorMsg);
-            console.error("Error updating user:", errorMsg);
+            let errorObject = await response.json();
+            showOverlayMessage("error", errorObject.message, errorObject.errors);
+            console.error("Error updating user:", errorObject.message);
+            console.error("Error object : ", errorObject.errors);
         }
     } catch (error) {
         console.error(error);
+        showOverlayMessage("error", "Something went wrong in frontEnd while adding new user");
     }
 
 }
@@ -1254,19 +1262,19 @@ async function storingNewVehicleInDB(newVehicle){
             allVehicles.push(result);
             totalVehicles++;
 
-            alert("vehicle added successfully");
+            showOverlayMessage("success", "Vehicle added successfully");
 
             printingVehiclesDataInTable(allVehicles);
 
         }
         else {
-            let errorMsg = await response.text();
-
-            alert(errorMsg);
-            console.error("Error updating user:", errorMsg);
+            let errorObj = await response.json();
+            console.error("Error updating user:", errorObj.message);
+            showOverlayMessage("error",errorObj.message,errorObj.errors);
         }
     } catch (error) {
         console.error(error);
+        showOverlayMessage("error", "Something went wrong in frontEnd while adding new vehicle");
     }
 
 }
@@ -1300,6 +1308,8 @@ async function updatingUserInDB(userId, updatedUser, fromUsersSection = false) {
                 allUsers[index] = result;  // Update user in the array
             }
 
+            showOverlayMessage("success","User Updated successfully...");
+
 
             //Checking if the admin updating his own details
             if (userId == admin.userId) {
@@ -1322,13 +1332,14 @@ async function updatingUserInDB(userId, updatedUser, fromUsersSection = false) {
         }
     } catch (error) {
         console.error(error);
+        showOverlayMessage("error", "Something went wrong in frontEnd while updating user");
     }
 
 }
 
 
 
-async function updatingVehicleInDB(registration_number,updatedVehicle,fromVehicleSection = false) {
+async function updatingVehicleInDB(registrationNumber,updatedVehicle,fromVehicleSection = false) {
 
     try {
         let adminEmail = admin.email;
@@ -1337,7 +1348,7 @@ async function updatingVehicleInDB(registration_number,updatedVehicle,fromVehicl
             return;
         }
         let response = await fetch(
-            `http://localhost:8080/vehicle/update/${registration_number}/${adminEmail}`, {
+            `http://localhost:8080/vehicle/update/${registrationNumber}/${adminEmail}`, {
             method: 'PUT',
             headers: {
                 "Content-type": "application/json"
@@ -1350,12 +1361,12 @@ async function updatingVehicleInDB(registration_number,updatedVehicle,fromVehicl
             let result = await response.json();
             console.log(result);
 
-            let index = allVehicles.findIndex(vehicle => vehicle.vehicle_id === result.vehicle_id);
+            let index = allVehicles.findIndex(vehicle => vehicle.vehicleId === result.vehicleId);
             if (index !== -1) {
                 allVehicles[index] = result;  // Update user in the array
             }
 
-            alert("vehicle updated successfully!");
+            showOverlayMessage("success", "Vehicle updated successfully!");
 
 
             if (fromVehicleSection) {
@@ -1364,12 +1375,13 @@ async function updatingVehicleInDB(registration_number,updatedVehicle,fromVehicl
 
         }
         else {
-            let errorMsg = await response.text();
-            alert(errorMsg);
-            console.error("Error updating user:", errorMsg);
+            let errorObj = await response.json();
+            console.error("Error updating user:", errorObj.message);
+            showOverlayMessage("error",errorObj.message,errorObj.errors);
         }
     } catch (error) {
         console.error(error);
+        showOverlayMessage("error", "Something went wrong in frontEnd while updating vehicle");
     }
 
 }
@@ -1384,6 +1396,35 @@ async function updatingVehicleInDB(registration_number,updatedVehicle,fromVehicl
 
 
 // ==============================================Searching Starts======================================
+
+// Attach the debounced search function to the search bar input event
+const searchBar = document.getElementById("searchBarId");
+searchBar.addEventListener("input", searchBarClick);
+
+let debounceTimer; // Declare a variable to hold the debounce timer
+
+// Function to handle search bar input with debounce
+function searchBarClick() {
+    clearTimeout(debounceTimer); // Clear the previous timer if the user types again
+
+    debounceTimer = setTimeout(() => {
+        let keyword = document.getElementById("searchBarId").value.toLowerCase(); // Get the search keyword
+
+        if (keyword.trim() === "") {
+            console.log("Search input is empty");
+            tablesContainer.innerHTML = "<h2>Please enter a keyword to search</h2>";
+            return;
+        }    
+
+        console.log("Searching for:", keyword);
+
+        // Call the existing search function
+        searchingByVehicleKeywords(keyword);
+    }, 1500); // Set a delay of 300 milliseconds before executing the search    
+}    
+
+
+
 //searching by keywords
 async function searchingByVehicleKeywords() {
     tablesContainer.innerHTML = "";
@@ -1419,9 +1460,12 @@ async function searchingByVehicleKeywords() {
         printingBookingsDataInTable(outputBooking,false);
 
 
-    if(outputUser==null && outputVehicle==null&&outputReview==null&&outputBooking==null){
-        tablesContainer.innerHTML = "<h2> No Content found <h2>"
-    }
+    if ((!outputUser || outputUser.length === 0) &&
+    (!outputVehicle || outputVehicle.length === 0) &&
+    (!outputReview || outputReview.length === 0) &&
+    (!outputBooking || outputBooking.length === 0)) {
+    tablesContainer.innerHTML = "<h2>No Content Found</h2>";
+}
 
 }
 
@@ -1443,6 +1487,7 @@ async function fetchingVehiclesOnKeyword(keyword) {
 
     } catch (error) {
         console.log(error);
+        showOverlayMessage("error", "Something went wrong in frontEnd while searching vehicles");
         return null;
     }
 }
@@ -1465,6 +1510,7 @@ async function fetchingUsersOnKeyword(keyword) {
 
     } catch (error) {
         console.log(error);
+        showOverlayMessage("error", "Something went wrong in frontEnd while searching users");
         return null;
 
     }
@@ -1487,6 +1533,7 @@ async function fetchingReviewsOnKeywords(keyword) {
 
     } catch (error) {
         console.log(error);
+        showOverlayMessage("error", "Something went wrong in frontEnd while searching reviews");
         return null;
 
     }
@@ -1508,6 +1555,7 @@ async function fetchingBookingsOnKeywords(keyword) {
 
     } catch (error) {
         console.log(error);
+        showOverlayMessage("error", "Something went wrong in frontEnd while searching bookings");
         return null;
 
     }
@@ -1523,3 +1571,96 @@ function logout(){
     localStorage.removeItem("admin");
     window.location.href = "index.html";
 }
+
+
+
+// ------------------------Overlay Message ---------------------
+function showOverlayMessage(type, message, errors = null, autoClose = true, timeout = 30000) {
+    // Remove any existing overlay
+    const existingOverlay = document.querySelector(".overlayMessage");
+    if (existingOverlay) {
+      existingOverlay.remove();
+    }
+  
+    // Create the overlay container
+    const overlay = document.createElement("div");
+    overlay.classList.add("overlayMessage");
+  
+    // Add blur effect to the background
+    document.body.classList.add("blurBackground");
+  
+    // Create the content container
+    const content = document.createElement("div");
+    content.classList.add("overlayContent");
+  
+    // Add a success or error icon based on the type
+    const icon = document.createElement("span");
+    icon.classList.add("overlayIcon");
+    if (type === "success") {
+      icon.innerText = "✔️"; // Success icon
+      content.classList.add("success");
+    } else if (type === "error") {
+      icon.innerText = "❌"; // Error icon
+      content.classList.add("error");
+    }
+    else if (type === "warning") {
+      icon.innerText = "⚠️"; // Warning icon
+      content.classList.add("warning");
+    }
+  
+    // Add the main message
+    const messageElement = document.createElement("p");
+    messageElement.classList.add("overlayMessageText");
+    messageElement.innerText = message;
+  
+    // Add error details if available
+    if (errors) {
+      const errorDetails = document.createElement("ul");
+      errorDetails.classList.add("overlayErrorDetails");
+  
+      if (typeof errors === "object") {
+        // If errors is an object, iterate through its keys
+        for (const [key, value] of Object.entries(errors)) {
+          const errorItem = document.createElement("li");
+          errorItem.innerText = `${key}: ${value}`;
+          errorDetails.appendChild(errorItem);
+        }
+      } else {
+        // If errors is a string, display it directly
+        const errorItem = document.createElement("li");
+        errorItem.innerText = errors;
+        errorDetails.appendChild(errorItem);
+      }
+  
+      content.appendChild(errorDetails);
+    }
+  
+    // Add a close button
+    const closeButton = document.createElement("button");
+    closeButton.classList.add("overlayCloseButton");
+    closeButton.innerText = "Close";
+    closeButton.addEventListener("click", () => {
+      overlay.remove();
+      document.body.classList.remove("blurBackground");
+    });
+  
+    // Append all elements to the content container
+    content.appendChild(icon);
+    content.appendChild(messageElement);
+    content.appendChild(closeButton);
+  
+    // Append the content container to the overlay
+    overlay.appendChild(content);
+  
+    // Append the overlay to the body
+    document.body.appendChild(overlay);
+  
+    // Automatically remove the overlay after a delay (optional)
+    if (autoClose) {
+      setTimeout(() => {
+        overlay.remove();
+        document.body.classList.remove("blurBackground");
+      }, timeout);
+    }
+    
+  }

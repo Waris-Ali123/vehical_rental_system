@@ -29,6 +29,10 @@ public interface BookingRepo extends JpaRepository<Booking, Integer> {
     )
     List<Booking> searchingByKeyword(String keyword);
 
+    List<Booking> findByVehicleAndEndDateGreaterThanEqualAndBookingStatus(
+                Vehicle vehicle, LocalDate endDate, BookingStatus bookingStatus);               
+    
+
 
 }
 

@@ -1127,8 +1127,100 @@ span.addBtn:hover{
     border: 4px dashed var(--primary);  
 }
 
+/* ---------------Overlay styles------------------ */
+/* Blur the background */
+body.blurBackground {
+    background-color: rgba(255, 255, 255, 0.7); /* Mimic blur with a semi-transparent overlay */
+    overflow: hidden; /* Prevent scrolling while the overlay is active */
+}
 
+/* Prevent the overlay itself from being blurred */
+body.blurBackground .overlayMessage {
+    filter: none; /* Exclude the overlay from the blur effect */
+    z-index: 1001; /* Ensure it appears above the blurred background */
+}
 
+/* Overlay container */
+.overlayMessage {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  /* Content container */
+  .overlayContent {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    z-index: 1001; /* Ensure it is above the blurred background */
+    transform: translate(-50%, -50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+  }
+  
+  /* Success styling */
+  .overlayContent.success {
+    border-left: 5px solid green;
+  }
+  
+  /* Error styling */
+  .overlayContent.error {
+    border-left: 5px solid red;
+  }
+  
+  /* Icon styling */
+  .overlayIcon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+  
+  /* Message text */
+  .overlayMessageText {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  
+  /* Error details */
+  .overlayErrorDetails {
+    text-align: left;
+    margin: 10px 0;
+    padding: 0;
+    list-style: none;
+    color: red;
+    font-size: 0.9rem;
+  }
+  
+  /* Close button */
+  .overlayCloseButton {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .overlayCloseButton:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Prevent the overlay itself from being blurred */
+  body.blurBackground .overlayMessage {
+    filter: none;
+  }
 /* Responsive design implementation starts ------- media query   -----------1
  */
 

@@ -8,8 +8,6 @@ import com.capstone1.vehical_rental_system.entities.Vehicle;
 import com.capstone1.vehical_rental_system.mappers.ReviewMapper;
 import com.capstone1.vehical_rental_system.repositories.ReviewRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,7 +28,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Autowired
     private final ReviewMapper reviewMapper;
 
-    public ReviewServiceImpl(LoginService loginService, VehicleService vehicleService, ReviewRepo reviewRepo,ReviewMapper reviewMapper) {
+    public ReviewServiceImpl(LoginService loginService, VehicleService vehicleService, ReviewRepo reviewRepo, ReviewMapper reviewMapper) {
         this.loginService = loginService;
         this.vehicleService = vehicleService;
         this.reviewRepo = reviewRepo;
@@ -38,9 +36,8 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ResponseEntity<?> addReview(final ReviewCreateDTO reviewCreateDTO) {
-        try {
-            final User user = loginService.getUserByEmail(reviewCreateDTO.getEmail());
+    public ReviewDTO addReview(final ReviewCreateDTO reviewCreateDTO) {
+        final User user = loginService.getUserByEmail(reviewCreateDTO.getEmail());
         final Vehicle vehicle = vehicleService.getByRegistrationNumber(reviewCreateDTO.getRegistrationNumber());
 
         // Check if a review already exists for this user and vehicle
@@ -52,7 +49,7 @@ public class ReviewServiceImpl implements ReviewService {
             existingReview.setReviewTime(LocalDateTime.now());
 
             final Review updatedReview = reviewRepo.save(existingReview);
-            return ResponseEntity.status(HttpStatus.OK).body(reviewMapper.toDTO(updatedReview));
+            return reviewMapper.toDTO(updatedReview);
         }
 
         // Create a new review if no existing review is found
@@ -67,94 +64,58 @@ public class ReviewServiceImpl implements ReviewService {
         user.addReview(savedReview);
         vehicle.addReview(savedReview);
 
-        return ResponseEntity.status(HttpStatus.OK).body(reviewMapper.toDTO(savedReview));
- 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add review!");
+        return reviewMapper.toDTO(savedReview);
+    }
+
+    @Override
+    public List<ReviewDTO> getReviews(final String regNo) {
+        final Vehicle vehicle = vehicleService.getByRegistrationNumber(regNo);
+        final List<Review> reviews = reviewRepo.findByVehicle(vehicle);
+        return reviewMapper.toDTOList(reviews);
+    }
+
+    @Override
+    public List<ReviewDTO> getReviewsByEmail(final String email) {
+        final User user = loginService.getUserByEmail(email);
+        final List<Review> reviews = reviewRepo.findByUser(user);
+        return reviewMapper.toDTOList(reviews);
+    }
+
+    @Override
+    public ReviewDTO updateReview(final String email, final String regNo, final String rating, final String feedback) {
+        final User user = loginService.getUserByEmail(email);
+        final Vehicle vehicle = vehicleService.getByRegistrationNumber(regNo);
+        final Review review = reviewRepo.findByVehicleAndUser(vehicle, user);
+        user.removeReview(review);
+        vehicle.removeReview(review);
+        review.setFeedback(feedback);
+        review.setRating(Integer.parseInt(rating));
+        review.setReviewTime(LocalDateTime.now());
+        final Review updatedReview = reviewRepo.save(review);
+        user.addReview(updatedReview);
+        vehicle.addReview(updatedReview);
+        return reviewMapper.toDTO(updatedReview);
+    }
+
+    @Override
+    public List<ReviewDTO> getAllReviews(final String email) {
+        if (loginService.isAdmin(email)) {
+            List<Review> reviews = reviewRepo.findAll();
+            return reviewMapper.toDTOList(reviews);
+        } else {
+            throw new IllegalArgumentException("Unauthorized access. Only admin can view all reviews.");
         }
     }
 
     @Override
-    public ResponseEntity<?> getReviews(final String regNo) {
-        try {
-            final Vehicle vehicle = vehicleService.getByRegistrationNumber(regNo);
-            final List<Review> reviews = reviewRepo.findByVehicle(vehicle);
-
-            return ResponseEntity.ok().body(reviewMapper.toDTOList(reviews));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body("Failed to get all reviews for this vehicle");
-        }
+    public List<ReviewDTO> searching(final String keyword) {
+        final List<Review> reviews = reviewRepo.SearchingByKeyword(keyword);
+        return reviewMapper.toDTOList(reviews);
     }
 
     @Override
-    public ResponseEntity<List<ReviewDTO>> getReviewsByEmail(final String email) {
-        try {
-            final User user = loginService.getUserByEmail(email);
-            final List<Review> reviews = reviewRepo.findByUser(user);
-            return ResponseEntity.ok().body(reviewMapper.toDTOList(reviews));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.noContent().build();
-        }
-    }
-
-    @Override
-    public ResponseEntity<ReviewDTO> updateReview(final String email, final String regNo, final String rating, final String feedback) {
-        try {
-            final User user = loginService.getUserByEmail(email);
-            final Vehicle vehicle = vehicleService.getByRegistrationNumber(regNo);
-            final Review review = reviewRepo.findByVehicleAndUser(vehicle, user);
-            user.removeReview(review);
-            vehicle.removeReview(review);
-            review.setFeedback(feedback);
-            review.setRating(Integer.parseInt(rating));
-            review.setReviewTime(LocalDateTime.now());
-            final Review updatedReview = reviewRepo.save(review);
-            user.addReview(updatedReview);
-            vehicle.addReview(updatedReview);
-            return ResponseEntity.ok().body(reviewMapper.toDTO(updatedReview));
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-    @Override
-    public ResponseEntity<List<ReviewDTO>> getAllReviews(final String email) {
-        try {
-            if (loginService.isAdmin(email)) {
-                List<Review> reviews = reviewRepo.findAll();
-                return ResponseEntity.ok().body(reviewMapper.toDTOList(reviews));
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
-        }
-    }
-
-    @Override
-    public ResponseEntity<List<ReviewDTO>> searching(final String keyword) {
-        try {
-            final List<Review> reviews = reviewRepo.SearchingByKeyword(keyword);
-            return ResponseEntity.ok().body(reviewMapper.toDTOList(reviews));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
-        }
-    }
-
-    @Override
-    public ResponseEntity<List<ReviewDTO>> getTopReviews() {
-        try {
-            final List<Review> topReviews = reviewRepo.findByRatingGreaterThanEqual(5);
-            return ResponseEntity.ok().body(reviewMapper.toDTOList(topReviews));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
-        }
+    public List<ReviewDTO> getTopReviews() {
+        final List<Review> topReviews = reviewRepo.findByRatingGreaterThanEqual(5);
+        return reviewMapper.toDTOList(topReviews);
     }
 }

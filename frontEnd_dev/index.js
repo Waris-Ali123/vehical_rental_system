@@ -27,7 +27,8 @@ async function login(event) {
         window.location.href = "home.html";
       }
     } else {
-      let backEndMsg = await response.text();
+      let errorObj = await response.json();
+      let backEndMsg = await errorObj.message;
       let isExisting = document.querySelector(".invalidMsg");
       if (!isExisting) {
         let invalidMsg = document.createElement("div");
@@ -35,7 +36,7 @@ async function login(event) {
         invalidMsg.classList.add("invalidMsg");
 
         loginForm.insertBefore(invalidMsg, loginForm.firstChild);
-      } else {
+      } else {  
         isExisting.innerHTML = backEndMsg;
       }
     }

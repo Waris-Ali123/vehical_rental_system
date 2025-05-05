@@ -485,6 +485,340 @@ span.addBtn:hover{
 }
 
 
+
+
+
+/* ---------------Overlay styles------------------ */
+/* Blur the background */
+body.blurBackground {
+    background-color: rgba(255, 255, 255, 0.7); /* Mimic blur with a semi-transparent overlay */
+    overflow: hidden; /* Prevent scrolling while the overlay is active */
+}
+
+/* Prevent the overlay itself from being blurred */
+body.blurBackground .overlayMessage {
+    filter: none; /* Exclude the overlay from the blur effect */
+    z-index: 1001; /* Ensure it appears above the blurred background */
+}
+
+/* Overlay container */
+.overlayMessage {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  /* Content container */
+  .overlayContent {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    z-index: 1001; /* Ensure it is above the blurred background */
+    transform: translate(-50%, -50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+  }
+  
+  /* Success styling */
+  .overlayContent.success {
+    border-left: 5px solid green;
+  }
+  
+  /* Error styling */
+  .overlayContent.error {
+    border-left: 5px solid red;
+  }
+  
+  /* Icon styling */
+  .overlayIcon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+  
+  /* Message text */
+  .overlayMessageText {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  
+  /* Error details */
+  .overlayErrorDetails {
+    text-align: left;
+    margin: 10px 0;
+    padding: 0;
+    list-style: none;
+    color: red;
+    font-size: 0.9rem;
+  }
+  
+  /* Close button */
+  .overlayCloseButton {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .overlayCloseButton:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Prevent the overlay itself from being blurred */
+  body.blurBackground .overlayMessage {
+    filter: none;
+  }
+
+
+  
+/* Responsive design implementation starts ------- media query   -----------1
+ */
+
+ @media (max-width: 1024px) {
+
+    .bookingForm {
+        grid-template-columns: 1fr;
+    }
+
+    .bookingForm .inputBox {
+        max-width: none;
+        padding: 0 50px;
+    }
+
+    #frontView .insiderText {
+        margin-left: 30px;
+    }
+
+    .mainDetailsContainer .reviewBtn {
+        font-size: 1rem;
+        white-space: nowrap;
+    }
+
+    .mainDetailsContainer .bookingBtn {
+        padding: 5px 12px;
+        font-size: 1rem;
+        white-space: nowrap;
+    }
+
+    .mainDetailsContainer .vehiclePrice {
+        font-size: 1.5rem;
+    }
+}
+
+
+
+/* -----------------------------------------768---------------------------------- */
+
+@media (max-width: 768px) {
+    .navigation{
+        width: 80px;
+        ;
+    }
+
+    .main{
+        left: 80px;
+        width: 100%;
+    }
+
+    .bookingForm .inputBox {
+        max-width: none;
+        padding: 0;
+    }
+
+    .formContainer .lowerBlock {
+        align-items: center;
+        row-gap: 25px;
+    }
+
+    .finalBookBtn {
+        padding: 8px 15px;
+        font-size: 1.3rem;
+    }
+    
+    .formContainer .lowerBlock .totalPriceBlock {
+        font-size: 1.2rem;
+    }
+
+
+    .bookingForm .inputBox{
+        flex-direction: column;
+        align-items: flex-start;
+        row-gap: 10px;
+        max-width: none;
+    }
+
+    .bookingForm input,
+    .bookingForm select{
+        min-width: 220px;
+        font-size: 1rem;
+        width: 100%;
+    }
+
+    /* ---------specific vehicle ----------------- */
+    .mainDetailsContainer {
+        display: flex;
+        flex-direction: column;
+        row-gap: 25px;
+    }
+
+    .mainDetailsContainer .vehicleImg {
+        border-radius: 25px;
+        width: 100%;
+    }
+
+  
+}
+
+
+@media (max-width : 430px){
+    .main{
+        padding: 10px;
+    }
+    .profileContainer .userFormContainer{
+        margin-bottom: 25px;
+    }
+    .profileContainer .userForm{
+        gap: 5px;
+        grid-template-columns: 1fr;
+    }
+    .profileContainer .editBtn {
+        
+        max-width: none;
+        padding: 5px 10px;
+        font-size: 1rem;
+    }
+    .profileContainer .userForm label {
+        font-size: 1rem;
+    }
+    .profileContainer .userForm input, .profileContainer .userForm select {
+        font-size: 1.1rem;
+        padding: 5px 15px;
+        font-weight: 500;
+    }
+
+
+
+    /* ----home page------ */
+    #frontView .insiderText {
+        row-gap: 10px;
+        max-width: 400px;
+        margin-left: 20px;
+        z-index: 2;
+    }
+
+    #frontView::before {
+        background-color: rgba(0, 0, 0, .55);
+    }
+
+    .insiderText h1 span {
+        color: var(--warning);
+    }
+
+    .reviewRow{
+        row-gap: 15px;
+    }
+
+    .newlyAddedRow .mainVehicleCard {
+        margin: 10px 0;
+    }
+
+    /* ---------specific vehicle page ---------- */
+    .mainDetailsContainer {
+        padding: 20px;
+    }
+
+    .mainDetailsContainer .btnContainer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 25px;
+    }
+
+    .formContainer {
+        padding: 15px;
+    }
+
+    .formContainer .lowerBlock {
+        flex-direction: column;
+    }
+
+}
+
+/* ---------320px -------------- */
+
+@media (max-width : 320px){
+
+    .main{
+        padding: 0;
+    }
+    .mainDetailsContainer .btnContainer {
+        display: flex;
+        flex-direction: column-reverse;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .mainDetailsContainer .bookingBtn {
+        width: 100%;
+    }
+
+    .mainDetailsContainer .reviewBtn {
+        width: 90%;
+    }
+
+    .formContainer {
+        padding: 10px;
+    }
+
+    .profileContainer .userFormContainer {
+        margin: 25px 15px;
+    }
+}
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* ============================
 Responsive design implementation starts ------- media query   -----------1
 ============================ */

@@ -35,54 +35,51 @@ public class LoginController {
     private LoginService loginService;
 
     @GetMapping("/login")
-    public ResponseEntity<?> getUserByEmailAndPassword(
+    public ResponseEntity<UserDTO> getUserByEmailAndPassword(
             @RequestParam @NotBlank(message = "Email cannot be blank") @Email(message = "Invalid email format") String email,
             @RequestParam @NotBlank(message = "Password cannot be blank") String password) {
-        final UserDTO u1 = loginService.getUserByEmailAndPass(email, password);
-        if (u1 != null) {
-            return ResponseEntity.ok().body(u1);
-        } else {
+        UserDTO user = loginService.getUserByEmailAndPass(email, password);
+        if (user == null) {
             throw new ResourceNotFoundException("User not found with this email and password");
         }
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping("/signUp")
-    public ResponseEntity<?> signUp(final @Valid @RequestBody UserCreateDTO userCreateDTO) {
+    public ResponseEntity<UserDTO> signUp(final @Valid @RequestBody UserCreateDTO userCreateDTO) {
         UserDTO userDTO = loginService.storeUser(userCreateDTO);
-        if (userDTO == null) {
-            throw new ResourceNotFoundException("User cannot be created with this email");
-        }
-    return ResponseEntity.ok().body(userDTO);
+        return ResponseEntity.ok(userDTO);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updatingExistingUser(
+    public ResponseEntity<UserDTO> updatingExistingUser(
             final @PathVariable("id") int id,
             final @Valid @RequestBody UserUpdateDTO userDetailsToUpdate) {
-            return loginService.updatingExistingUser(id, userDetailsToUpdate);
+        UserDTO updatedUser = loginService.updatingExistingUser(id, userDetailsToUpdate);
+        return ResponseEntity.ok(updatedUser);
     }
 
     @GetMapping("/getAllUsers")
     public ResponseEntity<?> getAllUsers(
             @RequestParam @NotBlank(message = "Email cannot be blank") @Email(message = "Invalid email format") String email) {
-                
-                return loginService.getAllUsers(email);
+        return ResponseEntity.ok(loginService.getAllUsers(email));
     }
 
     @GetMapping("/searching/{keyword}")
-public ResponseEntity<?> searching(
-        @PathVariable("keyword") @NotBlank(message = "Keyword cannot be blank") String keyword) {
-    return loginService.searching(keyword);
-}
-
-@DeleteMapping("/delete/{adminEmail}")
-public ResponseEntity<String> deletingUserByAdmin(
-        final @PathVariable("adminEmail") @NotBlank(message = "Admin email cannot be blank") @Email(message = "Invalid email format") String emailAdmin,
-        @Valid @RequestBody UserDTO userToDelete) {
-    if (loginService.isAdmin(emailAdmin)) {
-        return loginService.deletingUser(userToDelete);
-    } else {
-        throw new AccessDeniedException("Only admin can delete the user");
+    public ResponseEntity<?> searching(
+            @PathVariable("keyword") @NotBlank(message = "Keyword cannot be blank") String keyword) {
+        return ResponseEntity.ok(loginService.searching(keyword));
     }
-}
+
+    @DeleteMapping("/delete/{adminEmail}")
+    public ResponseEntity<String> deletingUserByAdmin(
+            final @PathVariable("adminEmail") @NotBlank(message = "Admin email cannot be blank") @Email(message = "Invalid email format") String emailAdmin,
+            @Valid @RequestBody UserDTO userToDelete) {
+        if (loginService.isAdmin(emailAdmin)) {
+            loginService.deletingUser(userToDelete);
+            return ResponseEntity.ok("User deleted successfully");
+        } else {
+            throw new AccessDeniedException("Only admin can delete the user");
+        }
+    }
 }

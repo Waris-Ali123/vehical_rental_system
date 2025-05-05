@@ -235,20 +235,21 @@ async function fetchingBookings() {
         method: "GET",
       }
     );
-
+    
+    let responseObject = await response.json();
     if (response.ok) {
-      let data = await response.json();
       //Inorder to make it more user friendly, we reversed the list coming from backend thus we will be having recent bookings first.
-      allBookings = data.reverse();
+      allBookings = responseObject.reverse();
       //Calculating total bookings.
       totalBookings = allBookings.length;
     }
     
     if (!response.ok) {
-      throw new Error(`Error: ${response.status}`);
+      showOverlayMessage("error",responseObject.message,responseObject.errors); 
     }
   } catch (error) {
     console.error("Error fetching data:", error);
+    showOverlayMessage("error","Something went wrong in frontEnd while fetching bookings");
   }
 }
 
@@ -262,14 +263,18 @@ async function fetchingReviews() {
         method: "GET",
       }
     );
+    let data = await response.json();
     if (response.ok) {
-      let data = await response.json();
       //Inorder to make it more user friendly, we reversed the list coming from backend thus we will be having recent reviews first.
       allReviews = data.reverse();
       totalReviews = allReviews.length;
     }
+    else{
+      showOverlayMessage("error",data.message,data.errors);
+    }
   } catch (error) {
     console.log(error);
+    showOverlayMessage("error","Something went wrong in frontEnd while fetching reviews");
   }
 }
 
@@ -290,15 +295,20 @@ async function fetchingVehiclesAvailableWithType(
       }
     );
     //console("called the fetching vehicles");
+    let data = await response.json();
     if (response.ok) {
-      let data = await response.json();
 
       return data;
     }
+    else {
+      showOverlayMessage("error",data.message,data.errors);
+      return null;
+    }
 
-    return null;
+
   } catch (error) {
     console.log(error);
+    showOverlayMessage("error","Something went wrong in frontEnd while fetching vehicles");
     return null;
   }
 }
@@ -316,15 +326,19 @@ async function fetchingVehiclesAvailable(start = startDate, end = endDate) {
       }
     );
 
+    let data = await response.json();
     if (response.ok) {
-      let data = await response.json();
       // Since the backend is already eleminating the under maintenance vehicle, we dont need to eliminate it.
       return data;
     }
+    else{
+      showOverlayMessage("error",data.message,data.errors);
+      return null;
+    }
 
-    return null;
   } catch (error) {
     console.log(error);
+    showOverlayMessage("error","Something went wrong in frontEnd while fetching vehicles"); 
     return null;
   }
 }
@@ -335,8 +349,8 @@ async function fetchingVehicles() {
     let response = await fetch(`http://localhost:8080/vehicle/getAllVehicles`, {
       method: "GET",
     });
+    let data = await response.json();
     if (response.ok) {
-      let data = await response.json();
 
       //removing the vehicles that are under maintenance
       data = data.filter(
@@ -346,41 +360,47 @@ async function fetchingVehicles() {
       allVehicles = data;
       totalVehicles = allVehicles.length;
     }
+    else{
+      showOverlayMessage("error",data.message,data.errors);
+
+    }
   } catch (error) {
     console.log(error);
+    showOverlayMessage("error","Something went wrong in frontEnd while fetching vehicles"); 
   }
 }
 
 // -----fetching bookings using registration number from backend for specific vehicle
-async function fetchingBookingsByVehicle(registration_number) {
+async function fetchingBookingsByVehicle(registrationNumber) {
   try {
     let response = await fetch(
-      `http://localhost:8080/booking/getByRegistrationNumber?registration_number=${registration_number}`,
+      `http://localhost:8080/booking/getByRegistrationNumber?registrationNumber=${registrationNumber}`,
       {
         method: "GET",
       }
     );
     if (response.ok) {
       let data = await response.json();
-
       return data;
     }
     else{
-    let errorMsg = await response.text();
-    alert(errorMsg);
+    let data = await response.json();
+    showOverlayMessage("error",data.message,data.errors);
+    return null;
     }
   } catch (error) {
-    alert("something went wrong in frontEnd while fetching bookings");
+    // alert("something went wrong in frontEnd while fetching bookings");
+    showOverlayMessage("error","Something went wrong in frontEnd while fetching bookings");
     console.log(error);
     return null;
   }
 }
 
 // -----fetching reviews using vehicle registration number from backend for specific vehicle
-async function fetchingReviewsByVehicle(registration_number) {
+async function fetchingReviewsByVehicle(registrationNumber) {
   try {
     let response = await fetch(
-      `http://localhost:8080/review/getReviewsByVehicle?registration_number=${registration_number}`,
+      `http://localhost:8080/review/getReviewsByVehicle?registrationNumber=${registrationNumber}`,
       {
         method: "GET",
       }
@@ -391,11 +411,13 @@ async function fetchingReviewsByVehicle(registration_number) {
       return data;
     }
     else{
-        let errorMsg = await response.text();
-        alert(errorMsg);
+        let errorObject = await response.json();
+        showOverlayMessage("error",errorObject.message,errorObject.errors);
+        return null;
     }
   } catch (error) {
-    alert("something went wrong in frontEnd while fetching reviews");
+    // alert("something went wrong in frontEnd while fetching reviews");
+    showOverlayMessage("error","Something went wrong in frontEnd while fetching reviews");
     console.log(error);
     return null;
   }
@@ -407,9 +429,13 @@ async function fetchingTopReviews() {
     let response = await fetch(`http://localhost:8080/review/getTopReviews`, {
       method: "GET",
     });
+    let data = await response.json();
     if (response.ok) {
-      let data = await response.json();
       return data;
+    }
+    else{
+      showOverlayMessage("error",data.message,data.errors);
+
     }
   } catch (error) {
     console.log(error);
@@ -420,52 +446,57 @@ async function fetchingTopReviews() {
 
 //Storing a new booking in the db. this function is used to book a vehicle.
 async function storingBookingInDB(
-  email,
-  registration_number,
-  starting,
-  ending
+  bookingObject
 ) {
   try {
     let response = await fetch(
-      `http://localhost:8080/booking/add?email=${email}&registration_number=${registration_number}&startDate=${starting}&endDate=${ending}`,
+      `http://localhost:8080/booking/add`,
       {
         method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(bookingObject)
       }
     );
 
     if (response.ok) {
-      let data = await response.text();
-      alert(data);
+      let data = await response.json();
+      showOverlayMessage("success","Booking done successfully...",null,true,2000);
+      allBookings.push(data);
+      printingOnClickBookingNav();
     } else {
-      let msg = await response.text();
-      alert("Failed to book bcz ' " + msg + " ' ");
-      console.log("error msg", response.status);
-      console.log("error msg", response.statusText);
+      let errorObject = await response.json();
+      showOverlayMessage("error",errorObject.message,errorObject.errors);
     }
   } catch (error) {
     console.error(error);
+    showOverlayMessage("error","Something went wrong in frontEnd while booking")
   }
 }
 
-async function storingReviewInDB(email, registration_number, rating, feedback) {
+async function storingReviewInDB(reviewObject) {
   try {
     let response = await fetch(
-      `http://localhost:8080/review/add?email=${email}&registration_number=${registration_number}&rating=${rating}&feedback=${feedback}`,
+      `http://localhost:8080/review/add`,
       {
         method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(reviewObject)
       }
     );
 
     if (response.ok) {
       let review = await response.json();
-      alert("Review Added successfully... ");
+      showOverlayMessage("success","Review added successfully...",null,true,2000);
 
       allReviews.push(review);
       printingReviewsDataInTable(allReviews);
     } else {
-        let errorMsg = await response.text();
-      alert(errorMsg);
-      console.log("error msg", errorMsg);
+        let data = response.json();
+        showOverlayMessage("success",data.message,data.errors);
     }
   } catch (error) {
     console.error(error);
@@ -492,14 +523,14 @@ async function updatingUserInDB(userId, updatedUser) {
         user = result;
       }
 
-      alert("User Updated Succesfully");
+      showOverlayMessage("success","User details updated successfully...");
     } else {
-    let errorMsg = await response.text();
-      console.error("Error updating user:",errorMsg);
-      alert(errorMsg);
+      let errorObj = await response.json();
+      showOverlayMessage("error",errorObj.message,errorObj.errors);
     }
   } catch (error) {
     console.error(error);
+    showOverlayMessage("error","Something went wrong in frontEnd while updating user details");
   }
 }
 
@@ -508,34 +539,35 @@ async function updatingBookingStatusInDB(booking) {
   try {
     let password = prompt("Enter your password please : ");
     let response = await fetch(
-      `http://localhost:8080/booking/cancelBooking/${password}`,
+      `http://localhost:8080/booking/cancelBooking/${password}/${booking.bookingId}`,
       {
         method: "PUT",
         headers: {
           "Content-type": "application/json",
-        },
-        body : JSON.stringify(booking)
+        }
       }
     );
+
+    
 
     if (response.ok) {
     let successMsg = await response.text();
 
-      alert(successMsg);
+      showOverlayMessage("success",successMsg);
       let index = allBookings.findIndex(
         (elem) => elem == booking
       );
       if (index != -1) {
-        allBookings[index].booking_status = "CANCELED";
+        allBookings[index].bookingStatus = "CANCELED";
         printingBookingsDataInTable(allBookings,true);
       }
     } else {
-    let errorMsg = await response.text();
-      alert(errorMsg);
-      console.log(errorMsg);
+      let errorObj = await response.json();
+      showOverlayMessage("error",errorObj.message,errorObj.errors,false);
     }
   } catch (error) {
     console.error("Error Msg : ", error);
+    showOverlayMessage("error","Something went wrong while canceling the booking",error);
   }
 }
 
@@ -588,7 +620,7 @@ function printingBookingsDataInTable(
 
   bookingsParam.forEach((element) => {
     let bookId = document.createElement("td");
-    bookId.innerText = element.booking_id;
+    bookId.innerText = element.bookingId;
     let startDate = document.createElement("td");
     startDate.innerText = element.startDate;
     let endDate = document.createElement("td");
@@ -603,8 +635,8 @@ function printingBookingsDataInTable(
     let statusBox = document.createElement("td");
     statusBox.classList.add("statusBox");
     let status = document.createElement("span");
-    status.innerText = element.booking_status;
-    if (element.booking_status == "CONFIRMED") status.classList.add("success");
+    status.innerText = element.bookingStatus;
+    if (element.bookingStatus == "CONFIRMED") status.classList.add("success");
     else status.classList.add("danger");
 
     statusBox.appendChild(status);
@@ -619,7 +651,7 @@ function printingBookingsDataInTable(
       let cancelCell = document.createElement("td");
       if (
         element.user.email == user.email &&
-        element.booking_status == "CONFIRMED" &&
+        element.bookingStatus == "CONFIRMED" &&
         element.startDate > today
       ) {
         let cancelBtn = document.createElement("button");
@@ -667,7 +699,7 @@ function printingBookingsDataInTable(
     } else {
       //Making the booking row with cancel status not to appear in the booking table in specific product page. thus if the isCanclebtn is false it means we are showing the booking table in the specific vehicle page thus we will check first whether the status is confirm or not , if it is not confirm we will not show that
 
-      if (element.booking_status == "CONFIRMED") {
+      if (element.bookingStatus == "CONFIRMED") {
         row.append(
           bookId,
           userEmail,
@@ -822,12 +854,13 @@ function printingCardsForVehicle(
 
       let pricePerDay = document.createElement("h3");
       pricePerDay.classList.add("pricePerDay");
-      pricePerDay.innerText = vehicle.price_per_day.toFixed(0) + "/-Rs";
+      pricePerDay.innerText = vehicle.pricePerDay.toFixed(0) + "/-Rs";
 
       let selectBtn = document.createElement("div");
       selectBtn.innerText = "BOOK NOW";
       selectBtn.classList.add("selectBtn");
       selectBtn.addEventListener("click", () => {
+        showPage3();
         scheduleBookingForVehicle(vehicle);
       });
 
@@ -908,10 +941,10 @@ function printingCompleteVehicleDetails(vehicle) {
 
   // ----------price per day --------------
 
-  let price_per_day = document.createElement("div");
-  price_per_day.innerHTML =
-    vehicle.price_per_day.toFixed(0) + "/-Rs" + "<span> per day</span>";
-  price_per_day.classList.add("vehiclePrice");
+  let pricePerDay = document.createElement("div");
+  pricePerDay.innerHTML =
+    vehicle.pricePerDay.toFixed(0) + "/-Rs" + "<span> per day</span>";
+  pricePerDay.classList.add("vehiclePrice");
 
   // --------------------Adding booking and review btn --------------
   let btnContainer = document.createElement("div");
@@ -936,7 +969,7 @@ function printingCompleteVehicleDetails(vehicle) {
 
   btnContainer.append(addReviewBtn, bookingBtn);
   // ----------------appending All --------------------
-  sideDetails.append(nameBlock, iconBlock, price_per_day, btnContainer);
+  sideDetails.append(nameBlock, iconBlock, pricePerDay, btnContainer);
   mainDetailsContainer.append(sideImg, sideDetails);
 
   vehicleContainer.appendChild(mainDetailsContainer);
@@ -952,7 +985,7 @@ function printingCompleteVehicleDetails(vehicle) {
 
 //used in printingCompleteVehicleDetails for printing the reviews for that specific vehicle
 async function printingReviewsBasedOnVehicle(vehicle) {
-  let reviews = await fetchingReviewsByVehicle(vehicle.registration_number);
+  let reviews = await fetchingReviewsByVehicle(vehicle.registrationNumber);
 
   if (reviews != null) printingReviewsDataInTable(reviews.reverse(), false);
 }
@@ -960,7 +993,7 @@ async function printingReviewsBasedOnVehicle(vehicle) {
 //used in printingCompleteVehicleDetails for printing the bookings for that specific vehicle
 //The bookings will only be shown that are for upcoming days Only or the one that has not ended yet.
 async function printingBookingsBasedOnVehicle(vehicle) {
-  let bookings = await fetchingBookingsByVehicle(vehicle.registration_number);
+  let bookings = await fetchingBookingsByVehicle(vehicle.registrationNumber);
   bookings = bookings.filter((booking) => {
     return booking.endDate >= today;
   });
@@ -1192,7 +1225,11 @@ function printingFilters() {
     let initial = document.getElementById("startDate").value;
     let ending = document.getElementById("endDate").value;
     if (initial > ending) {
-      alert("Start Date must be smaller than or equal to End Date ");
+      showOverlayMessage(
+        "warning",
+        "Start Date must be smaller than or equal to End Date ",
+        null,
+        false);
       return;
     }
     let typeSelected = document.getElementById("type");
@@ -1220,7 +1257,7 @@ function printingFilters() {
     //Available vehicles having already available vehicles thus no need to remove them from here.
     if (availableVehicles != null) {
       if (availableVehicles.length === 0) {
-        alert("No Vehicle Found");
+        showOverlayMessage("warning","No Vehicle Found");
         return;
       }
       showPage1();
@@ -1289,7 +1326,7 @@ function scheduleBookingForVehicle(vehicle) {
     },
     {
       label: "Registration Number",
-      value: vehicle.registration_number,
+      value: vehicle.registrationNumber,
       readOnly: true,
       type: "text",
       id: "b_VehicleRegistrationNumber",
@@ -1303,7 +1340,7 @@ function scheduleBookingForVehicle(vehicle) {
     },
     {
       label: "Price/Day (In Rupees)",
-      value: vehicle.price_per_day,
+      value: vehicle.pricePerDay,
       readOnly: true,
       type: "text",
       id: "b_VehiclePricePerDay",
@@ -1359,7 +1396,7 @@ function scheduleBookingForVehicle(vehicle) {
         let totalPriceBooking = document.querySelector(".totalPriceBooking");
 
         if (initial.value > final.value) {
-          alert("Start Date must be smaller or equal to end date");
+          showOverlayMessage("warning","Start Date must be smaller or equal to end date",null,false);
           return;
         }
 
@@ -1368,7 +1405,7 @@ function scheduleBookingForVehicle(vehicle) {
         endDate = final.value;
 
         let finalPrice =
-          vehicle.price_per_day * getDateDifference(initial.value, final.value);
+          vehicle.pricePerDay * getDateDifference(initial.value, final.value);
         totalPriceBooking.innerText = finalPrice.toFixed(0);
       };
     }
@@ -1393,7 +1430,7 @@ function scheduleBookingForVehicle(vehicle) {
   totalPrice.classList.add("totalPriceBooking");
   let differenceBetweenDates = 1;
   totalPrice.innerText =
-    vehicle.price_per_day * getDateDifference(startDate, endDate);
+    vehicle.pricePerDay * getDateDifference(startDate, endDate);
   formContainer.appendChild(bookingForm);
 
   totalPriceBlock.append(textTotal, totalPrice);
@@ -1405,18 +1442,22 @@ function scheduleBookingForVehicle(vehicle) {
 
   bookbtn.addEventListener("click", async () => {
     let userEmail = user.email;
-    let registration_number = vehicle.registration_number;
+    let registrationNumber = vehicle.registrationNumber;
     // let startDate = startDate;
     if (startDate > endDate) {
-      alert("The Start Date must be smaller than or equal to the end date");
+      showOverlayMessage("warning","The Start Date must be smaller than or equal to the end date");
       return;
     }
 
+    let bookingObj = {
+      email: userEmail,
+      registrationNumber: registrationNumber,
+      startDate: startDate,
+      endDate: endDate,
+    }
+
     await storingBookingInDB(
-      userEmail,
-      registration_number,
-      startDate,
-      endDate
+      bookingObj
     );
   });
 
@@ -1461,7 +1502,7 @@ function addingReviewForVehicle(vehicle) {
     },
     {
       label: "Registration Number",
-      value: vehicle.registration_number,
+      value: vehicle.registrationNumber,
       readOnly: true,
       type: "text",
       id: "b_VehicleRegistrationNumber",
@@ -1530,16 +1571,20 @@ function addingReviewForVehicle(vehicle) {
 
   addReveiwBtn.addEventListener("click", async () => {
     let userEmail = user.email;
-    let registration_number = vehicle.registration_number;
+    let registrationNumber = vehicle.registrationNumber;
     let ratingGiven = document.getElementById("b_Rating").value;
     let feedbackGiven = document.getElementById("b_Feedback").value;
     // let startDate = startDate;
 
+    let reviewObj = {
+      email: userEmail,
+      registrationNumber: registrationNumber,
+      rating: ratingGiven,
+      feedback: feedbackGiven,
+    };
+
     await storingReviewInDB(
-      userEmail,
-      registration_number,
-      ratingGiven,
-      feedbackGiven
+      reviewObj
     );
 
     showPage2();
@@ -1550,13 +1595,19 @@ function addingReviewForVehicle(vehicle) {
 }
 
 // ========================================================Search Bar Implementation starts ==========================================
+let debounceTimer; // Declare a variable to hold the debounce timer
+
 function searchBarClick() {
-  let keyword = searchBar.value.toLowerCase();
+  clearTimeout(debounceTimer); // Clear the previous timer if the user types again
 
-  let targetVehicles = searchingVehiclesForKeyword(keyword);
+  debounceTimer = setTimeout(() => {
+    let keyword = searchBar.value.toLowerCase();
 
-  showPage1();
-  printingCardsForVehicle(targetVehicles);
+    let targetVehicles = searchingVehiclesForKeyword(keyword);
+
+    showPage1();
+    printingCardsForVehicle(targetVehicles);
+  }, 300); // Set a delay of 300 milliseconds before executing the search
 }
 
 function searchingVehiclesForKeyword(keyword) {
@@ -1569,14 +1620,14 @@ function searchingVehiclesForKeyword(keyword) {
     let type = vehicle.type.toLowerCase();
     let fuelType = vehicle.fuelType.toLowerCase();
     let model = vehicle.model.toLowerCase();
-    let price_per_day = vehicle.price_per_day;
+    let pricePerDay = vehicle.pricePerDay;
 
     if (
       name.includes(keyword) ||
       type.includes(keyword) ||
       fuelType.includes(keyword) ||
       model.includes(keyword) ||
-      (price_per_day < keyword && price_per_day > keyword - 500) //filtering based on price with a range to enhance the user experience
+      (pricePerDay < keyword && pricePerDay > keyword - 500) //filtering based on price with a range to enhance the user experience
     ) {
       targetVehicles.push(vehicle);
     }
@@ -1616,7 +1667,7 @@ function validateForm(fields) {
     let inputElement = document.getElementById(field.id);
     if (inputElement && inputElement.hasAttribute("required")) {
       if (!inputElement.value || inputElement.value.trim() === "") {
-        alert(`Please fill in the required field: ${field.label}`);
+        showOverlayMessage("warning", `Please fill in the required field: ${field.label}`,null,false);
         isValid = false;
         inputElement.focus();
         return false;
@@ -1624,18 +1675,112 @@ function validateForm(fields) {
     }
 
     if (field.id === "contactNumber" && inputElement.value.length !== 10) {
-      alert("Mobile No must be exactly 10 digits!");
+      showOverlayMessage("warning", "Mobile No must be exactly 10 digits!");
       isValid = false;
       return false;
     }
 
     if (inputElement && inputElement.type == "email") {
       if (!inputElement.checkValidity()) {
-        alert(`Invalid value in ${inputElement.name}`);
+        showOverlayMessage("warning", `Invalid value in ${inputElement.name}`);
         isValid = false;
         return false;
       }
     }
   });
   return isValid;
+}
+
+
+
+
+// ------------------------Overlay Message ---------------------
+function showOverlayMessage(type, message, errors = null, autoClose = true, timeout = 30000) {
+  // Remove any existing overlay
+  const existingOverlay = document.querySelector(".overlayMessage");
+  if (existingOverlay) {
+    existingOverlay.remove();
+  }
+
+  // Create the overlay container
+  const overlay = document.createElement("div");
+  overlay.classList.add("overlayMessage");
+
+  // Add blur effect to the background
+  document.body.classList.add("blurBackground");
+
+  // Create the content container
+  const content = document.createElement("div");
+  content.classList.add("overlayContent");
+
+  // Add a success or error icon based on the type
+  const icon = document.createElement("span");
+  icon.classList.add("overlayIcon");
+  if (type === "success") {
+    icon.innerText = "✔️"; // Success icon
+    content.classList.add("success");
+  } else if (type === "error") {
+    icon.innerText = "❌"; // Error icon
+    content.classList.add("error");
+  }
+  else if (type === "warning") {
+    icon.innerText = "⚠️"; // Warning icon
+    content.classList.add("warning");
+  }
+
+  // Add the main message
+  const messageElement = document.createElement("p");
+  messageElement.classList.add("overlayMessageText");
+  messageElement.innerText = message;
+
+  // Add error details if available
+  if (errors) {
+    const errorDetails = document.createElement("ul");
+    errorDetails.classList.add("overlayErrorDetails");
+
+    if (typeof errors === "object") {
+      // If errors is an object, iterate through its keys
+      for (const [key, value] of Object.entries(errors)) {
+        const errorItem = document.createElement("li");
+        errorItem.innerText = `${key}: ${value}`;
+        errorDetails.appendChild(errorItem);
+      }
+    } else {
+      // If errors is a string, display it directly
+      const errorItem = document.createElement("li");
+      errorItem.innerText = errors;
+      errorDetails.appendChild(errorItem);
+    }
+
+    content.appendChild(errorDetails);
+  }
+
+  // Add a close button
+  const closeButton = document.createElement("button");
+  closeButton.classList.add("overlayCloseButton");
+  closeButton.innerText = "Close";
+  closeButton.addEventListener("click", () => {
+    overlay.remove();
+    document.body.classList.remove("blurBackground");
+  });
+
+  // Append all elements to the content container
+  content.appendChild(icon);
+  content.appendChild(messageElement);
+  content.appendChild(closeButton);
+
+  // Append the content container to the overlay
+  overlay.appendChild(content);
+
+  // Append the overlay to the body
+  document.body.appendChild(overlay);
+
+  // Automatically remove the overlay after a delay (optional)
+  if (autoClose) {
+    setTimeout(() => {
+      overlay.remove();
+      document.body.classList.remove("blurBackground");
+    }, timeout);
+  }
+  
 }
