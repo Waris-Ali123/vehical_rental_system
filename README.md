@@ -39,7 +39,7 @@ The **Vehicle Rental System (VRS)** is a web-based platform designed to facilita
 ### 🖥️ Backend
 
 - **Java Spring Boot** - Backend framework for handling business logic.
-- **MySQL** - Database to store users, vehicles, reviews and booking information.
+- **PostgreSQL** - Database to store users, vehicles, reviews and booking information.
 
 ### 🎨 Design & Styling
 
@@ -84,7 +84,7 @@ The **Vehicle Rental System (VRS)** is a web-based platform designed to facilita
 ### 🛠️ Prerequisites
 
 - **Java JDK 11+**
-- **MySQL Database**
+- **PostgreSQL Database**
 - **Spring Boot CLI**
 
 ### 📦 Installation
